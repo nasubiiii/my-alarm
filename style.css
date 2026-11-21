@@ -564,3 +564,45 @@ input:focus-visible,
 select:focus-visible {
   outline-color: var(--accent);
 }
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline-color: var(--accent);
+}
+
+/* =========================
+   STEP 4：アラーム詳細設定
+========================= */
+
+/* 編集画面のON/OFF設定 */
+.edit-form .setting-row {
+  margin-top: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* 左側の項目名 */
+.edit-form .setting-row span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* チェックボックス */
+.edit-form .setting-row input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+/* スヌーズ間隔の選択欄 */
+#edit-snooze-minutes:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* スマホでも押しやすいように */
+.edit-form .setting-row {
+  min-height: 56px;
+}

@@ -6,6 +6,7 @@
 const DAY_NAMES = ["日", "月", "火", "水", "木", "金", "土"];
 const DISPLAY_DAYS = [1, 2, 3, 4, 5, 6, 0];
 
+
 let alarms = JSON.parse(
   localStorage.getItem("myAlarms") || "[]"
 ).map(alarm => ({
@@ -14,8 +15,13 @@ let alarms = JSON.parse(
   sound: alarm.sound || "bell",
   days: Array.isArray(alarm.days)
     ? alarm.days
-    : [0, 1, 2, 3, 4, 5, 6]
+    : [0, 1, 2, 3, 4, 5, 6],
+  snooze: alarm.snooze ?? true,
+  snoozeMinutes: alarm.snoozeMinutes ?? 5,
+  fadeIn: alarm.fadeIn ?? false,
+  skipNext: alarm.skipNext ?? false
 }));
+
 
 let editingId = null;
 let selectedDays = [];
@@ -274,20 +280,43 @@ function renderWeekdays() {
   });
 }
 
+
+function updateSnoozeVisibility() {
+  $("edit-snooze-minutes").disabled =
+    !$("edit-snooze").checked;
+}
+
+$("edit-snooze").addEventListener(
+  "change",
+  updateSnoozeVisibility
+);
+
 function openEditor(id = null) {
+
   editingId = id;
   const alarm = alarms.find(a => a.id === id);
 
   $("edit-title").textContent =
   alarm ? t("editAlarm") : t("addAlarm");
 
+
   $("edit-name").value = alarm?.name || "";
   $("edit-time").value = alarm?.time || "07:00";
   $("edit-sound").value = alarm?.sound || "bell";
 
+  // STEP 4：追加設定を読み込む
+  $("edit-snooze").checked = alarm?.snooze ?? true;
+  $("edit-snooze-minutes").value =
+    String(alarm?.snoozeMinutes ?? 5);
+  $("edit-fade-in").checked = alarm?.fadeIn ?? false;
+  $("edit-skip-next").checked = alarm?.skipNext ?? false;
+
+  updateSnoozeVisibility();
+
   selectedDays = alarm
     ? [...alarm.days]
     : [0, 1, 2, 3, 4, 5, 6];
+
 
   $("edit-actions").hidden = !alarm;
 
@@ -303,12 +332,22 @@ function saveEditedAlarm() {
     return;
   }
 
+
   const data = {
     name: $("edit-name").value.trim(),
     time,
     sound: $("edit-sound").value,
-    days: [...selectedDays]
+    days: [...selectedDays],
+
+    // STEP 4：追加設定
+    snooze: $("edit-snooze").checked,
+    snoozeMinutes: Number(
+      $("edit-snooze-minutes").value
+    ),
+    fadeIn: $("edit-fade-in").checked,
+    skipNext: $("edit-skip-next").checked
   };
+
 
   const alarm = alarms.find(a => a.id === editingId);
 
@@ -718,6 +757,10 @@ ja: {
     language: "表示言語",
     alarmSettings: "アラーム設定",
     autoScroll: "次のアラームへ自動スクロール",
+    snooze: "スヌーズ",
+    snoozeInterval: "スヌーズ間隔",
+    fadeIn: "フェードイン",
+    skipNext: "次回だけスキップ",
     alarms: "アラーム",
     nextAlarm: "次のアラーム",
     add: "＋ 追加",
@@ -789,6 +832,10 @@ ja: {
     language: "Display language",
     alarmSettings: "Alarm settings",
     autoScroll: "Auto-scroll to next alarm",
+    snooze: "Snooze",
+    snoozeInterval: "Snooze interval",
+    fadeIn: "Fade in",
+    skipNext: "Skip next alarm",
     alarms: "Alarms",
     nextAlarm: "Next alarm",
     add: "+ Add",
@@ -981,8 +1028,17 @@ function applyLanguage() {
     '[data-group="light"]'
   ).label = t("backgroundLight");
 
+
   ["bell", "digital", "gentle"].forEach((key, index) => {
     $("edit-sound").options[index].textContent = t(key);
+  });
+
+  // スヌーズ間隔の表示
+  [5, 10, 15].forEach((minutes, index) => {
+    $("edit-snooze-minutes").options[index].textContent =
+      appSettings.language === "ja"
+        ? `${minutes}分`
+        : `${minutes} min`;
   });
 
 

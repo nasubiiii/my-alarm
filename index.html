@@ -81,13 +81,44 @@
             <button id="preview-btn" type="button" data-i18n="preview">
             ▶ 試聴
             </button>
+
         </div>
 
-            <button id="save-alarm-btn"
-                    class="primary-btn" type="button"
-                    data-i18n="save">
-            保存
-            </button>
+        <!-- スヌーズ -->
+        <label class="setting-row">
+          <span data-i18n="snooze">スヌーズ</span>
+          <input id="edit-snooze" type="checkbox">
+        </label>
+
+        <label for="edit-snooze-minutes"
+               data-i18n="snoozeInterval">
+          スヌーズ間隔
+        </label>
+        <select id="edit-snooze-minutes">
+          <option value="5">5分</option>
+          <option value="10">10分</option>
+          <option value="15">15分</option>
+        </select>
+
+        <!-- フェードイン -->
+        <label class="setting-row">
+          <span data-i18n="fadeIn">フェードイン</span>
+          <input id="edit-fade-in" type="checkbox">
+        </label>
+
+        <!-- 次回だけスキップ -->
+        <label class="setting-row">
+          <span data-i18n="skipNext">次回だけスキップ</span>
+          <input id="edit-skip-next" type="checkbox">
+        </label>
+
+        <button id="save-alarm-btn"
+                class="primary-btn"
+                type="button"
+                data-i18n="save">
+          保存
+        </button>
+
 
             <div id="edit-actions" class="edit-actions">
             <button id="duplicate-btn"
@@ -214,8 +245,6 @@
     </label>
   </div>
 </section>
-
-    </section>
 
   </main>
 
