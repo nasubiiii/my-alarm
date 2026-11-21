@@ -6,240 +6,256 @@
 body {
   margin: 0;
   background: #111827;
+  color: #f9fafb;
+  font-family: Arial, "Noto Sans JP", sans-serif;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  background: #374151;
   color: white;
-  font-family: Arial, sans-serif;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 3px;
 }
 
 .container {
   max-width: 480px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 20px;
 }
 
-h1 {
-  margin-bottom: 4px;
+[hidden] {
+  display: none !important;
 }
 
-.subtitle {
-  color: #9ca3af;
-  margin-top: 0;
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 52px;
+  margin-bottom: 20px;
 }
 
-.clock {
+.app-header h1,
+.app-header h2 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.icon-btn {
+  font-size: 22px;
+  background: transparent;
+  padding: 8px;
+}
+
+.clock-card {
+  background: #1f2937;
+  border-radius: 20px;
+  padding: 28px 18px;
   text-align: center;
-  padding: 40px 0;
+  margin-bottom: 28px;
+}
+
+#current-date {
+  color: #9ca3af;
+  font-size: 14px;
 }
 
 #current-time {
   font-size: clamp(36px, 10vw, 52px);
   font-weight: bold;
-  margin: 0;
+  margin: 12px 0 22px;
+  font-variant-numeric: tabular-nums;
 }
 
-#current-date {
+.next-alarm-info {
+  border-top: 1px solid #374151;
+  padding-top: 16px;
+}
+
+.next-alarm-info p {
   color: #9ca3af;
+  font-size: 13px;
 }
 
-h2 {
+#next-alarm-text {
   font-size: 20px;
 }
 
-/* アラーム追加フォーム */
-.add-alarm {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.add-alarm input {
-  flex: 1;
-  min-width: 0;
-  padding: 12px;
-  font-size: 18px;
-  border: 1px solid #374151;
-  border-radius: 8px;
-  background: #1f2937;
-  color: white;
-}
-
-button {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  background: #2563eb;
-  color: white;
-  cursor: pointer;
-}
-
-/* アラーム一覧 */
-.alarm-item {
+.section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  padding: 18px 0;
-  border-bottom: 1px solid #374151;
+  margin-bottom: 12px;
 }
 
-.alarm-time {
-  font-size: 30px;
-  font-weight: bold;
+.section-header h2 {
+  font-size: 20px;
 }
 
-.alarm-actions {
+#add-alarm-btn,
+.primary-btn {
+  background: #2563eb;
+}
+
+.alarm-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
+  border-bottom: 1px solid #374151;
+  padding: 18px 4px;
+  scroll-margin-top: 30vh;
 }
 
-.alarm-toggle {
-  width: 22px;
-  height: 22px;
-  accent-color: #2563eb;
+.alarm-item.next-alarm {
+  background: #1e3a5f;
+  border-radius: 12px;
+  padding: 18px 12px;
+  border: 1px solid #3b82f6;
+}
+
+.alarm-summary {
+  flex: 1;
+  min-width: 0;
   cursor: pointer;
 }
 
-.delete-btn {
-  background: #374151;
-  font-size: 13px;
+.alarm-time {
+  display: block;
+  font-size: 32px;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.alarm-name {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.alarm-days {
+  display: block;
+  margin-top: 5px;
+  color: #9ca3af;
+  font-size: 12px;
 }
 
 .alarm-item.disabled .alarm-time {
   color: #6b7280;
 }
 
-/* アラーム見出しと設定 */
-.alarm-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-#settings-btn {
-  background: #374151;
-  font-size: 14px;
-}
-
-.settings-panel {
-  background: #1f2937;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
-}
-
-.settings-panel[hidden] {
-  display: none;
-}
-
-.setting-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.setting-row input {
-  width: 20px;
-  height: 20px;
+.alarm-toggle {
+  width: 23px;
+  height: 23px;
   accent-color: #2563eb;
 }
 
-.setting-note {
-  font-size: 12px;
-  color: #9ca3af;
-  margin-bottom: 0;
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* 曜日選択 */
-.weekday-selector {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
+.edit-form label {
+  font-size: 14px;
+  font-weight: bold;
   margin-top: 10px;
 }
 
+.edit-form input,
+.edit-form select {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #374151;
+  border-radius: 10px;
+  background: #1f2937;
+  color: white;
+}
+
+.weekday-selector {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+
 .weekday-btn {
-  padding: 7px 10px;
-  background: #374151;
-  border-radius: 8px;
-  font-size: 12px;
+  flex: 1;
+  padding: 10px 0;
+  font-size: 13px;
 }
 
 .weekday-btn.selected {
   background: #2563eb;
-  color: white;
 }
 
-/* アラームの表示 */
-.alarm-info {
+.sound-row {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  gap: 10px;
 }
 
-.alarm-days {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-.alarm-item.next-alarm {
-  background: #1e3a5f;
-  border-radius: 10px;
-  padding: 18px 12px;
-  border: 1px solid #3b82f6;
-}
-
-.alarm-item {
-  scroll-margin-top: 30vh;
-}
-
-.alarm-item {
-  flex-wrap: wrap;
-}
-
-.alarm-weekdays {
-  width: 100%;
-}
-
-/* アラーム音の設定 */
-.sound-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  margin-top: 8px;
-}
-
-.sound-select {
+.sound-row select {
   flex: 1;
   min-width: 0;
-  padding: 10px;
-  border-radius: 8px;
-  background: #1f2937;
-  border: 1px solid #374151;
-  color: white;
 }
 
-.preview-btn {
-  background: #374151;
+.sound-row button {
   white-space: nowrap;
 }
 
-/* アラーム鳴動画面 */
+.primary-btn {
+  padding: 15px;
+  margin-top: 24px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-actions button {
+  flex: 1;
+}
+
+#delete-btn {
+  background: #7f1d1d;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 0;
+}
+
+.setting-row input {
+  width: 22px;
+  height: 22px;
+  accent-color: #2563eb;
+}
+
 .ringing-panel {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: #111827;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  background: #111827;
   padding: 24px;
-}
-
-.ringing-panel[hidden] {
-  display: none;
 }
 
 .ringing-content {
@@ -248,29 +264,10 @@ button {
 
 #ringing-time {
   font-size: 64px;
-  margin: 24px 0;
 }
 
 #stop-alarm-btn {
   background: #dc2626;
   padding: 18px 32px;
-  font-size: 18px;
   margin-top: 24px;
-}
-
-/* =========================
-   10. PWAの登録
-========================= */
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("./service-worker.js")
-      .then(() => {
-        console.log("PWAの登録に成功しました");
-      })
-      .catch((error) => {
-        console.error("PWA登録エラー:", error);
-      });
-  });
 }
