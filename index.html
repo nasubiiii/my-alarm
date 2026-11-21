@@ -29,9 +29,28 @@
                 type="button">⚙</button>
       </header>
 
-      <section class="clock-card">
+        <section class="clock-card">
         <p id="current-date"></p>
+
+        <!-- ホーム画面のアナログ時計 -->
+        <div id="home-analog-clock" class="analog-clock home-analog-clock" hidden>
+            <div class="analog-clock-face">
+            <div id="home-analog-markers"></div>
+
+            <span class="clock-number number-12">12</span>
+            <span class="clock-number number-3">3</span>
+            <span class="clock-number number-6">6</span>
+            <span class="clock-number number-9">9</span>
+
+            <div id="home-analog-hour-hand" class="clock-hand hour-hand"></div>
+            <div id="home-analog-minute-hand" class="clock-hand minute-hand"></div>
+            <div id="home-analog-second-hand" class="clock-hand second-hand"></div>
+            <div class="clock-center"></div>
+            </div>
+        </div>
+
         <p id="current-time">00:00:00</p>
+
         <div class="next-alarm-info">
           <p data-i18n="nextAlarm">次のアラーム</p>
           <strong id="next-alarm-text">設定なし</strong>
@@ -242,6 +261,7 @@
     <div class="settings-group">
     <h3 data-i18n="clockSettings">時計設定</h3>
 
+
     <label for="time-format-select" data-i18n="timeFormat">
         時刻表示形式
     </label>
@@ -249,6 +269,25 @@
         <option value="24">24時間表示</option>
         <option value="12">12時間表示</option>
     </select>
+
+        <label for="home-clock-display-select" data-i18n="homeClockDisplay">
+        ホーム画面の時計表示
+        </label>
+        <select id="home-clock-display-select">
+        <option value="digital">デジタル</option>
+        <option value="analog">アナログ</option>
+        <option value="both">両方</option>
+        </select>
+
+        <label for="clock-display-select" data-i18n="clockDisplay">
+        時計専用モードの表示
+        </label>
+        <select id="clock-display-select">
+        <option value="digital">デジタル</option>
+        <option value="analog">アナログ</option>
+        <option value="both">両方</option>
+        </select>
+
 
     <label class="setting-row">
         <span data-i18n="showSeconds">秒を表示する</span>
@@ -278,11 +317,32 @@
             type="button"
             aria-label="戻る">×</button>
 
+
     <div class="clock-mode-content">
       <p id="clock-mode-date"></p>
+
+      <!-- アナログ時計 -->
+      <div id="analog-clock" class="analog-clock" hidden>
+        <div class="analog-clock-face">
+          <div id="analog-markers"></div>
+
+          <span class="clock-number number-12">12</span>
+          <span class="clock-number number-3">3</span>
+          <span class="clock-number number-6">6</span>
+          <span class="clock-number number-9">9</span>
+
+          <div id="analog-hour-hand" class="clock-hand hour-hand"></div>
+          <div id="analog-minute-hand" class="clock-hand minute-hand"></div>
+          <div id="analog-second-hand" class="clock-hand second-hand"></div>
+          <div class="clock-center"></div>
+        </div>
+      </div>
+
+      <!-- デジタル時計 -->
       <p id="clock-mode-time">00:00:00</p>
 
       <div class="clock-mode-next">
+
         <p data-i18n="nextAlarm">次のアラーム</p>
         <strong id="clock-mode-next-alarm">設定なし</strong>
         <p id="clock-mode-countdown"></p>

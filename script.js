@@ -113,8 +113,71 @@ function findNextAlarm() {
 
 
 
+
+function setupAnalogClock() {
+  // 時計専用モードとホーム画面の両方に目盛りを作成
+  ["analog-markers", "home-analog-markers"].forEach(id => {
+    const markers = $(id);
+    markers.innerHTML = "";
+
+    for (let i = 0; i < 60; i++) {
+      const marker = document.createElement("div");
+      marker.className = i % 5 === 0
+        ? "clock-marker hour-marker"
+        : "clock-marker";
+
+      marker.style.transform =
+        `translate(-50%, -50%) rotate(${i * 6}deg)`;
+
+      markers.appendChild(marker);
+    }
+  });
+}
+
+function updateAnalogClock(now = new Date()) {
+  const hours = now.getHours() % 12;
+  const minutes = now.getMinutes();
+  const seconds = now.getSeconds();
+
+  const hourAngle = hours * 30 + minutes * 0.5;
+  const minuteAngle = minutes * 6 + seconds * 0.1;
+  const secondAngle = seconds * 6;
+
+  // 時計専用モードとホーム画面の針を更新
+  ["", "home-"].forEach(prefix => {
+    $(prefix + "analog-hour-hand").style.transform =
+      `translateX(-50%) rotate(${hourAngle}deg)`;
+
+    $(prefix + "analog-minute-hand").style.transform =
+      `translateX(-50%) rotate(${minuteAngle}deg)`;
+
+    $(prefix + "analog-second-hand").style.transform =
+      `translateX(-50%) rotate(${secondAngle}deg)`;
+  });
+}
+
+function applyClockDisplay() {
+  // 時計専用モード
+  const mode = appSettings.clockDisplay;
+
+  $("analog-clock").hidden = mode === "digital";
+  $("clock-mode-time").hidden = mode === "analog";
+
+  // ホーム画面
+  const homeMode = appSettings.homeClockDisplay;
+
+  $("home-analog-clock").hidden = homeMode === "digital";
+  $("current-time").hidden = homeMode === "analog";
+
+  // 秒針の表示
+  $("analog-second-hand").hidden = !appSettings.showSeconds;
+  $("home-analog-second-hand").hidden = !appSettings.showSeconds;
+}
+
 function updateClock() {
   const now = new Date();
+
+  updateAnalogClock(now);
 
   const locale = appSettings.language === "en"
     ? "en-US"
@@ -893,7 +956,9 @@ const DEFAULT_SETTINGS = {
   accent: "blue",
   background: "default",
   timeFormat: "24",
-  showSeconds: true
+  showSeconds: true,
+  clockDisplay: "digital",
+  homeClockDisplay: "digital"
 };
 
 
@@ -1030,29 +1095,33 @@ const TRANSLATIONS = {
 
 
 ja: {
-  backgroundTheme: "背景テーマ",
-  backgroundDefault: "標準（表示モードに合わせる）",
-  backgroundDark: "ダーク系",
-  backgroundLight: "ライト系",
-  mauve: "モーヴグレー",
-  smokyBlue: "スモーキーブルー",
-  espresso: "エスプレッソ",
-  olive: "ダークオリーブ",
-  wine: "ワインベルベット",
-  charcoal: "チャコールラテ",
-  oatmeal: "オートミール",
-  lilac: "ダスティライラック",
-  mistBlue: "ミストブルー",
-  pistachio: "ピスタチオミルク",
-  rose: "ローズミルク",
-  greige: "フレンチグレージュ",
-  clockSettings: "時計設定",
-  timeFormat: "時刻表示形式",
-  showSeconds: "秒を表示する",
-  clockMode: "時計専用モード",
-  back: "戻る",
-  settings: "設定",
-
+    backgroundTheme: "背景テーマ",
+    backgroundDefault: "標準（表示モードに合わせる）",
+    backgroundDark: "ダーク系",
+    backgroundLight: "ライト系",
+    mauve: "モーヴグレー",
+    smokyBlue: "スモーキーブルー",
+    espresso: "エスプレッソ",
+    olive: "ダークオリーブ",
+    wine: "ワインベルベット",
+    charcoal: "チャコールラテ",
+    oatmeal: "オートミール",
+    lilac: "ダスティライラック",
+    mistBlue: "ミストブルー",
+    pistachio: "ピスタチオミルク",
+    rose: "ローズミルク",
+    greige: "フレンチグレージュ",
+    clockSettings: "時計設定",
+    timeFormat: "時刻表示形式",
+    showSeconds: "秒を表示する",
+    clockMode: "時計専用モード",
+    clockDisplay: "時計専用モードの表示",
+    homeClockDisplay: "ホーム画面の時計表示",
+    clockDigital: "デジタル",
+    clockAnalog: "アナログ",
+    clockBoth: "両方",
+    back: "戻る",
+    settings: "設定",
     appearance: "外観",
     theme: "テーマ",
     accent: "アクセントカラー",
@@ -1132,6 +1201,11 @@ ja: {
     timeFormat: "Time format",
     showSeconds: "Show seconds",
     clockMode: "Clock mode",
+    clockDisplay: "Clock mode display",
+    homeClockDisplay: "Home clock display",
+    clockDigital: "Digital",
+    clockAnalog: "Analog",
+    clockBoth: "Both",
     back: "Back",
     settings: "Settings",
     appearance: "Appearance",
@@ -1349,6 +1423,14 @@ function applyLanguage() {
     $("edit-sound").options[index].textContent = t(key);
   });
 
+  ["clock-display-select", "home-clock-display-select"]
+    .forEach(id => {
+      ["clockDigital", "clockAnalog", "clockBoth"]
+        .forEach((key, index) => {
+          $(id).options[index].textContent = t(key);
+        });
+    });
+
   // スヌーズ間隔の表示
   [5, 10, 15].forEach((minutes, index) => {
     $("edit-snooze-minutes").options[index].textContent =
@@ -1385,6 +1467,9 @@ function applySettings() {
   // 時計の設定
   $("time-format-select").value = appSettings.timeFormat;
   $("show-seconds").checked = appSettings.showSeconds;
+  $("clock-display-select").value = appSettings.clockDisplay;
+
+  applyClockDisplay();
 
   $("clock-mode-btn").title = t("clockMode");
   $("clock-mode-btn").setAttribute(
@@ -1432,6 +1517,9 @@ window.matchMedia("(prefers-color-scheme: dark)")
   });
 
 
+// ページ起動時に文字盤を生成
+setupAnalogClock();
+
 // ページ起動時に保存済み設定を反映
 applySettings();
 
@@ -1450,6 +1538,23 @@ $("time-format-select").addEventListener("change", () => {
 $("show-seconds").addEventListener("change", () => {
   appSettings.showSeconds = $("show-seconds").checked;
   saveAppSettings();
+  applyClockDisplay();
+  updateClock();
+});
+
+// 時計専用モードの表示切り替え
+$("clock-display-select").addEventListener("change", () => {
+  appSettings.clockDisplay = $("clock-display-select").value;
+  saveAppSettings();
+  applyClockDisplay();
+  updateClock();
+});
+
+// ホーム画面の時計表示切り替え
+$("home-clock-display-select").addEventListener("change", () => {
+  appSettings.homeClockDisplay = $("home-clock-display-select").value;
+  saveAppSettings();
+  applyClockDisplay();
   updateClock();
 });
 
