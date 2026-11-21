@@ -26,16 +26,16 @@
         <p id="current-date"></p>
         <p id="current-time">00:00:00</p>
         <div class="next-alarm-info">
-          <p>次のアラーム</p>
+          <p data-i18n="nextAlarm">次のアラーム</p>
           <strong id="next-alarm-text">設定なし</strong>
           <p id="next-alarm-countdown"></p>
         </div>
       </section>
 
       <div class="section-header">
-        <h2>アラーム</h2>
-        <button id="add-alarm-btn" type="button">
-          ＋ 追加
+        <h2 data-i18n="alarms">アラーム</h2>
+        <button id="add-btn" type="button" data-i18n="add">
+        ＋ 追加
         </button>
       </div>
 
@@ -52,57 +52,116 @@
       </header>
 
       <div class="edit-form">
-        <label for="edit-name">アラーム名</label>
+        <label data-i18n="alarmName">アラーム名</label>
         <input id="edit-name" type="text"
                maxlength="40"
                placeholder="例：仕事">
 
-        <label for="edit-time">時刻</label>
+        <label data-i18n="time">時刻</label>
         <input id="edit-time" type="time" required>
 
-        <label>繰り返し</label>
+        <label data-i18n="repeat">繰り返し</label>
         <div id="edit-weekdays"
              class="weekday-selector"></div>
 
-        <label for="edit-sound">アラーム音</label>
+        <label data-i18n="sound">アラーム音</label>
         <div class="sound-row">
           <select id="edit-sound">
             <option value="bell">ベル</option>
             <option value="digital">デジタル</option>
             <option value="gentle">やさしい音</option>
           </select>
-          <button id="preview-btn" type="button">
+            <button id="preview-btn" type="button" data-i18n="preview">
             ▶ 試聴
-          </button>
+            </button>
         </div>
 
-        <button id="save-alarm-btn"
-                class="primary-btn" type="button">
-          保存
-        </button>
+            <button id="save-alarm-btn"
+                    class="primary-btn" type="button"
+                    data-i18n="save">
+            保存
+            </button>
 
-        <div id="edit-actions" class="edit-actions">
-          <button id="duplicate-btn"
-                  type="button">複製</button>
-          <button id="delete-btn"
-                  type="button">削除</button>
-        </div>
+            <div id="edit-actions" class="edit-actions">
+            <button id="duplicate-btn"
+                    type="button"
+                    data-i18n="duplicate">複製</button>
+
+            <button id="delete-btn"
+                    type="button"
+                    data-i18n="delete">削除</button>
+            </div>
       </div>
     </section>
 
-    <!-- 設定画面：次STEPで拡張 -->
-    <section id="settings-screen" hidden>
-      <header class="app-header">
-        <button id="settings-back-btn"
-                class="icon-btn" type="button">←</button>
-        <h2>設定</h2>
-        <span></span>
-      </header>
 
-      <label class="setting-row">
-        <span>次のアラームへ自動スクロール</span>
-        <input id="auto-scroll" type="checkbox">
-      </label>
+<!-- 設定画面 -->
+<section id="settings-screen" hidden>
+  <header class="app-header">
+    <button id="settings-back-btn"
+            class="icon-btn" type="button">←</button>
+    <h2 data-i18n="settings">設定</h2>
+    <span></span>
+  </header>
+
+  <div class="settings-group">
+    <h3 data-i18n="appearance">外観</h3>
+
+    <label for="theme-select" data-i18n="theme">
+      テーマ
+    </label>
+    <select id="theme-select">
+      <option value="system">端末設定に合わせる</option>
+      <option value="light">ライト</option>
+      <option value="dark">ダーク</option>
+    </select>
+
+    <label for="accent-select" data-i18n="accent">
+      アクセントカラー
+    </label>
+    <select id="accent-select">
+      <option value="blue">ブルー</option>
+      <option value="teal">ティール</option>
+      <option value="purple">パープル</option>
+      <option value="pink">ピンク</option>
+      <option value="orange">オレンジ</option>
+    </select>
+
+    <label for="font-select" data-i18n="font">
+      フォント
+    </label>
+    <select id="font-select">
+      <option value="sans">Noto Sans JP</option>
+      <option value="rounded">M PLUS Rounded 1c</option>
+      <option value="serif">Noto Serif JP</option>
+      <option value="mono">Roboto Mono</option>
+    </select>
+  </div>
+
+  <div class="settings-group">
+    <h3 data-i18n="languageHeading">言語</h3>
+
+    <label for="language-select" data-i18n="language">
+      表示言語
+    </label>
+    <select id="language-select">
+      <option value="ja">日本語</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+
+  <div class="settings-group">
+    <h3 data-i18n="alarmSettings">アラーム設定</h3>
+
+    <label class="setting-row">
+      <span data-i18n="autoScroll">
+        次のアラームへ自動スクロール
+      </span>
+      <input id="auto-scroll" type="checkbox">
+    </label>
+  </div>
+</section>
+
     </section>
   </main>
 
@@ -112,9 +171,9 @@
       <p>アラーム</p>
       <h2 id="ringing-time">07:00</h2>
       <p id="ringing-name"></p>
-      <button id="stop-alarm-btn" type="button">
+        <button id="stop-alarm-btn" type="button" data-i18n="stop">
         ■ 停止
-      </button>
+        </button>
     </div>
   </div>
 </body>

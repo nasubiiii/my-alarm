@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap");
 
 * {
   box-sizing: border-box;
@@ -270,4 +271,130 @@ select:focus-visible {
   background: #dc2626;
   padding: 18px 32px;
   margin-top: 24px;
+}
+
+/* =========================
+   STEP 2：テーマ・フォント
+========================= */
+
+
+:root {
+  --bg: #111827;
+  --surface: #1f2937;
+  --text: #f9fafb;
+  --muted: #9ca3af;
+  --border: #374151;
+  --accent: #2563eb;
+  --accent-soft: #1e3a5f;
+  --font: "Noto Sans JP", sans-serif;
+}
+
+:root[data-theme="light"] {
+  --bg: #f5f6fa;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #64748b;
+  --border: #dce1e9;
+  --accent-soft: #e8efff;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+.clock-card {
+  background: var(--surface);
+}
+
+#current-date,
+.next-alarm-info p,
+.alarm-days {
+  color: var(--muted);
+}
+
+.next-alarm-info,
+.alarm-item {
+  border-color: var(--border);
+}
+
+#add-alarm-btn,
+.primary-btn,
+.weekday-btn.selected {
+  background: var(--accent);
+  color: white;
+}
+
+.alarm-item.next-alarm {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.alarm-toggle,
+.setting-row input {
+  accent-color: var(--accent);
+}
+
+.edit-form input,
+.edit-form select,
+.settings-group select {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-group h3 {
+  font-size: 17px;
+  margin: 0 0 8px;
+}
+
+.settings-group label {
+  font-size: 14px;
+}
+
+.settings-group select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.settings-group .setting-row {
+  padding: 8px 0;
+}
+
+.ringing-panel {
+  background: var(--bg);
+}
+
+.ringing-content {
+  color: var(--text);
+}
+
+/* ライトモード用の細部調整 */
+:root[data-theme="light"] .alarm-item.disabled .alarm-time {
+  color: #94a3b8;
+}
+
+:root[data-theme="light"] .icon-btn {
+  color: var(--text);
+}
+
+:root[data-theme="light"] .weekday-btn {
+  color: var(--text);
+  background: #e2e8f0;
+}
+
+:root[data-theme="light"] .weekday-btn.selected {
+  background: var(--accent);
+  color: white;
 }

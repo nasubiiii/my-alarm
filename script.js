@@ -37,12 +37,13 @@ function showScreen(screen) {
 }
 
 function formatDays(days) {
-  if (days.length === 7) return "毎日";
-  if (days.length === 0) return "1回のみ";
+  if (days.length === 7) return t("everyday");
+  if (days.length === 0) return t("once");
+
   return DISPLAY_DAYS
     .filter(day => days.includes(day))
-    .map(day => DAY_NAMES[day])
-    .join("・");
+    .map(day => t("weekdays")[day])
+    .join(appSettings.language === "ja" ? "・" : ", ");
 }
 
 function getNextAlarmDate(alarm, now = new Date()) {
@@ -85,16 +86,21 @@ function findNextAlarm() {
   return result;
 }
 
+
 function updateClock() {
   const now = new Date();
+  const locale = appSettings.language === "en" ? "en-US" : "ja-JP";
 
   $("current-time").textContent =
-    now.toLocaleTimeString("ja-JP", {
+    now.toLocaleTimeString(locale, {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
       hour12: false
     });
 
   $("current-date").textContent =
-    now.toLocaleDateString("ja-JP", {
+    now.toLocaleDateString(locale, {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -104,27 +110,32 @@ function updateClock() {
   const next = findNextAlarm();
 
   if (!next) {
-    $("next-alarm-text").textContent = "設定なし";
+    $("next-alarm-text").textContent = t("none");
     $("next-alarm-countdown").textContent = "";
     return;
   }
 
   const diff = Math.max(0, next.date - now);
-  const hours = Math.floor(diff / 3600000);
-  const minutes = Math.ceil((diff % 3600000) / 60000);
+  const totalMinutes = Math.ceil(diff / 60000);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
 
   $("next-alarm-text").textContent =
-    next.date.toLocaleString("ja-JP", {
+    next.date.toLocaleString(locale, {
       month: "numeric",
       day: "numeric",
       weekday: "short",
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
+      hour12: false
     });
 
   $("next-alarm-countdown").textContent =
-    `あと${hours}時間${minutes}分`;
+    appSettings.language === "en"
+      ? `In ${hours}h ${minutes}m`
+      : `あと${hours}時間${minutes}分`;
 }
+
 
 function renderAlarms() {
   const list = $("alarm-list");
@@ -135,7 +146,7 @@ function renderAlarms() {
   const next = findNextAlarm();
 
   if (alarms.length === 0) {
-    list.textContent = "まだアラームがありません";
+     list.textContent = t("empty");
     return;
   }
 
@@ -161,7 +172,7 @@ function renderAlarms() {
 
     const name = document.createElement("span");
     name.className = "alarm-name";
-    name.textContent = alarm.name || "アラーム";
+    name.textContent = alarm.name || t("defaultAlarm");
 
     const days = document.createElement("span");
     days.className = "alarm-days";
@@ -209,7 +220,7 @@ function renderWeekdays() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "weekday-btn";
-    button.textContent = DAY_NAMES[day];
+    button.textContent = t("weekdays")[day];
 
     if (selectedDays.includes(day)) {
       button.classList.add("selected");
@@ -233,7 +244,7 @@ function openEditor(id = null) {
   const alarm = alarms.find(a => a.id === id);
 
   $("edit-title").textContent =
-    alarm ? "アラーム編集" : "アラーム追加";
+  alarm ? t("editAlarm") : t("addAlarm");
 
   $("edit-name").value = alarm?.name || "";
   $("edit-time").value = alarm?.time || "07:00";
@@ -253,7 +264,7 @@ function saveEditedAlarm() {
   const time = $("edit-time").value;
 
   if (!time) {
-    alert("時刻を入力してください");
+    alert(t("enterTime"));
     return;
   }
 
@@ -290,8 +301,8 @@ function duplicateAlarm() {
     ...alarm,
     id: crypto.randomUUID(),
     name: alarm.name
-      ? alarm.name + "（コピー）"
-      : "アラーム（コピー）"
+    ? alarm.name + t("copied")
+    : t("defaultAlarm") + t("copied")
   };
 
   alarms.push(copy);
@@ -303,7 +314,7 @@ function duplicateAlarm() {
 
 function deleteAlarm() {
   if (!editingId) return;
-  if (!confirm("このアラームを削除しますか？")) return;
+  if (!confirm(t("confirmDelete"))) return;
 
   alarms = alarms.filter(a => a.id !== editingId);
   saveAlarms();
@@ -451,7 +462,7 @@ function scrollToNextAlarm() {
    ボタン操作
 ========================= */
 
-$("add-alarm-btn").addEventListener("click", () => openEditor());
+$("add-btn").addEventListener("click", () => openEditor());
 $("back-btn").addEventListener("click", () => showScreen("home"));
 $("save-alarm-btn").addEventListener("click", saveEditedAlarm);
 $("duplicate-btn").addEventListener("click", duplicateAlarm);
@@ -476,9 +487,6 @@ $("stop-alarm-btn").addEventListener("click", stopRinging);
    初期化
 ========================= */
 
-renderAlarms();
-updateClock();
-
 setInterval(updateClock, 1000);
 setInterval(checkAlarms, 1000);
 
@@ -493,3 +501,249 @@ if ("serviceWorker" in navigator) {
       .catch(console.error);
   });
 }
+
+/* =========================
+   STEP 2：表示設定
+========================= */
+
+const DEFAULT_SETTINGS = {
+  theme: "dark",
+  language: "ja",
+  font: "sans",
+  accent: "blue"
+};
+
+let appSettings;
+
+try {
+  appSettings = {
+    ...DEFAULT_SETTINGS,
+    ...JSON.parse(localStorage.getItem("myAlarmSettings") || "{}")
+  };
+} catch {
+  appSettings = { ...DEFAULT_SETTINGS };
+}
+
+const ACCENT_COLORS = {
+  blue: "#2563eb",
+  teal: "#0d9488",
+  purple: "#9333ea",
+  pink: "#e11d48",
+  orange: "#d97706"
+};
+
+const FONTS = {
+  sans: '"Noto Sans JP", sans-serif',
+  rounded: '"M PLUS Rounded 1c", sans-serif',
+  serif: '"Noto Serif JP", serif',
+  mono: '"Roboto Mono", "Noto Sans JP", monospace'
+};
+
+const TRANSLATIONS = {
+  ja: {
+    settings: "設定",
+    appearance: "外観",
+    theme: "テーマ",
+    accent: "アクセントカラー",
+    font: "フォント",
+    languageHeading: "言語",
+    language: "表示言語",
+    alarmSettings: "アラーム設定",
+    autoScroll: "次のアラームへ自動スクロール",
+    alarms: "アラーム",
+    nextAlarm: "次のアラーム",
+    add: "＋ 追加",
+    alarmName: "アラーム名",
+    time: "時刻",
+    repeat: "繰り返し",
+    sound: "アラーム音",
+    preview: "▶ 試聴",
+    save: "保存",
+    duplicate: "複製",
+    delete: "削除",
+    stop: "■ 停止",
+    editAlarm: "アラーム編集",
+    addAlarm: "アラーム追加",
+    defaultAlarm: "アラーム",
+    everyday: "毎日",
+    once: "1回のみ",
+    none: "設定なし",
+    empty: "まだアラームがありません",
+    hours: "時間",
+    minutes: "分",
+    remaining: "あと",
+    confirmDelete: "このアラームを削除しますか？",
+    enterTime: "時刻を入力してください",
+    copied: "（コピー）",
+    bell: "ベル",
+    digital: "デジタル",
+    gentle: "やさしい音",
+    system: "端末設定に合わせる",
+    light: "ライト",
+    dark: "ダーク",
+    blue: "ブルー",
+    teal: "ティール",
+    purple: "パープル",
+    pink: "ピンク",
+    orange: "オレンジ",
+    weekdays: ["日", "月", "火", "水", "木", "金", "土"]
+  },
+  en: {
+    settings: "Settings",
+    appearance: "Appearance",
+    theme: "Theme",
+    accent: "Accent color",
+    font: "Font",
+    languageHeading: "Language",
+    language: "Display language",
+    alarmSettings: "Alarm settings",
+    autoScroll: "Auto-scroll to next alarm",
+    alarms: "Alarms",
+    nextAlarm: "Next alarm",
+    add: "+ Add",
+    alarmName: "Alarm name",
+    time: "Time",
+    repeat: "Repeat",
+    sound: "Alarm sound",
+    preview: "▶ Preview",
+    save: "Save",
+    duplicate: "Duplicate",
+    delete: "Delete",
+    stop: "■ Stop",
+    editAlarm: "Edit alarm",
+    addAlarm: "Add alarm",
+    defaultAlarm: "Alarm",
+    everyday: "Every day",
+    once: "Once",
+    none: "Not set",
+    empty: "No alarms yet",
+    hours: "h",
+    minutes: "m",
+    remaining: "In ",
+    confirmDelete: "Delete this alarm?",
+    enterTime: "Please select a time.",
+    copied: " (copy)",
+    bell: "Bell",
+    digital: "Digital",
+    gentle: "Gentle",
+    system: "Use device settings",
+    light: "Light",
+    dark: "Dark",
+    blue: "Blue",
+    teal: "Teal",
+    purple: "Purple",
+    pink: "Pink",
+    orange: "Orange",
+    weekdays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  }
+};
+
+function t(key) {
+  return TRANSLATIONS[appSettings.language][key] || key;
+}
+
+function saveAppSettings() {
+  localStorage.setItem(
+    "myAlarmSettings",
+    JSON.stringify(appSettings)
+  );
+}
+
+function applyTheme() {
+  const theme = appSettings.theme === "system"
+    ? (window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark" : "light")
+    : appSettings.theme;
+
+  document.documentElement.dataset.theme = theme;
+
+  document.documentElement.style.setProperty(
+    "--accent",
+    ACCENT_COLORS[appSettings.accent] || ACCENT_COLORS.blue
+  );
+
+  document.documentElement.style.setProperty(
+    "--font",
+    FONTS[appSettings.font] || FONTS.sans
+  );
+
+  document.querySelector('meta[name="theme-color"]')
+    ?.setAttribute(
+      "content",
+      theme === "dark" ? "#111827" : "#f5f6fa"
+    );
+}
+
+function applyLanguage() {
+  document.documentElement.lang = appSettings.language;
+
+  document.querySelectorAll("[data-i18n]").forEach(element => {
+    element.textContent = t(element.dataset.i18n);
+  });
+
+  const selects = {
+    "theme-select": ["system", "light", "dark"],
+    "accent-select": ["blue", "teal", "purple", "pink", "orange"]
+  };
+
+  Object.entries(selects).forEach(([id, keys]) => {
+    const select = document.getElementById(id);
+
+    keys.forEach((key, index) => {
+      select.options[index].textContent = t(key);
+    });
+  });
+
+  ["bell", "digital", "gentle"].forEach((key, index) => {
+    $("edit-sound").options[index].textContent = t(key);
+  });
+
+  $("edit-name").placeholder =
+    appSettings.language === "ja"
+      ? "例：仕事"
+      : "e.g. Work";
+
+  $("edit-title").textContent =
+    t(editingId === null ? "addAlarm" : "editAlarm");
+
+  $("ringing-panel").querySelector("p").textContent =
+    t("defaultAlarm");
+}
+
+function applySettings() {
+  applyTheme();
+  applyLanguage();
+
+  $("theme-select").value = appSettings.theme;
+  $("language-select").value = appSettings.language;
+  $("font-select").value = appSettings.font;
+  $("accent-select").value = appSettings.accent;
+
+  renderAlarms();
+  updateClock();
+
+  if (!$("edit-screen").hidden) {
+    renderWeekdays();
+  }
+}
+
+["theme", "language", "font", "accent"].forEach(key => {
+  const select = $(key + "-select");
+
+  select.addEventListener("change", () => {
+    appSettings[key] = select.value;
+    saveAppSettings();
+    applySettings();
+  });
+});
+
+// OSのテーマが変わった場合
+window.matchMedia("(prefers-color-scheme: dark)")
+  .addEventListener("change", () => {
+    if (appSettings.theme === "system") {
+      applyTheme();
+    }
+  });
+
+// ページ起動時に保存済み設定を反映
+applySettings();
