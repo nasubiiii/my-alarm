@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>My Alarm</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#111827">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <h1>My Alarm</h1>
+    <p class="subtitle">自分専用の時計アプリ</p>
+
+    <div class="clock">
+      <p id="current-time">00:00:00</p>
+      <p id="current-date"></p>
+    </div>
+
+
+
+<div class="alarm-heading">
+  <h2>アラーム</h2>
+  <button id="settings-btn" type="button">⚙ 設定</button>
+</div>
+
+<div id="settings-panel" class="settings-panel" hidden>
+  <label class="setting-row">
+    <span>次のアラームへ自動スクロール</span>
+    <input type="checkbox" id="auto-scroll" checked>
+  </label>
+  <p class="setting-note">
+    ONの場合、起動時に次に鳴るアラームへ移動します。
+  </p>
+</div>
+
+
+<div class="add-alarm">
+  <input type="time" id="alarm-time" value="07:00">
+  <button id="add-alarm-btn">＋ 追加</button>
+</div>
+
+<div id="alarm-list">
+  <p>まだアラームがありません</p>
+</div>
+
+<!-- アラーム鳴動時の画面 -->
+<div id="ringing-panel" class="ringing-panel" hidden>
+  <div class="ringing-content">
+    <p>アラーム</p>
+    <h2 id="ringing-time">07:00</h2>
+    <p>アラームが鳴っています</p>
+
+    <button id="stop-alarm-btn" type="button">
+      ■ アラームを停止
+    </button>
+  </div>
+</div>
+
+  </main>
+</body>
+</html>
