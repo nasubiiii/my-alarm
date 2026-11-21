@@ -542,14 +542,17 @@ if ("serviceWorker" in navigator) {
 ========================= */
 
 
+
 const DEFAULT_SETTINGS = {
   theme: "dark",
   language: "ja",
   font: "sans",
   accent: "blue",
+  background: "default",
   timeFormat: "24",
   showSeconds: true
 };
+
 
 
 let appSettings;
@@ -563,6 +566,7 @@ try {
   appSettings = { ...DEFAULT_SETTINGS };
 }
 
+
 const ACCENT_COLORS = {
   blue: "#2563eb",
   teal: "#0d9488",
@@ -570,6 +574,107 @@ const ACCENT_COLORS = {
   pink: "#e11d48",
   orange: "#d97706"
 };
+
+// 背景テーマ12種類
+const BACKGROUND_THEMES = {
+  mauve: {
+    mode: "dark",
+    bg: "#29252F",
+    surface: "#393440",
+    text: "#F4EDF3",
+    muted: "#BDB1C2",
+    border: "#514858"
+  },
+  smokyBlue: {
+    mode: "dark",
+    bg: "#222E3A",
+    surface: "#344454",
+    text: "#EFF4F7",
+    muted: "#B4C4D0",
+    border: "#506273"
+  },
+  espresso: {
+    mode: "dark",
+    bg: "#29231F",
+    surface: "#3B322C",
+    text: "#F8F0E6",
+    muted: "#C8B6A5",
+    border: "#594B41"
+  },
+  olive: {
+    mode: "dark",
+    bg: "#272D27",
+    surface: "#384238",
+    text: "#F0F2E9",
+    muted: "#B6C2B1",
+    border: "#536153"
+  },
+  wine: {
+    mode: "dark",
+    bg: "#302329",
+    surface: "#46323B",
+    text: "#FAEDF1",
+    muted: "#D1B6C0",
+    border: "#654852"
+  },
+  charcoal: {
+    mode: "dark",
+    bg: "#2D2C2A",
+    surface: "#403E3A",
+    text: "#F7F4EF",
+    muted: "#C5BFB6",
+    border: "#5C5852"
+  },
+  oatmeal: {
+    mode: "light",
+    bg: "#F3EFE7",
+    surface: "#FFFCF7",
+    text: "#443C36",
+    muted: "#857A70",
+    border: "#DED4C8"
+  },
+  lilac: {
+    mode: "light",
+    bg: "#EFEBF2",
+    surface: "#FCF9FD",
+    text: "#44394C",
+    muted: "#8C7F94",
+    border: "#D9CEDF"
+  },
+  mistBlue: {
+    mode: "light",
+    bg: "#E8EEF1",
+    surface: "#F9FBFC",
+    text: "#344651",
+    muted: "#788D99",
+    border: "#CDDCE4"
+  },
+  pistachio: {
+    mode: "light",
+    bg: "#EBEEE4",
+    surface: "#FAFBF6",
+    text: "#3D493D",
+    muted: "#7D8C7B",
+    border: "#D0DBCA"
+  },
+  rose: {
+    mode: "light",
+    bg: "#F4EAEB",
+    surface: "#FFFAFA",
+    text: "#513F46",
+    muted: "#99828B",
+    border: "#E6D1D8"
+  },
+  greige: {
+    mode: "light",
+    bg: "#EBE7E1",
+    surface: "#F9F7F3",
+    text: "#47433F",
+    muted: "#89837D",
+    border: "#D8D0C7"
+  }
+};
+
 
 const FONTS = {
   sans: '"Noto Sans JP", sans-serif',
@@ -580,7 +685,24 @@ const FONTS = {
 
 const TRANSLATIONS = {
 
+
 ja: {
+  backgroundTheme: "背景テーマ",
+  backgroundDefault: "標準（表示モードに合わせる）",
+  backgroundDark: "ダーク系",
+  backgroundLight: "ライト系",
+  mauve: "モーヴグレー",
+  smokyBlue: "スモーキーブルー",
+  espresso: "エスプレッソ",
+  olive: "ダークオリーブ",
+  wine: "ワインベルベット",
+  charcoal: "チャコールラテ",
+  oatmeal: "オートミール",
+  lilac: "ダスティライラック",
+  mistBlue: "ミストブルー",
+  pistachio: "ピスタチオミルク",
+  rose: "ローズミルク",
+  greige: "フレンチグレージュ",
   clockSettings: "時計設定",
   timeFormat: "時刻表示形式",
   showSeconds: "秒を表示する",
@@ -635,7 +757,24 @@ ja: {
     weekdays: ["日", "月", "火", "水", "木", "金", "土"]
   },
 
+
     en: {
+    backgroundTheme: "Background theme",
+    backgroundDefault: "Default (follow appearance)",
+    backgroundDark: "Dark themes",
+    backgroundLight: "Light themes",
+    mauve: "Mauve Gray",
+    smokyBlue: "Smoky Blue",
+    espresso: "Espresso",
+    olive: "Dark Olive",
+    wine: "Wine Velvet",
+    charcoal: "Charcoal Latte",
+    oatmeal: "Oatmeal",
+    lilac: "Dusty Lilac",
+    mistBlue: "Mist Blue",
+    pistachio: "Pistachio Milk",
+    rose: "Rose Milk",
+    greige: "French Greige",
     clockSettings: "Clock settings",
     timeFormat: "Time format",
     showSeconds: "Show seconds",
@@ -701,30 +840,91 @@ function saveAppSettings() {
   );
 }
 
+
 function applyTheme() {
-  const theme = appSettings.theme === "system"
-    ? (window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark" : "light")
+  const root = document.documentElement;
+  const style = root.style;
+
+  // ライト・ダーク・端末設定
+  const systemDark = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+
+  const baseMode = appSettings.theme === "system"
+    ? (systemDark ? "dark" : "light")
     : appSettings.theme;
 
-  document.documentElement.dataset.theme = theme;
+  // 選択された背景テーマ
+  const background =
+    BACKGROUND_THEMES[appSettings.background];
 
-  document.documentElement.style.setProperty(
-    "--accent",
-    ACCENT_COLORS[appSettings.accent] || ACCENT_COLORS.blue
+  // 背景テーマを選んだ場合はその明暗を優先
+  const mode = background ? background.mode : baseMode;
+  root.dataset.theme = mode;
+
+  // 背景テーマの配色を適用
+  const colors = background || (
+    mode === "dark"
+      ? {
+          bg: "#111827",
+          surface: "#1f2937",
+          text: "#f9fafb",
+          muted: "#9ca3af",
+          border: "#374151"
+        }
+      : {
+          bg: "#f5f6fa",
+          surface: "#ffffff",
+          text: "#111827",
+          muted: "#64748b",
+          border: "#dce1e9"
+        }
   );
 
-  document.documentElement.style.setProperty(
+  style.setProperty("--bg", colors.bg);
+  style.setProperty("--surface", colors.surface);
+  style.setProperty("--text", colors.text);
+  style.setProperty("--muted", colors.muted);
+  style.setProperty("--border", colors.border);
+
+  // アクセントカラーは従来どおり独立
+  const accent =
+    ACCENT_COLORS[appSettings.accent] ||
+    ACCENT_COLORS.blue;
+
+  style.setProperty("--accent", accent);
+
+  // 選択中アラームの背景色
+  // アクセント色を薄く重ねる
+  style.setProperty(
+    "--accent-soft",
+    mode === "dark"
+      ? "color-mix(in srgb, var(--accent) 18%, var(--surface))"
+      : "color-mix(in srgb, var(--accent) 10%, var(--surface))"
+  );
+
+  // 通常ボタンの配色
+  style.setProperty(
+    "--button-bg",
+    mode === "dark" ? colors.surface : colors.border
+  );
+
+  style.setProperty(
+    "--button-text",
+    colors.text
+  );
+
+  // フォント設定は維持
+  style.setProperty(
     "--font",
     FONTS[appSettings.font] || FONTS.sans
   );
 
+  // ブラウザのテーマカラー
   document.querySelector('meta[name="theme-color"]')
-    ?.setAttribute(
-      "content",
-      theme === "dark" ? "#111827" : "#f5f6fa"
-    );
+    ?.setAttribute("content", colors.bg);
 }
+
 
 function applyLanguage() {
   document.documentElement.lang = appSettings.language;
@@ -732,6 +932,7 @@ function applyLanguage() {
   document.querySelectorAll("[data-i18n]").forEach(element => {
     element.textContent = t(element.dataset.i18n);
   });
+
 
   const selects = {
     "theme-select": ["system", "light", "dark"],
@@ -746,9 +947,44 @@ function applyLanguage() {
     });
   });
 
+
+  // 背景テーマの選択肢を翻訳
+  const backgroundSelect = $("background-select");
+
+  backgroundSelect.options[0].textContent =
+    t("backgroundDefault");
+
+  const backgroundNames = [
+    "mauve",
+    "smokyBlue",
+    "espresso",
+    "olive",
+    "wine",
+    "charcoal",
+    "oatmeal",
+    "lilac",
+    "mistBlue",
+    "pistachio",
+    "rose",
+    "greige"
+  ];
+
+  backgroundNames.forEach((key, index) => {
+    backgroundSelect.options[index + 1].textContent = t(key);
+  });
+
+  backgroundSelect.querySelector(
+    '[data-group="dark"]'
+  ).label = t("backgroundDark");
+
+  backgroundSelect.querySelector(
+    '[data-group="light"]'
+  ).label = t("backgroundLight");
+
   ["bell", "digital", "gentle"].forEach((key, index) => {
     $("edit-sound").options[index].textContent = t(key);
   });
+
 
   $("edit-name").placeholder =
     appSettings.language === "ja"
@@ -767,10 +1003,12 @@ function applySettings() {
   applyTheme();
   applyLanguage();
 
+
   $("theme-select").value = appSettings.theme;
   $("language-select").value = appSettings.language;
   $("font-select").value = appSettings.font;
   $("accent-select").value = appSettings.accent;
+  $("background-select").value = appSettings.background;
 
   // 時計の設定
   $("time-format-select").value = appSettings.timeFormat;
@@ -794,15 +1032,24 @@ function applySettings() {
 }
 
 
-["theme", "language", "font", "accent"].forEach(key => {
-  const select = $(key + "-select");
 
-  select.addEventListener("change", () => {
-    appSettings[key] = select.value;
+    ["theme", "language", "font", "accent"].forEach(key => {
+    const select = $(key + "-select");
+
+    select.addEventListener("change", () => {
+        appSettings[key] = select.value;
+        saveAppSettings();
+        applySettings();
+    });
+    });
+
+    // 背景テーマを変更したとき
+    $("background-select").addEventListener("change", () => {
+    appSettings.background = $("background-select").value;
     saveAppSettings();
     applySettings();
-  });
-});
+    });
+
 
 // OSのテーマが変わった場合
 window.matchMedia("(prefers-color-scheme: dark)")

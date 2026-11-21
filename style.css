@@ -278,6 +278,7 @@ select:focus-visible {
 ========================= */
 
 
+
 :root {
   --bg: #111827;
   --surface: #1f2937;
@@ -287,7 +288,10 @@ select:focus-visible {
   --accent: #2563eb;
   --accent-soft: #1e3a5f;
   --font: "Noto Sans JP", sans-serif;
+  --button-bg: #374151;
+  --button-text: #ffffff;
 }
+
 
 :root[data-theme="light"] {
   --bg: #f5f6fa;
@@ -474,4 +478,89 @@ body {
   #clock-mode-time {
     font-size: clamp(32px, 9vw, 48px);
   }
+}
+
+/* =========================
+   STEP 3追加：背景テーマ12種類
+========================= */
+
+/* 背景・文字色の切り替えを滑らかに */
+body,
+.clock-card,
+.alarm-item,
+.edit-form input,
+.edit-form select,
+.settings-group select,
+#clock-mode-screen {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* 通常のボタン */
+button:not(.primary-btn):not(#add-alarm-btn):not(.weekday-btn):not(.icon-btn):not(#delete-btn):not(#stop-alarm-btn) {
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+/* アイコンボタン */
+.icon-btn {
+  color: var(--text);
+}
+
+/* 選択されているアラーム */
+.alarm-item.next-alarm {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* 無効なアラーム */
+.alarm-item.disabled .alarm-time {
+  color: var(--muted);
+}
+
+/* 入力欄 */
+.edit-form input,
+.edit-form select,
+.settings-group select {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* 曜日選択ボタン */
+.weekday-btn {
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+.weekday-btn.selected,
+:root[data-theme="light"] .weekday-btn.selected {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* アラームON/OFF */
+.alarm-toggle,
+.setting-row input {
+  accent-color: var(--accent);
+}
+
+/* 時計専用モード */
+#clock-mode-screen {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* 背景テーマ選択欄 */
+#background-select {
+  cursor: pointer;
+}
+
+/* テーマに合わせたフォーカス表示 */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline-color: var(--accent);
 }
