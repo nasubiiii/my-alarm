@@ -37,6 +37,9 @@ let ringingStartedAt = 0;
 let soundGeneration = 0;
 let alarmVolumeNode = null;
 
+// 追加アラーム音の再生予約を管理
+let extraSoundNodes = [];
+
 const $ = id => document.getElementById(id);
 
 function saveAlarms() {
@@ -618,6 +621,24 @@ function playSound(type, volume = 0.2, generation = soundGeneration) {
     playTone(frequency, duration, toneVolume);
   };
 
+  // STEP 4-6：追加した7種類のアラーム音
+  const extraSounds = [
+    "classicBell",
+    "chime",
+    "piano",
+    "marimba",
+    "synth",
+    "pulse",
+    "alert"
+  ];
+
+  if (extraSounds.includes(type)) {
+    if (generation !== soundGeneration) return;
+
+    playExtraSound(type, volume);
+    return;
+  }
+
   if (type === "digital") {
     playIfCurrent(880, 0.15, volume);
     setTimeout(() => {
@@ -701,6 +722,112 @@ function stopAlarmVolume() {
 }
 
 
+function playExtraTone(
+  frequency,
+  duration,
+  volume = 0.2,
+  type = "sine",
+  delay = 0
+) {
+  const context = getAudioContext();
+
+  if (context.state !== "running") {
+    context.resume();
+  }
+
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const start = context.currentTime + delay;
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, start);
+
+  gain.gain.setValueAtTime(0.001, start);
+  gain.gain.exponentialRampToValueAtTime(
+    Math.max(0.001, volume),
+    start + 0.015
+  );
+  gain.gain.exponentialRampToValueAtTime(
+    0.001,
+    start + duration
+  );
+
+  oscillator.connect(gain);
+  gain.connect(alarmVolumeNode || context.destination);
+
+  // 停止時にまとめて止められるよう管理
+  extraSoundNodes.push(oscillator);
+
+  oscillator.onended = () => {
+    extraSoundNodes = extraSoundNodes.filter(
+      node => node !== oscillator
+    );
+    oscillator.disconnect();
+    gain.disconnect();
+  };
+
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.02);
+}
+
+// 追加した7種類のアラーム音
+function stopExtraSounds() {
+  extraSoundNodes.forEach(oscillator => {
+    try {
+      oscillator.stop();
+    } catch {
+      // すでに停止済みの場合は何もしない
+    }
+  });
+
+  extraSoundNodes = [];
+}
+function playExtraSound(type, volume = 0.2) {
+  switch (type) {
+    case "classicBell":
+      playExtraTone(1100, 0.35, volume, "square");
+      playExtraTone(880, 0.35, volume * 0.5, "sine", 0.4);
+      break;
+
+    case "chime":
+      playExtraTone(523.25, 0.8, volume, "sine");
+      playExtraTone(659.25, 0.8, volume, "sine", 0.25);
+      playExtraTone(783.99, 1.0, volume, "sine", 0.5);
+      break;
+
+    case "piano":
+      playExtraTone(261.63, 0.6, volume, "triangle");
+      playExtraTone(329.63, 0.6, volume, "triangle", 0.35);
+      playExtraTone(392.0, 0.8, volume, "triangle", 0.7);
+      break;
+
+    case "marimba":
+      playExtraTone(523.25, 0.22, volume, "sine");
+      playExtraTone(659.25, 0.22, volume, "sine", 0.25);
+      playExtraTone(783.99, 0.22, volume, "sine", 0.5);
+      playExtraTone(1046.5, 0.35, volume, "sine", 0.75);
+      break;
+
+    case "synth":
+      playExtraTone(440, 0.6, volume * 0.6, "sawtooth");
+      playExtraTone(660, 0.6, volume * 0.6, "sawtooth", 0.3);
+      playExtraTone(880, 0.8, volume * 0.6, "sawtooth", 0.6);
+      break;
+
+    case "pulse":
+      playExtraTone(880, 0.12, volume, "square");
+      playExtraTone(880, 0.12, volume, "square", 0.2);
+      playExtraTone(880, 0.12, volume, "square", 0.4);
+      break;
+
+    case "alert":
+      playExtraTone(900, 0.25, volume, "square");
+      playExtraTone(650, 0.25, volume, "square", 0.3);
+      playExtraTone(900, 0.25, volume, "square", 0.6);
+      break;
+  }
+}
+
 function startRinging(alarm, isSnooze = false) {
   if (activeAlarm) return;
 
@@ -747,6 +874,9 @@ function stopRinging() {
   snoozedAlarm = null;
 
   soundGeneration++;
+
+  // 追加アラーム音の予約も停止
+  stopExtraSounds();
   stopAlarmVolume();
 
   activeAlarm = null;
@@ -762,6 +892,9 @@ function snoozeAlarm() {
   clearInterval(soundTimer);
   soundTimer = null;
   soundGeneration++;
+
+  // スヌーズ時も追加アラーム音を停止
+  stopExtraSounds();
   stopAlarmVolume();
 
   activeAlarm = null;
@@ -1168,6 +1301,13 @@ ja: {
     bell: "ベル",
     digital: "デジタル",
     gentle: "やさしい音",
+    classicBell: "クラシックベル",
+    chime: "チャイム",
+    piano: "ピアノ",
+    marimba: "マリンバ",
+    synth: "シンセ",
+    pulse: "パルス",
+    alert: "アラート",
     system: "端末設定に合わせる",
     light: "ライト",
     dark: "ダーク",
@@ -1254,6 +1394,13 @@ ja: {
     bell: "Bell",
     digital: "Digital",
     gentle: "Gentle",
+    classicBell: "Classic Bell",
+    chime: "Chime",
+    piano: "Piano",
+    marimba: "Marimba",
+    synth: "Synth",
+    pulse: "Pulse",
+    alert: "Alert",
     system: "Use device settings",
     light: "Light",
     dark: "Dark",
@@ -1419,7 +1566,18 @@ function applyLanguage() {
   ).label = t("backgroundLight");
 
 
-  ["bell", "digital", "gentle"].forEach((key, index) => {
+  [
+    "bell",
+    "digital",
+    "gentle",
+    "classicBell",
+    "chime",
+    "piano",
+    "marimba",
+    "synth",
+    "pulse",
+    "alert"
+  ].forEach((key, index) => {
     $("edit-sound").options[index].textContent = t(key);
   });
 
