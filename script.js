@@ -87,53 +87,88 @@ function findNextAlarm() {
 }
 
 
+
 function updateClock() {
   const now = new Date();
-  const locale = appSettings.language === "en" ? "en-US" : "ja-JP";
 
-  $("current-time").textContent =
-    now.toLocaleTimeString(locale, {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false
-    });
+  const locale = appSettings.language === "en"
+    ? "en-US"
+    : "ja-JP";
 
-  $("current-date").textContent =
-    now.toLocaleDateString(locale, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      weekday: "long"
-    });
+  const is12Hour = appSettings.timeFormat === "12";
+
+  // 時刻表示の設定
+  const timeOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: is12Hour
+  };
+
+  if (appSettings.showSeconds) {
+    timeOptions.second = "2-digit";
+  }
+
+  const timeText = now.toLocaleTimeString(
+    locale,
+    timeOptions
+  );
+
+  const dateText = now.toLocaleDateString(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "long"
+  });
+
+  // ホーム画面
+  $("current-time").textContent = timeText;
+  $("current-date").textContent = dateText;
+
+  // 時計専用モード
+  $("clock-mode-time").textContent = timeText;
+  $("clock-mode-date").textContent = dateText;
 
   const next = findNextAlarm();
 
   if (!next) {
     $("next-alarm-text").textContent = t("none");
     $("next-alarm-countdown").textContent = "";
+
+    $("clock-mode-next-alarm").textContent = t("none");
+    $("clock-mode-countdown").textContent = "";
     return;
   }
 
-  const diff = Math.max(0, next.date - now);
-  const totalMinutes = Math.ceil(diff / 60000);
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  $("next-alarm-text").textContent =
-    next.date.toLocaleString(locale, {
+  // 次のアラーム日時
+  const nextDateText = next.date.toLocaleString(
+    locale,
+    {
       month: "numeric",
       day: "numeric",
       weekday: "short",
       hour: "2-digit",
       minute: "2-digit",
-      hour12: false
-    });
+      hour12: is12Hour
+    }
+  );
 
-  $("next-alarm-countdown").textContent =
+  // 残り時間
+  const diff = Math.max(0, next.date - now);
+  const totalMinutes = Math.ceil(diff / 60000);
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  const countdownText =
     appSettings.language === "en"
       ? `In ${hours}h ${minutes}m`
       : `あと${hours}時間${minutes}分`;
+
+  $("next-alarm-text").textContent = nextDateText;
+  $("next-alarm-countdown").textContent = countdownText;
+
+  $("clock-mode-next-alarm").textContent = nextDateText;
+  $("clock-mode-countdown").textContent = countdownText;
 }
 
 
@@ -506,12 +541,16 @@ if ("serviceWorker" in navigator) {
    STEP 2：表示設定
 ========================= */
 
+
 const DEFAULT_SETTINGS = {
   theme: "dark",
   language: "ja",
   font: "sans",
-  accent: "blue"
+  accent: "blue",
+  timeFormat: "24",
+  showSeconds: true
 };
+
 
 let appSettings;
 
@@ -540,8 +579,15 @@ const FONTS = {
 };
 
 const TRANSLATIONS = {
-  ja: {
-    settings: "設定",
+
+ja: {
+  clockSettings: "時計設定",
+  timeFormat: "時刻表示形式",
+  showSeconds: "秒を表示する",
+  clockMode: "時計専用モード",
+  back: "戻る",
+  settings: "設定",
+
     appearance: "外観",
     theme: "テーマ",
     accent: "アクセントカラー",
@@ -588,7 +634,13 @@ const TRANSLATIONS = {
     orange: "オレンジ",
     weekdays: ["日", "月", "火", "水", "木", "金", "土"]
   },
-  en: {
+
+    en: {
+    clockSettings: "Clock settings",
+    timeFormat: "Time format",
+    showSeconds: "Show seconds",
+    clockMode: "Clock mode",
+    back: "Back",
     settings: "Settings",
     appearance: "Appearance",
     theme: "Theme",
@@ -710,6 +762,7 @@ function applyLanguage() {
     t("defaultAlarm");
 }
 
+
 function applySettings() {
   applyTheme();
   applyLanguage();
@@ -719,6 +772,19 @@ function applySettings() {
   $("font-select").value = appSettings.font;
   $("accent-select").value = appSettings.accent;
 
+  // 時計の設定
+  $("time-format-select").value = appSettings.timeFormat;
+  $("show-seconds").checked = appSettings.showSeconds;
+
+  $("clock-mode-btn").title = t("clockMode");
+  $("clock-mode-btn").setAttribute(
+    "aria-label", t("clockMode")
+  );
+
+  $("clock-mode-back-btn").setAttribute(
+    "aria-label", t("back")
+  );
+
   renderAlarms();
   updateClock();
 
@@ -726,6 +792,7 @@ function applySettings() {
     renderWeekdays();
   }
 }
+
 
 ["theme", "language", "font", "accent"].forEach(key => {
   const select = $(key + "-select");
@@ -745,5 +812,36 @@ window.matchMedia("(prefers-color-scheme: dark)")
     }
   });
 
+
 // ページ起動時に保存済み設定を反映
 applySettings();
+
+/* =========================
+   STEP 3：時計設定
+========================= */
+
+// 12時間／24時間表示
+$("time-format-select").addEventListener("change", () => {
+  appSettings.timeFormat = $("time-format-select").value;
+  saveAppSettings();
+  updateClock();
+});
+
+// 秒表示のON/OFF
+$("show-seconds").addEventListener("change", () => {
+  appSettings.showSeconds = $("show-seconds").checked;
+  saveAppSettings();
+  updateClock();
+});
+
+// 時計専用モードを開く
+$("clock-mode-btn").addEventListener("click", () => {
+  $("clock-mode-screen").hidden = false;
+  updateClock();
+});
+
+// 時計専用モードを閉じる
+$("clock-mode-back-btn").addEventListener("click", () => {
+  $("clock-mode-screen").hidden = true;
+});
+

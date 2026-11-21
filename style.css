@@ -398,3 +398,80 @@ body {
   background: var(--accent);
   color: white;
 }
+
+/* =========================
+   STEP 3：時計表示
+========================= */
+
+#home-screen .app-header {
+  gap: 8px;
+}
+
+#home-screen .app-header h1 {
+  margin-right: auto;
+}
+
+/* 時計専用モード */
+#clock-mode-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+#clock-mode-back-btn {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: 20px;
+  color: var(--text);
+  font-size: 30px;
+}
+
+.clock-mode-content {
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+
+#clock-mode-date {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+#clock-mode-time {
+  font-size: clamp(42px, 11vw, 88px);
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  margin: 20px 0 32px;
+}
+
+.clock-mode-next {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.clock-mode-next p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+#clock-mode-next-alarm {
+  font-size: 20px;
+}
+
+#current-time {
+  font-size: clamp(30px, 9vw, 52px);
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  #clock-mode-time {
+    font-size: clamp(32px, 9vw, 48px);
+  }
+}

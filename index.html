@@ -18,6 +18,13 @@
     <section id="home-screen">
       <header class="app-header">
         <h1>My Alarm</h1>
+
+        <button id="clock-mode-btn"
+                class="icon-btn"
+                type="button"
+                aria-label="時計専用モード"
+                title="時計専用モード">⛶</button>
+
         <button id="settings-btn" class="icon-btn"
                 type="button">⚙</button>
       </header>
@@ -150,8 +157,27 @@
     </select>
   </div>
 
-  <div class="settings-group">
+
+    <div class="settings-group">
+    <h3 data-i18n="clockSettings">時計設定</h3>
+
+    <label for="time-format-select" data-i18n="timeFormat">
+        時刻表示形式
+    </label>
+    <select id="time-format-select">
+        <option value="24">24時間表示</option>
+        <option value="12">12時間表示</option>
+    </select>
+
+    <label class="setting-row">
+        <span data-i18n="showSeconds">秒を表示する</span>
+        <input id="show-seconds" type="checkbox" checked>
+    </label>
+    </div>
+
+    <div class="settings-group">
     <h3 data-i18n="alarmSettings">アラーム設定</h3>
+
 
     <label class="setting-row">
       <span data-i18n="autoScroll">
@@ -163,10 +189,31 @@
 </section>
 
     </section>
+
   </main>
+
+  <!-- 時計専用モード -->
+  <section id="clock-mode-screen" hidden>
+    <button id="clock-mode-back-btn"
+            class="icon-btn"
+            type="button"
+            aria-label="戻る">×</button>
+
+    <div class="clock-mode-content">
+      <p id="clock-mode-date"></p>
+      <p id="clock-mode-time">00:00:00</p>
+
+      <div class="clock-mode-next">
+        <p data-i18n="nextAlarm">次のアラーム</p>
+        <strong id="clock-mode-next-alarm">設定なし</strong>
+        <p id="clock-mode-countdown"></p>
+      </div>
+    </div>
+  </section>
 
   <!-- アラーム鳴動画面 -->
   <div id="ringing-panel" class="ringing-panel" hidden>
+
     <div class="ringing-content">
       <p>アラーム</p>
       <h2 id="ringing-time">07:00</h2>
