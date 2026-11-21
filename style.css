@@ -606,3 +606,235 @@ select:focus-visible {
 .edit-form .setting-row {
   min-height: 56px;
 }
+
+.edit-form .setting-row {
+  min-height: 56px;
+}
+
+/* =========================
+   STEP 4-2：一括操作
+========================= */
+
+.bulk-alarm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.bulk-alarm-actions button {
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.bulk-alarm-actions button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* =========================
+   STEP 4-2：鳴動画面
+========================= */
+
+.ringing-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+#snooze-alarm-btn {
+  background: var(--accent);
+  color: #ffffff;
+  padding: 18px 28px;
+  font-weight: bold;
+}
+
+#stop-alarm-btn {
+  margin-top: 0;
+  padding: 18px 28px;
+}
+
+.ringing-actions button {
+  min-width: 130px;
+}
+
+@media (max-width: 360px) {
+  .ringing-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 360px) {
+  .ringing-actions {
+    flex-direction: column;
+  }
+}
+
+/* =========================
+   STEP 4-3：時刻入力
+========================= */
+
+.time-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 8px 0 14px;
+}
+
+.edit-form .time-picker select {
+  width: auto;
+  flex: 1;
+  min-width: 0;
+  padding: 16px 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-separator {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.edit-form #edit-ampm {
+  flex: 0 0 85px;
+  font-size: 17px;
+}
+
+@media (max-width: 380px) {
+  .edit-form .time-picker select {
+    font-size: 20px;
+    padding: 14px 4px;
+  }
+}
+
+/* =========================
+   STEP 4-4：一括ON/OFFスイッチ
+========================= */
+
+.bulk-alarm-wrapper {
+  margin: 6px 0 18px;
+}
+
+.bulk-alarm-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+#bulk-alarm-status {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 一体型の外枠 */
+.bulk-alarm-actions {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+/* 2つのボタン */
+.bulk-alarm-actions button,
+button#all-on-btn,
+button#all-off-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+}
+
+/* 選択中のボタン */
+.bulk-alarm-actions button.is-active,
+button#all-on-btn.is-active,
+button#all-off-btn.is-active {
+  background: var(--accent);
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* 選択中のボタンは操作不要 */
+.bulk-alarm-actions button.is-active:disabled {
+  cursor: default;
+}
+
+/* 押したときの動き */
+.bulk-alarm-actions button:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+/* アラームが0件の場合 */
+.bulk-alarm-actions button:disabled:not(.is-active) {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.bulk-alarm-actions button:disabled:not(.is-active) {
+  opacity: 0.65;
+  cursor: default;
+}
+
+/* =========================
+   STEP 4-4：アクセントカラー修正
+========================= */
+
+/* 通常時 */
+.bulk-alarm-actions #all-on-btn,
+.bulk-alarm-actions #all-off-btn {
+  background: transparent;
+  color: var(--muted);
+}
+
+/* 選択中：アクセントカラーを適用 */
+.bulk-alarm-actions #all-on-btn.is-active,
+.bulk-alarm-actions #all-off-btn.is-active {
+  background: var(--accent);
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* 選択中でも色を薄くしない */
+.bulk-alarm-actions #all-on-btn.is-active:disabled,
+.bulk-alarm-actions #all-off-btn.is-active:disabled {
+  background: var(--accent);
+  color: #ffffff;
+  opacity: 1;
+}
+.bulk-alarm-actions #all-on-btn.is-active:disabled,
+.bulk-alarm-actions #all-off-btn.is-active:disabled {
+  background: var(--accent);
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* 一括ON/OFF：選択状態の色を最優先 */
+.bulk-alarm-actions button.is-active {
+  background-color: var(--accent) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}

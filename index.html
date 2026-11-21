@@ -46,6 +46,20 @@
         </button>
       </div>
 
+        <div class="bulk-alarm-wrapper">
+        <div class="bulk-alarm-header">
+            <span id="bulk-alarm-status">一部ON</span>
+        </div>
+
+        <div class="bulk-alarm-actions" role="group"
+            aria-label="アラームの一括操作">
+            <button id="all-on-btn" type="button"
+                    data-i18n="allOn">すべてON</button>
+            <button id="all-off-btn" type="button"
+                    data-i18n="allOff">すべてOFF</button>
+        </div>
+        </div>
+
       <div id="alarm-list"></div>
     </section>
 
@@ -65,7 +79,16 @@
                placeholder="例：仕事">
 
         <label data-i18n="time">時刻</label>
-        <input id="edit-time" type="time" required>
+
+        <div class="time-picker">
+          <select id="edit-hour" aria-label="時"></select>
+          <span class="time-separator">:</span>
+          <select id="edit-minute" aria-label="分"></select>
+          <select id="edit-ampm" aria-label="午前・午後" hidden>
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
 
         <label data-i18n="repeat">繰り返し</label>
         <div id="edit-weekdays"
@@ -274,9 +297,19 @@
       <p>アラーム</p>
       <h2 id="ringing-time">07:00</h2>
       <p id="ringing-name"></p>
-        <button id="stop-alarm-btn" type="button" data-i18n="stop">
-        ■ 停止
-        </button>
+        <div class="ringing-actions">
+          <button id="snooze-alarm-btn"
+                  type="button"
+                  data-i18n="snoozeNow">
+            スヌーズ
+          </button>
+
+          <button id="stop-alarm-btn"
+                  type="button"
+                  data-i18n="stop">
+            ■ 停止
+          </button>
+        </div>
     </div>
   </div>
 </body>

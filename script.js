@@ -30,6 +30,13 @@ let soundTimer = null;
 let activeAlarm = null;
 let lastCheckedMinute = "";
 
+// STEP 4-2
+let snoozeTimer = null;
+let snoozedAlarm = null;
+let ringingStartedAt = 0;
+let soundGeneration = 0;
+let alarmVolumeNode = null;
+
 const $ = id => document.getElementById(id);
 
 function saveAlarms() {
@@ -52,31 +59,43 @@ function formatDays(days) {
     .join(appSettings.language === "ja" ? "・" : ", ");
 }
 
+
 function getNextAlarmDate(alarm, now = new Date()) {
   if (!alarm.enabled) return null;
 
   const [hours, minutes] = alarm.time.split(":").map(Number);
 
-  // 曜日未選択は次に到来する時刻に鳴らす
+  // 次回だけスキップする場合は、その次の予定を返す
+  let occurrencesToSkip = alarm.skipNext ? 1 : 0;
+
+  // 曜日未選択は1回限りのアラーム
   if (alarm.days.length === 0) {
+    if (occurrencesToSkip > 0) return null;
+
     const date = new Date(now);
     date.setHours(hours, minutes, 0, 0);
     if (date <= now) date.setDate(date.getDate() + 1);
     return date;
   }
 
-  for (let i = 0; i <= 7; i++) {
+  for (let i = 0; i <= 14; i++) {
     const date = new Date(now);
     date.setDate(now.getDate() + i);
     date.setHours(hours, minutes, 0, 0);
 
     if (alarm.days.includes(date.getDay()) && date > now) {
+      if (occurrencesToSkip > 0) {
+        occurrencesToSkip--;
+        continue;
+      }
+
       return date;
     }
   }
 
   return null;
 }
+
 
 function findNextAlarm() {
   const now = new Date();
@@ -178,9 +197,33 @@ function updateClock() {
 }
 
 
+
 function renderAlarms() {
   const list = $("alarm-list");
   list.innerHTML = "";
+
+  const total = alarms.length;
+  const enabled = alarms.filter(alarm => alarm.enabled).length;
+
+  const allOn = total > 0 && enabled === total;
+  const allOff = enabled === 0;
+
+  const status = $("bulk-alarm-status");
+
+  status.textContent =
+    total === 0
+      ? t("none")
+      : allOn
+        ? t("allEnabled")
+        : allOff
+          ? t("allDisabled")
+          : t("partiallyEnabled");
+
+  $("all-on-btn").classList.toggle("is-active", allOn);
+  $("all-off-btn").classList.toggle("is-active", total > 0 && allOff);
+
+  $("all-on-btn").disabled = total === 0 || allOn;
+  $("all-off-btn").disabled = total === 0 || allOff;
 
   alarms.sort((a, b) => a.time.localeCompare(b.time));
 
@@ -291,7 +334,68 @@ $("edit-snooze").addEventListener(
   updateSnoozeVisibility
 );
 
+
+function setupTimePicker() {
+  const hourSelect = $("edit-hour");
+  const minuteSelect = $("edit-minute");
+  const ampmSelect = $("edit-ampm");
+
+  const is12Hour = appSettings.timeFormat === "12";
+
+  hourSelect.innerHTML = "";
+  minuteSelect.innerHTML = "";
+
+  // 時間の選択肢
+  const hourStart = is12Hour ? 1 : 0;
+  const hourEnd = is12Hour ? 12 : 23;
+
+  for (let hour = hourStart; hour <= hourEnd; hour++) {
+    const option = document.createElement("option");
+    option.value = String(hour).padStart(2, "0");
+    option.textContent = option.value;
+    hourSelect.appendChild(option);
+  }
+
+  // 分の選択肢
+  for (let minute = 0; minute <= 59; minute++) {
+    const option = document.createElement("option");
+    option.value = String(minute).padStart(2, "0");
+    option.textContent = option.value;
+    minuteSelect.appendChild(option);
+  }
+
+  ampmSelect.hidden = !is12Hour;
+}
+
+function setTimePickerValue(time) {
+  const [hours, minutes] = time.split(":").map(Number);
+  const is12Hour = appSettings.timeFormat === "12";
+
+  if (is12Hour) {
+    const hour12 = hours % 12 || 12;
+    $("edit-hour").value = String(hour12).padStart(2, "0");
+    $("edit-ampm").value = hours >= 12 ? "PM" : "AM";
+  } else {
+    $("edit-hour").value = String(hours).padStart(2, "0");
+  }
+
+  $("edit-minute").value = String(minutes).padStart(2, "0");
+}
+
+function getTimePickerValue() {
+  let hours = Number($("edit-hour").value);
+  const minutes = $("edit-minute").value;
+
+  if (appSettings.timeFormat === "12") {
+    const isPM = $("edit-ampm").value === "PM";
+    hours = hours % 12 + (isPM ? 12 : 0);
+  }
+
+  return String(hours).padStart(2, "0") + ":" + minutes;
+}
+
 function openEditor(id = null) {
+
 
   editingId = id;
   const alarm = alarms.find(a => a.id === id);
@@ -301,7 +405,10 @@ function openEditor(id = null) {
 
 
   $("edit-name").value = alarm?.name || "";
-  $("edit-time").value = alarm?.time || "07:00";
+
+  setupTimePicker();
+  setTimePickerValue(alarm?.time || "07:00");
+
   $("edit-sound").value = alarm?.sound || "bell";
 
   // STEP 4：追加設定を読み込む
@@ -325,7 +432,7 @@ function openEditor(id = null) {
 }
 
 function saveEditedAlarm() {
-  const time = $("edit-time").value;
+  const time = getTimePickerValue();
 
   if (!time) {
     alert(t("enterTime"));
@@ -430,52 +537,189 @@ function playTone(frequency, duration, volume = 0.2) {
   );
 
   oscillator.connect(gain);
-  gain.connect(context.destination);
+
+  // アラーム鳴動中だけ全体音量の制御を通す
+  gain.connect(
+    alarmVolumeNode || context.destination
+  );
 
   oscillator.start();
   oscillator.stop(context.currentTime + duration);
 }
 
-function playSound(type) {
+
+function playSound(type, volume = 0.2, generation = soundGeneration) {
+  // 停止後に遅れて音が鳴ることを防ぐ
+  const playIfCurrent = (frequency, duration, toneVolume) => {
+    if (generation !== soundGeneration) return;
+    playTone(frequency, duration, toneVolume);
+  };
+
   if (type === "digital") {
-    playTone(880, 0.15);
-    setTimeout(() => playTone(880, 0.15), 200);
+    playIfCurrent(880, 0.15, volume);
+    setTimeout(() => {
+      playIfCurrent(880, 0.15, volume);
+    }, 200);
+
   } else if (type === "gentle") {
-    playTone(523, 0.5, 0.1);
-    setTimeout(() => playTone(659, 0.5, 0.1), 550);
+    playIfCurrent(523, 0.5, volume * 0.5);
+    setTimeout(() => {
+      playIfCurrent(659, 0.5, volume * 0.5);
+    }, 550);
+
   } else {
-    playTone(880, 0.4);
-    setTimeout(() => playTone(660, 0.4), 450);
+    playIfCurrent(880, 0.4, volume);
+    setTimeout(() => {
+      playIfCurrent(660, 0.4, volume);
+    }, 450);
   }
 }
 
-function startRinging(alarm) {
+function playAlarmCycle() {
+  if (!activeAlarm) return;
+
+  // 各音の音量は一定にし、
+  // アラーム全体の音量を別途制御する
+  playSound(activeAlarm.sound, 0.2);
+}
+
+function setupAlarmVolume(fadeIn) {
+  const context = getAudioContext();
+
+  // 以前の音量制御を終了
+  if (alarmVolumeNode) {
+    alarmVolumeNode.gain.cancelScheduledValues(
+      context.currentTime
+    );
+    alarmVolumeNode.gain.setValueAtTime(
+      0,
+      context.currentTime
+    );
+    alarmVolumeNode = null;
+  }
+
+  alarmVolumeNode = context.createGain();
+  alarmVolumeNode.connect(context.destination);
+
+  if (fadeIn) {
+    // 通常音量の5%から開始
+    alarmVolumeNode.gain.setValueAtTime(
+      0.05,
+      context.currentTime
+    );
+
+    // 30秒後に通常音量へ
+    alarmVolumeNode.gain.linearRampToValueAtTime(
+      1,
+      context.currentTime + 30
+    );
+  } else {
+    alarmVolumeNode.gain.setValueAtTime(
+      1,
+      context.currentTime
+    );
+  }
+}
+
+function stopAlarmVolume() {
+  if (!alarmVolumeNode) return;
+
+  const context = getAudioContext();
+
+  alarmVolumeNode.gain.cancelScheduledValues(
+    context.currentTime
+  );
+  alarmVolumeNode.gain.setValueAtTime(
+    0,
+    context.currentTime
+  );
+
+  alarmVolumeNode = null;
+}
+
+
+function startRinging(alarm, isSnooze = false) {
   if (activeAlarm) return;
 
-  activeAlarm = alarm;
-  $("ringing-time").textContent = alarm.time;
-  $("ringing-name").textContent = alarm.name || "";
-  $("ringing-panel").hidden = false;
+  // 予約済みのスヌーズがあれば解除
+  clearTimeout(snoozeTimer);
+  snoozeTimer = null;
+  snoozedAlarm = null;
 
-  playSound(alarm.sound);
+  activeAlarm = alarm;
+  ringingStartedAt = Date.now();
+  soundGeneration++;
+
+  // フェードイン設定を適用
+  setupAlarmVolume(alarm.fadeIn);
+
+  $("ringing-time").textContent = alarm.time;
+  $("ringing-name").textContent =
+    alarm.name || t("defaultAlarm");
+
+  $("ringing-panel").hidden = false;
+  $("snooze-alarm-btn").hidden = !alarm.snooze;
+
+  playAlarmCycle();
+
   soundTimer = setInterval(() => {
-    playSound(alarm.sound);
+    playAlarmCycle();
   }, 2000);
 
-  // 1回限りのアラームはOFFにする
-  if (alarm.days.length === 0) {
+  // 1回限りのアラームは、通常の予定をOFFにする
+  if (!isSnooze && alarm.days.length === 0) {
     alarm.enabled = false;
     saveAlarms();
     renderAlarms();
+    updateClock();
   }
 }
 
 function stopRinging() {
   clearInterval(soundTimer);
   soundTimer = null;
+
+  clearTimeout(snoozeTimer);
+  snoozeTimer = null;
+  snoozedAlarm = null;
+
+  soundGeneration++;
+  stopAlarmVolume();
+
   activeAlarm = null;
   $("ringing-panel").hidden = true;
 }
+function snoozeAlarm() {
+  if (!activeAlarm || !activeAlarm.snooze) return;
+
+  const alarm = activeAlarm;
+  const minutes = Number(alarm.snoozeMinutes) || 5;
+
+  // 現在鳴っている音を止める
+  clearInterval(soundTimer);
+  soundTimer = null;
+  soundGeneration++;
+  stopAlarmVolume();
+
+  activeAlarm = null;
+  $("ringing-panel").hidden = true;
+
+  // 指定した分数後に再鳴動
+  snoozedAlarm = alarm;
+
+  snoozeTimer = setTimeout(() => {
+    snoozeTimer = null;
+
+    const target = snoozedAlarm;
+    snoozedAlarm = null;
+
+    if (target) {
+      startRinging(target, true);
+    }
+  }, minutes * 60 * 1000);
+}
+
+
 
 function checkAlarms() {
   const now = new Date();
@@ -489,14 +733,44 @@ function checkAlarms() {
   if (minuteKey === lastCheckedMinute) return;
   lastCheckedMinute = minuteKey;
 
-  const alarm = alarms.find(a =>
-    a.enabled &&
-    a.time === time &&
-    (a.days.length === 0 ||
-     a.days.includes(now.getDay()))
-  );
+  let changed = false;
+  const dueAlarms = [];
 
-  if (alarm) startRinging(alarm);
+  alarms.forEach(alarm => {
+    if (!alarm.enabled) return;
+    if (alarm.time !== time) return;
+
+    const matchesToday =
+      alarm.days.length === 0 ||
+      alarm.days.includes(now.getDay());
+
+    if (!matchesToday) return;
+
+    if (alarm.skipNext) {
+      // 次回だけスキップを消費
+      alarm.skipNext = false;
+
+      // 1回限りなら次の予定はないのでOFF
+      if (alarm.days.length === 0) {
+        alarm.enabled = false;
+      }
+
+      changed = true;
+      return;
+    }
+
+    dueAlarms.push(alarm);
+  });
+
+  if (changed) {
+    saveAlarms();
+    renderAlarms();
+    updateClock();
+  }
+
+  if (!activeAlarm && dueAlarms.length > 0) {
+    startRinging(dueAlarms[0]);
+  }
 }
 
 /* =========================
@@ -536,7 +810,36 @@ function scrollToNextAlarm() {
    ボタン操作
 ========================= */
 
+
 $("add-btn").addEventListener("click", () => openEditor());
+
+// すべてON
+$("all-on-btn").addEventListener("click", () => {
+  alarms.forEach(alarm => {
+    alarm.enabled = true;
+  });
+
+  saveAlarms();
+  renderAlarms();
+  updateClock();
+});
+
+// すべてOFF
+$("all-off-btn").addEventListener("click", () => {
+  alarms.forEach(alarm => {
+    alarm.enabled = false;
+  });
+
+  // スヌーズ待機中のアラームも解除
+  clearTimeout(snoozeTimer);
+  snoozeTimer = null;
+  snoozedAlarm = null;
+
+  saveAlarms();
+  renderAlarms();
+  updateClock();
+});
+
 $("back-btn").addEventListener("click", () => showScreen("home"));
 $("save-alarm-btn").addEventListener("click", saveEditedAlarm);
 $("duplicate-btn").addEventListener("click", duplicateAlarm);
@@ -556,6 +859,7 @@ $("preview-btn").addEventListener("click", () => {
 });
 
 $("stop-alarm-btn").addEventListener("click", stopRinging);
+$("snooze-alarm-btn").addEventListener("click", snoozeAlarm);
 
 /* =========================
    初期化
@@ -757,6 +1061,12 @@ ja: {
     language: "表示言語",
     alarmSettings: "アラーム設定",
     autoScroll: "次のアラームへ自動スクロール",
+    allOn: "すべてON",
+    allOff: "すべてOFF",
+    allEnabled: "すべてON",
+    allDisabled: "すべてOFF",
+    partiallyEnabled: "一部ON",
+    snoozeNow: "スヌーズ",
     snooze: "スヌーズ",
     snoozeInterval: "スヌーズ間隔",
     fadeIn: "フェードイン",
@@ -832,6 +1142,12 @@ ja: {
     language: "Display language",
     alarmSettings: "Alarm settings",
     autoScroll: "Auto-scroll to next alarm",
+    allOn: "All ON",
+    allOff: "All OFF",
+    allEnabled: "All enabled",
+    allDisabled: "All disabled",
+    partiallyEnabled: "Partially enabled",
+    snoozeNow: "Snooze",
     snooze: "Snooze",
     snoozeInterval: "Snooze interval",
     fadeIn: "Fade in",
