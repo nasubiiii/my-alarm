@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "my-alarm-v16";
+const CACHE_NAME = "my-alarm-v35";
 
 const APP_FILES = [
   "./",
@@ -8,7 +8,19 @@ const APP_FILES = [
   "./script.js",
   "./manifest.json",
   "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icons/icon-512.png",
+  "./scenes/morning.svg", "./scenes/day.svg", "./scenes/evening.svg", "./scenes/night.svg",
+  "./scenes/city-Tokyo.svg",
+  "./scenes/city-London.svg",
+  "./scenes/city-Paris.svg",
+  "./scenes/city-New_York.svg",
+  "./scenes/city-Los_Angeles.svg",
+  "./scenes/city-Seoul.svg",
+  "./scenes/city-Sydney.svg",
+  "./scenes/city-Dubai.svg",
+  "./scenes/city-Singapore.svg",
+  "./scenes/city-Shanghai.svg",
+  "./scenes/city-Kolkata.svg"
 ];
 
 // インストール時に必要なファイルを保存

@@ -1040,3 +1040,103 @@ body{background:radial-gradient(ellipse at 5% 4%,var(--glow,var(--bg)),transpare
 .header-tools .icon-btn{display:grid;place-items:center;width:34px;height:36px;padding:6px;font-size:20px;color:var(--text)}.header-tools svg,.nav-icon svg{width:20px;height:20px;display:block}.nav-icon{display:block}
 #world-screen .clock-card{padding:16px 12px;margin-bottom:12px}#world-screen #world-time{margin:14px 0}#world-screen .city-row{padding:8px 0;gap:2px 8px}#world-screen .city-info,#world-screen .city-clock{gap:2px}#world-screen .city-controls{gap:3px}#world-screen .city-controls button{padding:4px 8px}.history-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0}.history-row button{padding:5px 8px;font-size:12px}.settings-group{padding:12px;margin-bottom:9px}.settings-disclosure[open] summary{margin-bottom:10px}
 #clock-mode-screen{background:var(--bg)}
+
+/* Update 02.3 */
+#world-screen .clock-card{padding:10px 12px;margin-bottom:8px}#world-screen .clock-card p{margin:4px 0}#world-screen #world-time{margin:6px 0;font-size:36px}#world-screen .glass-panel{padding:10px 12px;margin-bottom:8px}#world-screen .city-row{grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:4px 8px;padding:6px 0;line-height:1.2}#world-screen .city-info,#world-screen .city-clock{gap:2px}#world-screen .city-info strong{font-size:14px}#world-screen .city-info small{font-size:11px}#world-screen .city-time{font-size:23px}#world-screen .city-controls{grid-column:auto;align-items:center;gap:4px}#world-screen .city-controls button{padding:0;width:30px;height:34px;font-size:19px;background:transparent}#world-screen .city-handle{touch-action:none;cursor:grab;user-select:none}#world-screen .city-dragging{background:var(--surface);box-shadow:0 3px 12px #0003;border-radius:10px;position:relative;z-index:2} .app-dialog{width:min(90vw,360px);border:1px solid var(--border);border-radius:20px;padding:20px;background:var(--surface);color:var(--text);box-shadow:0 12px 40px #0004} .app-dialog::backdrop{background:#0006;backdrop-filter:blur(3px)}.app-dialog h3{margin:0 0 16px;font-size:18px}.app-dialog input{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)}.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.dialog-primary{background:var(--accent);color:white}.container{padding-bottom:calc(115px + env(safe-area-inset-bottom))}
+/* Update 02.4 */
+#world-screen .city-controls button,#group-list .quiet-action{background:transparent!important;box-shadow:none!important;color:var(--muted)!important;border:0;width:36px;height:38px;padding:0;font-size:17px;flex:none}
+#world-screen .city-controls button:hover,#group-list .quiet-action:hover{color:var(--text)!important;background:var(--accent-soft)!important}
+#world-screen .city-handle{touch-action:none;-webkit-user-select:none;user-select:none;cursor:grab}#world-screen .city-dragging .city-handle{cursor:grabbing}
+#group-list .group-row{flex-wrap:nowrap;gap:5px;padding:9px 12px!important}#group-list .group-info{flex:1;min-width:0;overflow-wrap:anywhere;display:flex;flex-direction:column;gap:3px}#group-list .group-info small{font-size:11px;color:var(--muted)}#group-list .alarm-toggle{margin:0 3px}#group-list .alarm-toggle:indeterminate{background:var(--accent-soft);border:1px solid var(--accent)}#group-list .alarm-toggle:indeterminate:before{left:11px}#group-list .alarm-toggle:disabled{opacity:.45}
+.app-dialog .dialog-actions button:not(.dialog-primary){background:transparent!important;color:var(--muted)!important}.app-dialog .dialog-actions .dialog-primary{background:var(--accent)!important;color:#fff!important}
+
+/* Update 02.5 */
+.group-editor{box-sizing:border-box;width:min(92vw,400px);max-height:85dvh;overflow:auto}.group-editor #group-edit-name{box-sizing:border-box;margin:6px 0 14px}.group-edit-header,.group-edit-tools{display:flex;align-items:center;justify-content:space-between;gap:8px}.group-edit-header small,.group-edit-note,.group-member-info small{color:var(--muted);font-size:12px}.group-edit-tools{justify-content:flex-end}.group-edit-tools button{background:transparent!important;color:var(--muted);font-size:12px;padding:8px}.group-member-list{max-height:min(36dvh,280px);overflow-y:auto;overscroll-behavior:contain}.group-member-row{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--border);cursor:pointer}.group-editor .group-member-row input{appearance:auto;width:18px;height:18px;flex:none;accent-color:var(--accent);padding:0}.group-member-info{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;min-width:0;overflow-wrap:anywhere}.group-member-info strong{font-variant-numeric:tabular-nums}.group-edit-note{display:block;margin-top:10px}
+
+/* Update 02.6: quieter secondary controls */
+#world-screen .city-controls button,#group-list .quiet-action{font-size:13px;opacity:.72;min-width:36px;min-height:40px}
+#world-screen .city-controls button:hover,#world-screen .city-controls button:focus-visible,#group-list .quiet-action:hover,#group-list .quiet-action:focus-visible{opacity:1}
+#tab-nav button[data-tab]{background:transparent!important;box-shadow:none!important;border:0;color:var(--muted)!important}
+#tab-nav button[data-tab][aria-current=page]{background:color-mix(in srgb,var(--accent) 13%,transparent)!important;color:var(--text)!important}
+#tab-nav .nav-icon svg{width:18px;height:18px;stroke-width:1.5}
+
+/* Mobile city picker */
+.city-picker{box-sizing:border-box;width:min(92vw,440px);max-height:85dvh;overflow:hidden; padding:16px}.city-picker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.city-picker-header h3{margin:0}.city-picker-header button{background:transparent;color:var(--muted)}.city-picker #city-search{box-sizing:border-box;width:100%;font-size:16px;margin-bottom:8px}.city-picker-list{max-height:55dvh;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}.city-picker .city-picker-option{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;background:transparent;color:var(--text);padding:10px 4px;border-bottom:1px solid var(--border);border-radius:0;min-height:48px}.city-picker-info{display:flex;flex-direction:column;gap:4px}.city-picker-info small{color:var(--muted);font-size:12px}.city-picker-option:disabled{opacity:.5}#world-screen .city-controls{gap:0}#world-screen .city-row{column-gap:4px}#world-screen .city-controls button{width:32px;min-width:32px}#world-screen #city-add{width:100%;text-align:left}#tab-nav button[data-tab]{min-width:0;white-space:nowrap;font-size:clamp(8px,2.6vw,12px)}
+
+/* Update 03.0 */
+body::before{content:"";position:fixed;inset:0;z-index:-1;background-image:linear-gradient(180deg,#ffffff1f,#ffffff10),var(--scenic-image,none);background-size:cover;background-position:center;pointer-events:none;transition:opacity .6s}
+:root[data-theme="dark"] body::before{filter:brightness(.60) saturate(.8)}
+:root[data-scenery="none"] body::before{display:none}
+.feature-check{display:flex;align-items:center;gap:8px;margin:12px 0;line-height:1.5}.feature-check input{width:18px;height:18px;flex-shrink:0}
+.city-row.has-city-scene{position:relative;isolation:isolate;overflow:hidden;border:1px solid #ffffff42;border-radius:15px;padding:12px;margin-bottom:9px;background:linear-gradient(110deg,#23476dbb,#3b597b91);color:#fff}
+.city-row.has-city-scene::before{content:"";position:absolute;inset:0;z-index:-2;background-image:linear-gradient(90deg,#142339b8,#16263d55),var(--city-landmark);background-size:cover,auto 100%;background-position:center,right bottom;background-repeat:no-repeat;opacity:.9}
+.city-row.has-city-scene[data-period="morning"]{background:linear-gradient(110deg,#e6b59bbb,#90b4d0aa)}
+.city-row.has-city-scene[data-period="day"]{background:linear-gradient(110deg,#70a9c2bb,#a4d6df99)}
+.city-row.has-city-scene[data-period="evening"]{background:linear-gradient(110deg,#aa677bbb,#db9b8099)}
+.city-row.has-city-scene[data-period="night"]{background:linear-gradient(110deg,#172540dd,#3d477dbb)}
+.city-row.has-city-scene .city-info,.city-row.has-city-scene .city-clock,.city-row.has-city-scene .city-controls{position:relative;z-index:1;text-shadow:0 1px 3px #0009}
+.city-row.has-city-scene small,.city-row.has-city-scene strong{color:#fff}
+.city-row.has-city-scene button{background:#ffffff28;color:white;border:1px solid #ffffff44}
+.timer-art.art-3{position:relative;overflow:hidden;width:135px;height:210px;border:3px solid #ffffff9e;border-radius:35px;background:linear-gradient(180deg,#d7f5ffcc,#8ccde6bb);box-shadow:inset 0 0 24px #ffffffa6,0 12px 24px #0001;clip-path:none}
+.timer-art.art-3::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:var(--remaining);background:linear-gradient(0deg,#ed8ca8c7,#e5a8c8aa);transition:height .5s}
+.oil-drop{position:absolute;z-index:2;top:-22px;left:calc(8% + var(--i)*11%);width:calc(12px + var(--i)*1px);height:calc(16px + var(--i)*1px);border-radius:50% 50% 55% 55%;background:radial-gradient(circle at 35% 25%,#fff9,#e766a5 55%,#b857a8);animation:oil-fall calc(3.8s + var(--i)*.55s) linear infinite;animation-delay:calc(var(--i)*-.63s);box-shadow:inset -2px -2px 4px #7c397355}
+@keyframes oil-fall{0%{transform:translateY(-15px) scale(.75)}50%{transform:translateY(115px) translateX(8px) scale(1.1)}100%{transform:translateY(250px) translateX(-5px) scale(.8)}}
+@media(prefers-reduced-motion:reduce){.oil-drop{animation:none;top:40%}}
+.welcome-dialog{width:min(420px,calc(100vw - 32px));max-height:90dvh;border:1px solid var(--border);border-radius:24px;padding:24px;background:var(--surface);color:var(--text);box-shadow:0 25px 90px #0005}
+.welcome-dialog::backdrop{background:#111a2f99;backdrop-filter:blur(5px)}
+.welcome-content{text-align:center}.welcome-illustration{font-size:62px;margin:6px auto 14px;color:var(--accent)}.welcome-content h2{margin:0 0 12px}.welcome-content p{min-height:65px;color:var(--muted);line-height:1.6}.welcome-dots{letter-spacing:7px;color:var(--accent);margin:16px}.welcome-controls{display:flex;justify-content:space-between;gap:10px}.welcome-controls button{flex:1}.welcome-replay{width:100%;margin:12px 0 24px}
+
+/* Update 03.1: light theme contrast and readable scenic overlay */
+:root[data-theme="light"] body{background:linear-gradient(180deg,#f7f9fbe8,#e9eef5e6),var(--scenic-image,none),var(--bg);background-size:cover;background-position:center;background-attachment:fixed;color:var(--text)}
+:root[data-theme="light"] body::before{display:none}
+:root[data-theme="light"] #home-screen .app-header,:root[data-theme="light"] #world-screen>h2,:root[data-theme="light"] #timer-screen>h2,:root[data-theme="light"] #stopwatch-screen>h2{color:var(--text)}
+:root[data-theme="light"] .app-header button,:root[data-theme="light"] .app-header h1,:root[data-theme="light"] .section-header,:root[data-theme="light"] .section-header h2,:root[data-theme="light"] .section-header button,:root[data-theme="light"] .bulk-alarm-wrapper{color:var(--text)}
+:root[data-theme="light"] .clock-card,:root[data-theme="light"] .alarm-item,:root[data-theme="light"] .glass-panel,:root[data-theme="light"] .settings-group{background:color-mix(in srgb,#fff 90%,transparent);color:#243747;border-color:#d7e0e8}
+:root[data-theme="light"] #tab-nav{background:#f9fbfdeb;color:#243747;border-color:#d5dee8}
+:root[data-theme="light"] #tab-nav button[data-tab]{color:#526879!important}
+:root[data-theme="light"] #tab-nav button[data-tab][aria-current=page]{color:#23394b!important}
+:root[data-theme="light"] .alarm-item.disabled{opacity:.77}
+/* Oil drops use resolved inline positions/durations for browser compatibility */
+.timer-art.art-3 .oil-drop{left:10%;width:14px;height:18px;animation:oil-fall 4s linear infinite;animation-duration:var(--oil-duration,4s);animation-delay:var(--oil-delay,0s)}
+.timer-art.art-3.oil-paused .oil-drop{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.timer-art.art-3 .oil-drop{animation:none;top:42%}}
+/* Presets */
+#timer-presets{margin-bottom:12px}.preset-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}.preset-heading h3{margin:0!important;font-size:16px}.preset-heading button{font-size:12px;padding:8px 10px}.preset-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.preset-card{display:flex;align-items:stretch;flex-direction:column;min-width:0;border:1px solid var(--border);background:color-mix(in srgb,var(--surface) 72%,transparent);border-radius:14px;overflow:hidden}.preset-launch{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px;min-height:90px;text-align:left;background:transparent!important;color:var(--text)!important}.preset-launch strong{font-size:13px;overflow-wrap:anywhere}.preset-launch span{font-size:23px;font-variant-numeric:tabular-nums;font-weight:600}.preset-launch small{font-size:11px;color:var(--muted)}.preset-controls{display:flex;justify-content:flex-end;padding:0 5px 5px}.preset-controls button{background:transparent!important;color:var(--muted)!important;padding:5px 7px;font-size:14px;min-width:28px}.preset-controls button:disabled{opacity:.25}.preset-empty{font-size:13px;color:var(--muted)}.preset-dialog{box-sizing:border-box}.preset-dialog label{display:block;margin:10px 0 5px;font-size:13px}.preset-dialog #preset-name,.preset-dialog #preset-kind{width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)}.preset-dialog .duration input{width:30%;box-sizing:border-box}.preset-dialog .duration{gap:4px}
+@media(max-width:370px){.preset-list{grid-template-columns:1fr}}
+
+/* Update 03.2: visible scene layers, timer animation continuity, shared presets */
+:root[data-theme="light"] body{background-image:linear-gradient(180deg,rgba(247,249,251,.20),rgba(233,238,245,.28)),var(--scenic-image,none),linear-gradient(180deg,#edf4fb,#dce5f3)!important;background-size:cover!important;background-position:center!important;background-attachment:fixed!important}
+:root[data-theme="dark"] body{background-image:linear-gradient(180deg,rgba(10,20,37,.38),rgba(13,25,43,.5)),var(--scenic-image,none),linear-gradient(180deg,#17253e,#23364c)!important;background-size:cover!important;background-position:center!important;background-attachment:fixed!important}
+body::before{display:none!important}
+#timer-detail #timer-presets{margin-top:18px;margin-bottom:12px}
+.timer-art.art-3 .oil-drop{animation-name:oil-fall!important;animation-timing-function:linear!important;animation-iteration-count:infinite!important;animation-play-state:running}
+.timer-art.art-3.oil-paused .oil-drop{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.timer-art.art-3 .oil-drop{animation-name:oil-fall!important;animation-duration:7s!important}}
+
+/* Update 03.3: bookmark-only saved timer menu */
+#timer-detail{position:relative}
+.timer-detail-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.timer-detail-heading h3{margin:0!important}
+#preset-toggle{font-size:21px!important;font-weight:400!important;line-height:1!important;padding:5px 8px!important;min-width:32px!important;min-height:32px!important;background:transparent!important;color:var(--muted)!important;border:0!important;box-shadow:none!important;opacity:.75}
+#preset-toggle:hover,#preset-toggle[aria-expanded="true"]{opacity:1;color:var(--text)!important}
+#timer-detail #timer-presets.preset-popover{position:absolute;z-index:40;right:12px;top:56px;width:min(290px,calc(100% - 24px));max-height:min(65vh,460px);overflow:auto;box-sizing:border-box;margin:0!important;padding:12px;background:var(--surface,#fff);color:var(--text);border:1px solid var(--border);border-radius:13px;box-shadow:0 12px 35px rgba(0,0,0,.18);backdrop-filter:blur(22px)}
+#timer-detail #timer-presets[hidden]{display:none!important}
+#timer-detail #timer-save-preset{display:none!important}
+.preset-heading h3{font-size:13px!important}.preset-heading button{font-size:11px!important;padding:5px 7px!important}
+#timer-presets .preset-list{display:flex;flex-direction:column;gap:2px;margin-top:7px}
+#timer-presets .preset-card{display:flex;flex-direction:row;align-items:center;border:0;border-bottom:1px solid var(--border);border-radius:0;background:transparent;min-height:40px}
+#timer-presets .preset-launch{display:flex;flex:1;flex-direction:row;align-items:center;justify-content:space-between;gap:8px;min-height:0;padding:8px 3px}
+#timer-presets .preset-launch strong{font-size:12px;font-weight:500}
+#timer-presets .preset-launch span{font-size:12px;font-weight:500;white-space:nowrap}
+#timer-presets .preset-controls{padding:0;gap:0}
+#timer-presets .preset-controls button{font-size:12px;padding:3px;min-width:23px}
+
+/* Update 03.4: subtle add-city action and independent local clock display */
+#world-screen .glass-panel:has(> #city-add){position:relative;padding-top:10px}
+#world-screen #city-add{display:flex;align-items:center;justify-content:center;width:32px!important;height:32px;min-width:32px;min-height:32px;margin:0 0 8px auto;padding:0!important;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--surface) 65%,transparent)!important;color:var(--muted)!important;font-size:20px;font-weight:400;box-shadow:none;opacity:.8}
+#world-screen #city-add:hover,#world-screen #city-add:focus-visible{opacity:1;color:var(--text)!important;background:var(--accent-soft)!important}
+#world-screen .world-local-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#world-screen .world-local-heading #world-date{margin:0;flex:1;text-align:left;font-size:13px}
+#world-clock-display{width:auto;max-width:120px;min-width:0;font-size:12px;padding:5px 22px 5px 8px;border:1px solid var(--border);border-radius:9px;color:var(--muted);background:var(--surface);cursor:pointer}
+#world-screen #world-analog-clock{margin:8px auto;max-width:110px;max-height:110px}
+#world-screen #world-time[hidden],#world-screen #world-analog-clock[hidden]{display:none!important}
