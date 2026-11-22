@@ -17,7 +17,7 @@
     <!-- ホーム画面 -->
     <section id="home-screen">
       <header class="app-header">
-        <h1>My Alarm</h1>
+        <h1>My Alarm</h1><div class="header-tools"><button id="forecast-btn" class="icon-btn" aria-label="7日間の予定">▦</button><button id="groups-btn" class="icon-btn" aria-label="グループ">▤</button>
 
         <button id="clock-mode-btn"
                 class="icon-btn"
@@ -26,7 +26,7 @@
                 title="時計専用モード">⛶</button>
 
         <button id="settings-btn" class="icon-btn"
-                type="button">⚙</button>
+                type="button">⚙</button></div>
       </header>
 
         <section class="clock-card">
@@ -51,7 +51,7 @@
 
         <p id="current-time">00:00:00</p>
 
-        <div class="next-alarm-info">
+        <div class="next-alarm-info" hidden>
           <p data-i18n="nextAlarm">次のアラーム</p>
           <strong id="next-alarm-text">設定なし</strong>
           <p id="next-alarm-countdown"></p>
@@ -144,11 +144,10 @@
           スヌーズ間隔
         </label>
         <select id="edit-snooze-minutes">
-          <option value="5">5分</option>
-          <option value="10">10分</option>
-          <option value="15">15分</option>
+          <option value="1">1分</option><option value="2">2分</option><option value="3">3分</option><option value="4">4分</option><option value="5">5分</option><option value="6">6分</option><option value="7">7分</option><option value="8">8分</option><option value="9">9分</option><option value="10">10分</option><option value="11">11分</option><option value="12">12分</option><option value="13">13分</option><option value="14">14分</option><option value="15">15分</option><option value="16">16分</option><option value="17">17分</option><option value="18">18分</option><option value="19">19分</option><option value="20">20分</option><option value="21">21分</option><option value="22">22分</option><option value="23">23分</option><option value="24">24分</option><option value="25">25分</option><option value="26">26分</option><option value="27">27分</option><option value="28">28分</option><option value="29">29分</option><option value="30">30分</option>
         </select>
 
+        <label for="edit-snooze-count" data-i18n="snoozeCount">スヌーズ回数</label><select id="edit-snooze-count"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="0">無制限</option></select><label for="edit-group" data-i18n="group">グループ</label><select id="edit-group"></select>
         <!-- フェードイン -->
         <label class="setting-row">
           <span data-i18n="fadeIn">フェードイン</span>
@@ -313,9 +312,34 @@
       <input id="auto-scroll" type="checkbox">
     </label>
   </div>
+
+  <!-- バックアップ・復元 -->
+  <div class="settings-group">
+    <h3 data-i18n="backupHeading">バックアップ・復元</h3>
+
+    <button id="export-backup-btn" type="button"
+            data-i18n="exportBackup">
+      バックアップを保存
+    </button>
+
+    <button id="import-backup-btn" type="button"
+            data-i18n="importBackup">
+      バックアップから復元
+    </button>
+
+    <input id="backup-file-input"
+           type="file"
+           accept=".json,application/json"
+           hidden>
+  </div>
 </section>
 
-  </main>
+  <section id="world-screen" hidden><h2 data-i18n="world">世界時計</h2><div class="clock-card"><p id="world-date"></p><p id="world-time"></p><button id="world-full" data-i18n="full">全画面</button></div><p data-i18n="later">詳細機能は次回実装予定</p></section>
+<section id="timer-screen" hidden><h2 data-i18n="timer">タイマー</h2><p data-i18n="later">詳細機能は次回実装予定</p></section>
+<section id="stopwatch-screen" hidden><h2 data-i18n="stopwatch">ストップウォッチ</h2><p data-i18n="later">詳細機能は次回実装予定</p></section>
+<section id="forecast-screen" hidden><button class="return-home" data-i18n="back">戻る</button><h2 data-i18n="forecast">7日間の予定</h2><div id="forecast-list"></div></section>
+<section id="groups-screen" hidden><button class="return-home" data-i18n="back">戻る</button><h2 data-i18n="groups">グループ管理</h2><input id="group-name" maxlength="40" aria-label="Group name"><button id="group-add" data-i18n="add">追加</button><div id="group-list"></div></section>
+<nav id="tab-nav" aria-label="Navigation"><button type="button" data-tab="home" data-i18n="alarms">アラーム</button><button type="button" data-tab="world" data-i18n="world">世界時計</button><button type="button" data-tab="timer" data-i18n="timer">タイマー</button><button type="button" data-tab="stopwatch" data-i18n="stopwatch">ストップウォッチ</button><button type="button" data-tab="settings" data-i18n="other">その他</button></nav></main>
 
   <!-- 時計専用モード -->
   <section id="clock-mode-screen" hidden>

@@ -4,7 +4,7 @@
 ========================= */
 
 const DAY_NAMES = ["日", "月", "火", "水", "木", "金", "土"];
-const DISPLAY_DAYS = [1, 2, 3, 4, 5, 6, 0];
+const DISPLAY_DAYS = [0, 1, 2, 3, 4, 5, 6];
 
 
 let alarms = JSON.parse(
@@ -47,9 +47,12 @@ function saveAlarms() {
 }
 
 function showScreen(screen) {
-  ["home", "edit", "settings"].forEach(name => {
+  ["home", "edit", "settings", "world", "timer", "stopwatch", "forecast", "groups"].forEach(name => {
     $(name + "-screen").hidden = name !== screen;
   });
+  $("tab-nav").hidden = ["edit", "forecast", "groups"].includes(screen);
+  document.querySelectorAll("[data-tab]").forEach(b => b.setAttribute("aria-current", b.dataset.tab === screen ? "page" : "false"));
+  if (screen === "home") requestAnimationFrame(scrollToNextAlarm);
 }
 
 function formatDays(days) {
@@ -329,6 +332,7 @@ function renderAlarms() {
     days.textContent = formatDays(alarm.days);
 
     summary.append(time, name, days);
+    if (alarm.groupId) { const label = document.createElement("small"); label.textContent = readGroups().find(g=>g.id===alarm.groupId)?.name || ""; summary.append(label); }
 
     summary.addEventListener("click", () => {
       openEditor(alarm.id);
@@ -369,7 +373,7 @@ function renderWeekdays() {
   DISPLAY_DAYS.forEach(day => {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "weekday-btn";
+    button.className = "weekday-btn day-" + day;
     button.textContent = t("weekdays")[day];
 
     if (selectedDays.includes(day)) {
@@ -393,6 +397,7 @@ function renderWeekdays() {
 function updateSnoozeVisibility() {
   $("edit-snooze-minutes").disabled =
     !$("edit-snooze").checked;
+  $("edit-snooze-count").disabled = !$("edit-snooze").checked;
 }
 
 $("edit-snooze").addEventListener(
@@ -484,6 +489,8 @@ function openEditor(id = null) {
   $("edit-fade-in").checked = alarm?.fadeIn ?? false;
   $("edit-skip-next").checked = alarm?.skipNext ?? false;
 
+  $("edit-snooze-count").value = String(alarm?.snoozeCount ?? 0);
+  fillGroups(alarm?.groupId);
   updateSnoozeVisibility();
 
   selectedDays = alarm
@@ -517,6 +524,8 @@ function saveEditedAlarm() {
     snoozeMinutes: Number(
       $("edit-snooze-minutes").value
     ),
+    snoozeCount: Number($("edit-snooze-count").value),
+    groupId: $("edit-group").value,
     fadeIn: $("edit-fade-in").checked,
     skipNext: $("edit-skip-next").checked
   };
@@ -828,6 +837,7 @@ function playExtraSound(type, volume = 0.2) {
   }
 }
 
+let snoozeUsed = 0;
 function startRinging(alarm, isSnooze = false) {
   if (activeAlarm) return;
 
@@ -836,6 +846,7 @@ function startRinging(alarm, isSnooze = false) {
   snoozeTimer = null;
   snoozedAlarm = null;
 
+  if (!isSnooze) snoozeUsed = 0;
   activeAlarm = alarm;
   ringingStartedAt = Date.now();
   soundGeneration++;
@@ -848,7 +859,7 @@ function startRinging(alarm, isSnooze = false) {
     alarm.name || t("defaultAlarm");
 
   $("ringing-panel").hidden = false;
-  $("snooze-alarm-btn").hidden = !alarm.snooze;
+  $("snooze-alarm-btn").hidden = !alarm.snooze || (alarm.snoozeCount > 0 && snoozeUsed >= alarm.snoozeCount);
 
   playAlarmCycle();
 
@@ -886,6 +897,8 @@ function snoozeAlarm() {
   if (!activeAlarm || !activeAlarm.snooze) return;
 
   const alarm = activeAlarm;
+  if (alarm.snoozeCount > 0 && snoozeUsed >= alarm.snoozeCount) return;
+  snoozeUsed++;
   const minutes = Number(alarm.snoozeMinutes) || 5;
 
   // 現在鳴っている音を止める
@@ -1255,6 +1268,9 @@ ja: {
     clockBoth: "両方",
     back: "戻る",
     settings: "設定",
+    backupHeading: "バックアップ・復元",
+    exportBackup: "バックアップを保存",
+    importBackup: "バックアップから復元",
     appearance: "外観",
     theme: "テーマ",
     accent: "アクセントカラー",
@@ -1348,6 +1364,9 @@ ja: {
     clockBoth: "Both",
     back: "Back",
     settings: "Settings",
+    backupHeading: "Backup & Restore",
+    exportBackup: "Export backup",
+    importBackup: "Restore from backup",
     appearance: "Appearance",
     theme: "Theme",
     accent: "Accent color",
@@ -1414,7 +1433,7 @@ ja: {
 };
 
 function t(key) {
-  return TRANSLATIONS[appSettings.language][key] || key;
+  return TRANSLATIONS[appSettings.language][key] || ({ja:{world:"世界時計",timer:"タイマー",stopwatch:"ストップウォッチ",other:"その他",forecast:"7日間の予定",groups:"グループ管理",group:"グループ",snoozeCount:"スヌーズ回数",later:"詳細機能は次回実装予定",full:"全画面"},en:{world:"World clock",timer:"Timer",stopwatch:"Stopwatch",other:"More",forecast:"7-day schedule",groups:"Groups",group:"Group",snoozeCount:"Snooze repeats",later:"Coming in the next update",full:"Fullscreen"}}[appSettings.language] || {})[key] || key;
 }
 
 function saveAppSettings() {
@@ -1589,8 +1608,9 @@ function applyLanguage() {
         });
     });
 
+  $("edit-snooze-count").options[10].textContent = appSettings.language === "ja" ? "無制限" : "Unlimited";
   // スヌーズ間隔の表示
-  [5, 10, 15].forEach((minutes, index) => {
+  Array.from({length:30}, (_,i)=>i+1).forEach((minutes, index) => {
     $("edit-snooze-minutes").options[index].textContent =
       appSettings.language === "ja"
         ? `${minutes}分`
@@ -1727,3 +1747,137 @@ $("clock-mode-back-btn").addEventListener("click", () => {
   $("clock-mode-screen").hidden = true;
 });
 
+$("clock-mode-back-btn").addEventListener("click", () => {
+  $("clock-mode-screen").hidden = true;
+});
+
+/* =========================
+   STEP 5：バックアップ・復元
+========================= */
+
+// バックアップを保存
+$("export-backup-btn").addEventListener("click", () => {
+  const backup = {
+    app: "My Alarm",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    alarms: alarms,
+    groups: readGroups(),
+    settings: appSettings,
+    autoScroll: $("auto-scroll").checked
+  };
+
+  const blob = new Blob(
+    [JSON.stringify(backup, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download =
+    "my-alarm-backup-" +
+    new Date().toISOString().slice(0, 10) +
+    ".json";
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  URL.revokeObjectURL(url);
+});
+
+// バックアップファイルを選択
+$("import-backup-btn").addEventListener("click", () => {
+  $("backup-file-input").click();
+});
+
+// バックアップから復元
+$("backup-file-input").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    const backup = JSON.parse(text);
+
+    // バックアップファイルの基本チェック
+    if (
+      backup.app !== "My Alarm" ||
+      backup.version !== 1 ||
+      !Array.isArray(backup.alarms) ||
+      !backup.settings ||
+      typeof backup.settings !== "object" ||
+      Array.isArray(backup.settings)
+    ) {
+      throw new Error("Invalid backup");
+    }
+
+    // 各アラームのデータを確認
+    const validAlarms = backup.alarms.every(alarm =>
+      alarm &&
+      typeof alarm.id === "string" &&
+      typeof alarm.time === "string" &&
+      /^([01]\d|2[0-3]):[0-5]\d$/.test(alarm.time) &&
+      typeof alarm.enabled === "boolean" &&
+      Array.isArray(alarm.days) &&
+      alarm.days.every(day =>
+        Number.isInteger(day) && day >= 0 && day <= 6
+      )
+    );
+
+    if (!validAlarms) {
+      throw new Error("Invalid alarm data");
+    }
+
+    const confirmed = confirm(
+      "現在のアラームと表示設定を、バックアップの内容で上書きします。\n" +
+      "現在のデータは置き換えられます。続行しますか？"
+    );
+
+    if (!confirmed) return;
+
+    // 復元
+    localStorage.setItem("myAlarmGroups", JSON.stringify(Array.isArray(backup.groups) ? backup.groups.filter(g => g && typeof g.id === "string" && typeof g.name === "string") : []));
+    alarms = backup.alarms.map(alarm => ({
+      ...alarm,
+      name: alarm.name || "",
+      sound: alarm.sound || "bell"
+    }));
+
+    appSettings = {
+      ...DEFAULT_SETTINGS,
+      ...backup.settings
+    };
+
+    saveAlarms();
+    saveAppSettings();
+
+    if (typeof backup.autoScroll === "boolean") {
+      $("auto-scroll").checked = backup.autoScroll;
+      localStorage.setItem(
+        "autoScroll",
+        String(backup.autoScroll)
+      );
+    }
+
+    applySettings();
+    showScreen("home");
+
+    alert("バックアップを復元しました。");
+  } catch (error) {
+    console.error(error);
+    alert("バックアップファイルを読み込めませんでした。");
+  } finally {
+    // 同じファイルを再選択できるようにする
+    event.target.value = "";
+  }
+});
+function readGroups(){try{return JSON.parse(localStorage.getItem("myAlarmGroups")||"[]")}catch{return []}}
+function fillGroups(value=""){const s=$("edit-group");s.replaceChildren(new Option(appSettings.language==="ja"?"なし":"None",""));readGroups().forEach(g=>s.add(new Option(g.name,g.id)));s.value=value||"";}
+function renderGroups(){const list=$("group-list");list.replaceChildren();readGroups().forEach(g=>{const row=document.createElement("div");row.className="alarm-item";const name=document.createElement("span");name.textContent=g.name;row.append(name);for(const [label,action] of [["ON",()=>setGroup(g.id,true)],["OFF",()=>setGroup(g.id,false)],[t("delete"),()=>{if(!confirm(g.name+" — "+t("delete")))return;localStorage.setItem("myAlarmGroups",JSON.stringify(readGroups().filter(x=>x.id!==g.id)));alarms.forEach(a=>{if(a.groupId===g.id)a.groupId=""});saveAlarms();renderGroups();renderAlarms()}]]){const b=document.createElement("button");b.textContent=label;b.onclick=action;row.append(b)}list.append(row)})}
+function setGroup(id,enabled){alarms.forEach(a=>{if(a.groupId===id)a.enabled=enabled});if(!enabled&&snoozedAlarm?.groupId===id){clearTimeout(snoozeTimer);snoozedAlarm=null;snoozeTimer=null}saveAlarms();renderAlarms();updateClock()}
+$("group-add").onclick=()=>{const name=$("group-name").value.trim();if(!name)return;localStorage.setItem("myAlarmGroups",JSON.stringify([...readGroups(),{id:crypto.randomUUID(),name}]));$("group-name").value="";renderGroups()};
+function renderForecast(){const list=$("forecast-list");list.replaceChildren();const now=new Date();for(let i=0;i<7;i++){const day=new Date(now);day.setDate(day.getDate()+i);const heading=document.createElement("h3");heading.textContent=day.toLocaleDateString(appSettings.language,{weekday:"short",month:"numeric",day:"numeric"});list.append(heading);const rows=alarms.filter(a=>{if(!a.enabled)return false;const next=getNextAlarmDate(a,now);if(!next)return false; const end=new Date(day);end.setHours(23,59,59,999);if(next>end)return false;return a.days.length? a.days.includes(day.getDay()):next.toDateString()===day.toDateString()});for(const a of rows){const r=document.createElement("div");r.className="alarm-item";r.textContent=a.time+"  "+(a.name||t("defaultAlarm"));list.append(r)}if(!rows.length){const r=document.createElement("p");r.textContent="—";list.append(r)}}}
+$("forecast-btn").onclick=()=>{renderForecast();showScreen("forecast")};$("groups-btn").onclick=()=>{renderGroups();showScreen("groups")};document.querySelectorAll(".return-home").forEach(b=>b.onclick=()=>showScreen("home"));document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>showScreen(b.dataset.tab));$("world-full").onclick=()=>$("clock-mode-btn").click();function updateWorld(){ $("world-time").textContent=$("current-time").textContent;$("world-date").textContent=$("current-date").textContent }setInterval(updateWorld,1000);updateWorld();showScreen("home");

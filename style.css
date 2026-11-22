@@ -980,3 +980,44 @@ button#all-off-btn.is-active {
     width: min(65vw, 210px);
   }
 }
+/* =========================
+   STEP 5：バックアップ・復元
+========================= */
+
+#export-backup-btn,
+#import-backup-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+#export-backup-btn {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+#import-backup-btn {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: 1px solid var(--border);
+}
+/* Phase 1 layout */
+.container{max-width:560px;padding:16px 16px 94px}#home-screen:not([hidden]){height:calc(100dvh - 110px);display:flex;flex-direction:column;min-height:0}#home-screen .app-header,#home-screen .clock-card,#home-screen .section-header,#home-screen .bulk-alarm-wrapper{flex:none}#home-screen .app-header{margin-bottom:6px}.header-tools{display:flex;gap:2px}#home-screen .clock-card{padding:12px;margin-bottom:8px}#home-screen #current-time{margin:4px 0;font-size:clamp(30px,9vw,48px)}#home-screen #current-date{margin:4px}#home-screen .home-analog-clock{max-width:110px;max-height:110px}#alarm-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:4px 2px}.clock-card,.alarm-item,.settings-group{background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--border);backdrop-filter:blur(14px);border-radius:18px}#tab-nav{position:fixed;bottom: max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(calc(100% - 24px),530px);display:flex;gap:3px;padding:7px;background:var(--surface);border:1px solid var(--border);border-radius:22px;z-index:10;box-shadow:0 8px 24px #0002}#tab-nav button{flex:1;min-width:0;font-size:11px;padding:12px 2px;background:transparent;color:var(--text)}#tab-nav button[aria-current=page]{background:var(--accent-soft);color:var(--text)}.weekday-btn.day-0{color:#df7b85}.weekday-btn.day-6{color:#79a8e8}#world-time{font-size:42px;font-variant-numeric:tabular-nums}#group-list .alarm-item{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:10px}#group-list .alarm-item span{flex:1}#forecast-list .alarm-item{margin:6px 0}
+/* 日曜日・土曜日の文字色 */
+#edit-weekdays .weekday-btn.day-0 {
+    color: #D66B78;
+}
+
+#edit-weekdays .weekday-btn.day-6 {
+    color: #528ACB;
+}
+
+/* 選択状態の日曜日・土曜日 */
+#edit-weekdays .weekday-btn.day-0.selected {
+    color: #FFD1D6;
+}
+
+#edit-weekdays .weekday-btn.day-6.selected {
+    color: #C6E2FF;
+}
