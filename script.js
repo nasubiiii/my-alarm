@@ -48,7 +48,9 @@ function saveAlarms() {
 
 // Settings navigation: explicit entry point determines whether a return arrow is shown.
 let activeScreen = 'home';
+let subpageReturnScreen = 'home';
 function showScreen(screen, entry = 'tab') {
+  if (['forecast','groups'].includes(screen) && !['forecast','groups'].includes(activeScreen)) subpageReturnScreen = activeScreen;
   activeScreen = screen;
   const fromAlarm = screen === 'settings' && entry === 'alarm';
   const settingsPanel = $('settings-screen');
@@ -1893,11 +1895,14 @@ function renderGroups(){const list=$("group-list");list.replaceChildren();readGr
 function setGroup(id,enabled){alarms.forEach(a=>{if(a.groupId===id)a.enabled=enabled});if(!enabled&&snoozedAlarm?.groupId===id){clearTimeout(snoozeTimer);snoozedAlarm=null;snoozeTimer=null}saveAlarms();renderAlarms();updateClock()}
 $("group-add").onclick=()=>{const name=$("group-name").value.trim();if(!name)return;localStorage.setItem("myAlarmGroups",JSON.stringify([...readGroups(),{id:crypto.randomUUID(),name}]));$("group-name").value="";renderGroups()};
 function renderForecast(){const list=$("forecast-list");list.replaceChildren();const now=new Date();for(let i=0;i<7;i++){const day=new Date(now);day.setDate(day.getDate()+i);day.setHours(0,0,0,0);const card=document.createElement("article");card.className="glass-panel";const heading=document.createElement("h3");heading.className="day-"+day.getDay();heading.textContent=day.toLocaleDateString(appSettings.language,{weekday:"short",month:"numeric",day:"numeric"})+(i===0?" · "+L("今日","Today"):"");card.append(heading);const rows=alarms.filter(a=>{const next=getNextAlarmDate(a,now);if(!next)return false;const candidate=new Date(day);candidate.setHours(...a.time.split(":").map(Number),0,0);return candidate>=next&&(a.days.length?a.days.includes(day.getDay()):candidate.getTime()===next.getTime())}).sort((a,b)=>a.time.localeCompare(b.time));for(const a of rows){const r=document.createElement("button");r.className="forecast-row";r.textContent=a.time+"  "+(a.name||t("defaultAlarm"))+"  ›";r.onclick=()=>openEditor(a.id);card.append(r)}if(!rows.length){const r=document.createElement("p");r.textContent=L("アラームなし","No alarms");card.append(r)}list.append(card)}}
-$("forecast-btn").onclick=()=>{renderForecast();showScreen("forecast")};$("groups-btn").onclick=()=>{renderGroups();showScreen("groups")};document.querySelectorAll(".return-home").forEach(b=>b.onclick=()=>showScreen("home"));document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>showScreen(b.dataset.tab,"tab"));$("world-full").onclick=()=>$("clock-mode-btn").click();
+$("forecast-btn").onclick=()=>{renderForecast();showScreen("forecast")};$("groups-btn").onclick=()=>{renderGroups();showScreen("groups")};document.querySelectorAll(".return-home").forEach(b=>b.onclick=()=>showScreen(subpageReturnScreen));document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>showScreen(b.dataset.tab,"tab"));$("world-full").onclick=()=>$("clock-mode-btn").click();
 let restoredTab = "home";
 try { const saved = sessionStorage.getItem("myAlarmActiveTab"); if (["home","world","timer","stopwatch","settings"].includes(saved)) restoredTab = saved; } catch {}
 showScreen(restoredTab);
 $("settings-return").addEventListener("click",()=>showScreen("home"));
+function localizeSubpageReturns(){document.querySelectorAll(".return-home").forEach(b=>{b.setAttribute("aria-label",t("back"));b.title=t("back")})}
+const originalSubpageLanguage=applyLanguage;applyLanguage=function(){originalSubpageLanguage();localizeSubpageReturns()};
+localizeSubpageReturns();
 
 /* Phase 2 additions */
 function L(ja,en){return appSettings.language==='ja'?ja:en}
