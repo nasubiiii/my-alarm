@@ -1463,7 +1463,7 @@ function applyTheme() {
     BACKGROUND_THEMES[appSettings.background];
 
   // 背景テーマを選んだ場合はその明暗を優先
-  const mode = baseMode;
+  const mode = background?.mode || baseMode;
   root.dataset.theme = mode;
 
   // 背景テーマの配色を適用
@@ -1486,6 +1486,7 @@ function applyTheme() {
   );
 
   style.setProperty("--bg", colors.bg);
+  style.setProperty("--glow", mode === "light" ? `color-mix(in srgb, ${colors.border} 75%, ${colors.bg})` : `color-mix(in srgb, ${colors.surface} 75%, ${colors.bg})`);
   style.setProperty("--surface", colors.surface);
   style.setProperty("--text", colors.text);
   style.setProperty("--muted", colors.muted);
@@ -1675,6 +1676,7 @@ function applySettings() {
 
     select.addEventListener("change", () => {
         appSettings[key] = select.value;
+        if (key === "theme") appSettings.background = "default";
         saveAppSettings();
         applySettings();
     });
@@ -1683,6 +1685,7 @@ function applySettings() {
     // 背景テーマを変更したとき
     $("background-select").addEventListener("change", () => {
     appSettings.background = $("background-select").value;
+        if (BACKGROUND_THEMES[appSettings.background]) appSettings.theme = BACKGROUND_THEMES[appSettings.background].mode;
     saveAppSettings();
     applySettings();
     });
@@ -1924,11 +1927,11 @@ $('timer-reset').onclick=()=>{timer.end=0;timer.total=timer.left=timerInputs();s
 function tickTimer(){let left=timer.end?Math.max(0,timer.end-Date.now()):timer.left;if(timer.end&&!left){timer.end=0;timer.left=0;saveTimer();try{const c=new AudioContext();const o=c.createOscillator();o.connect(c.destination);o.start();o.stop(c.currentTime+.6)}catch{}alert(L('タイマー終了','Timer finished'))}const ratio=timer.total?left/timer.total:0;$('timer-value').textContent=duration(Math.ceil(left/1000)*1000);$('timer-progress').value=ratio;$('timer-title').textContent=L(...timerNames[timer.kind]);$('timer-start').textContent=timer.end?L('一時停止','Pause'):L('開始・再開','Start / resume');$('timer-reset').textContent=L('リセット','Reset');$('timer-art').className=timer.kind?'timer-art art-'+timer.kind:'';$('timer-art').style.setProperty('--remaining',ratio*100+'%');['hours','minutes','seconds'].forEach(k=>$('timer-'+k).disabled=!!timer.end)}
 let sw=readExtra('myAlarmStopwatch',{elapsed:0,start:0,laps:[],history:[]});function swTime(){return sw.elapsed+(sw.start?Date.now()-sw.start:0)}function saveSW(){storeExtra('myAlarmStopwatch',sw)}
 $('sw-start').onclick=()=>{if(sw.start){sw.elapsed=swTime();sw.start=0}else sw.start=Date.now();saveSW();tickSW()};$('sw-lap').onclick=()=>{if(!sw.start)return;sw.laps.push(swTime());saveSW();drawLaps()};$('sw-reset').onclick=()=>{const total=swTime();if(total>0)sw.history.unshift({date:Date.now(),total,laps:sw.laps.slice()});sw.history=sw.history.slice(0,100);sw.elapsed=0;sw.start=0;sw.laps=[];saveSW();drawLaps();tickSW()};
-function drawLaps(){$('sw-laps').replaceChildren(...sw.laps.map((v,i)=>el('p',`${i+1}  ${duration(v-(sw.laps[i-1]||0),true)}  /  ${duration(v,true)}`)));$('sw-history').replaceChildren(...sw.history.map(h=>el('p',new Date(h.date).toLocaleString(appSettings.language)+' · '+duration(h.total,true))))}
+function drawLaps(){$('sw-laps').replaceChildren(...sw.laps.map((v,i)=>el('p',`${i+1}  ${duration(v-(sw.laps[i-1]||0),true)}  /  ${duration(v,true)}`)));$('sw-history').replaceChildren(...sw.history.map((h,i)=>{const row=el('div',undefined,'history-row');row.append(el('span',new Date(h.date).toLocaleString(appSettings.language)+' · '+duration(h.total,true)),action(L('削除','Delete'),()=>{if(confirm(L('この履歴を削除しますか？','Delete this record?'))){sw.history.splice(i,1);saveSW();drawLaps()}}));return row}));if(sw.history.length)$('sw-history').append(action(L('履歴をすべて削除','Clear history'),()=>{if(confirm(L('すべての履歴を削除しますか？','Clear all history?'))){sw.history=[];saveSW();drawLaps()}}))}
 function tickSW(){$('sw-value').textContent=duration(swTime(),true);$('sw-start').textContent=sw.start?L('一時停止','Pause'):L('開始・再開','Start / resume');$('sw-lap').textContent=L('ラップ','Lap');$('sw-reset').textContent=L('リセット','Reset');$('sw-history-title').textContent=L('履歴','History');$('sw-lap').disabled=!sw.start}
 const originalGroups=renderGroups;renderGroups=function(){originalGroups();Array.from($('group-list').children).forEach((row,i)=>{const g=readGroups()[i];if(!g)return;row.classList.add('glass-panel');row.querySelector('span').append(el('small',' · '+alarms.filter(a=>a.groupId===g.id).length));row.append(action(L('名前変更','Rename'),()=>{const name=prompt(L('グループ名','Group name'),g.name)?.trim();if(!name)return;storeExtra('myAlarmGroups',readGroups().map(x=>x.id===g.id?{...x,name}:x));renderGroups();renderAlarms()}))})};
 const originalLanguage=applyLanguage;applyLanguage=function(){originalLanguage();$('time-format-select').options[0].textContent=L('24時間表示','24-hour');$('time-format-select').options[1].textContent=L('12時間表示','12-hour');document.querySelector('[data-i18n="homeClockDisplay"]').textContent=L('アラーム画面の時計','Alarm screen clock');$('home-clock-display-select').value=appSettings.homeClockDisplay;$('city-search').placeholder=L('都市・タイムゾーン','City / time zone');$('travel-reset').textContent=L('現在時刻','Now');$('group-name').placeholder=L('グループ名','Group name');refreshCityOptions();drawTimerTypes();decorateNav()};
-function decorateNav(){const icons=['◴','◎','◷','⏱','⋯'];document.querySelectorAll('#tab-nav button').forEach((b,i)=>{b.prepend(el('span',icons[i],'nav-icon'))})}
+function decorateNav(){const paths=['<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M5 3L2 6m17-3 3 3"/>','<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>','<path d="M6 3h12M6 21h12M7 3v4l5 5-5 5v4m10-18v4l-5 5 5 5v4"/>','<circle cx="12" cy="14" r="8"/><path d="M9 2h6m-3 0v4m6 1 2-2m-8 5v4"/>','<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'];document.querySelectorAll('#tab-nav button').forEach((b,i)=>{b.querySelector('.nav-icon')?.remove();const span=el('span',undefined,'nav-icon');span.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[i]+'</svg>';b.prepend(span)});for(const [id,key] of [['forecast-btn','forecast'],['groups-btn','groups']]){$(id).title=t(key);$(id).setAttribute('aria-label',t(key))}}
 function colorDates(){const d=new Date().getDay();['current-date','clock-mode-date'].forEach(id=>{$(id).classList.toggle('day-0',d===0);$(id).classList.toggle('day-6',d===6)})}
 // Settings categories (native disclosure, retain original controls and listeners)
 document.querySelectorAll('#settings-screen .settings-group').forEach(g=>{const h=g.querySelector('h3');const d=el('details');d.className='settings-disclosure';const sum=el('summary');h.replaceWith(sum);sum.append(h);while(g.firstChild!==sum)d.append(g.firstChild);while(sum.nextSibling)d.append(sum.nextSibling);d.prepend(sum);g.append(d)});

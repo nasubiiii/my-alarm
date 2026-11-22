@@ -1025,3 +1025,18 @@ button#all-off-btn.is-active {
 
 /* Update 02.1 world clock */
 #world-zone,.city-zone,.city-diff{font-size:12px;color:var(--muted)}.city-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px}.city-info,.city-clock{display:flex;flex-direction:column;gap:5px;min-width:0}.city-info strong{font-size:16px}.city-zone{overflow-wrap:anywhere}.city-clock{text-align:right;align-self:center}.city-time{font-size:26px;font-variant-numeric:tabular-nums}.city-controls{grid-column:1/-1;display:flex;justify-content:flex-end;gap:6px}.city-daylight{font-size:18px}#city-message:empty{display:none}#world-zone{overflow-wrap:anywhere}
+
+/* Update 02.2 – palette and compact layout */
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+body{background:radial-gradient(ellipse at 5% 4%,var(--glow,var(--bg)),transparent 65%),linear-gradient(150deg,var(--bg),color-mix(in srgb,var(--bg) 72%,var(--surface)));background-attachment:fixed;color:var(--text)}
+.clock-card,.alarm-item,.settings-group,.glass-panel,#tab-nav{background:color-mix(in srgb,var(--surface) 76%,transparent);border-color:var(--border);box-shadow:0 4px 16px #162b420c}
+:root[data-theme=light] .clock-card,:root[data-theme=light] .alarm-item,:root[data-theme=light] .glass-panel,:root[data-theme=light] .settings-group{box-shadow:0 4px 18px #3542560c,inset 0 1px 0 #ffffffb0}
+#tab-nav{background:color-mix(in srgb,var(--surface) 95%,transparent)}
+#home-screen .app-header{min-height:40px;margin-bottom:4px}#home-screen .clock-card{padding:5px 10px;margin-bottom:5px}#home-screen .home-analog-clock{margin:3px auto;max-width:88px;max-height:88px}#home-screen #current-date{margin:2px;font-size:12px}
+#home-screen .section-header{margin:0 0 4px}#home-screen .section-header h2{font-size:17px;margin:5px 0}#home-screen #add-btn{padding:5px 10px;font-size:12px}
+#home-screen .bulk-alarm-wrapper{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:0 0 6px}#home-screen .bulk-alarm-header{margin:0}#home-screen .bulk-alarm-actions{width:auto;gap:2px;padding:2px;border-radius:10px}#home-screen #all-on-btn,#home-screen #all-off-btn{flex:none;padding:5px 10px;font-size:11px;border-radius:7px;min-height:28px}#bulk-alarm-status{font-size:11px}
+#alarm-list .alarm-item{padding:8px 12px!important;margin:0 0 6px;border-radius:14px}#alarm-list .alarm-time{font-size:27px;line-height:1.15}#alarm-list .alarm-name{font-size:13px;margin:2px 0}#alarm-list .alarm-days{font-size:11px;line-height:1.25}
+#alarm-list .alarm-item.next-alarm{background:var(--accent-soft);border-color:var(--accent)}
+.header-tools .icon-btn{display:grid;place-items:center;width:34px;height:36px;padding:6px;font-size:20px;color:var(--text)}.header-tools svg,.nav-icon svg{width:20px;height:20px;display:block}.nav-icon{display:block}
+#world-screen .clock-card{padding:16px 12px;margin-bottom:12px}#world-screen #world-time{margin:14px 0}#world-screen .city-row{padding:8px 0;gap:2px 8px}#world-screen .city-info,#world-screen .city-clock{gap:2px}#world-screen .city-controls{gap:3px}#world-screen .city-controls button{padding:4px 8px}.history-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0}.history-row button{padding:5px 8px;font-size:12px}.settings-group{padding:12px;margin-bottom:9px}.settings-disclosure[open] summary{margin-bottom:10px}
+#clock-mode-screen{background:var(--bg)}
