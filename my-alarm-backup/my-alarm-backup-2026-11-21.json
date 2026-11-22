@@ -1,0 +1,199 @@
+{
+  "app": "My Alarm",
+  "version": 1,
+  "exportedAt": "2026-11-21T17:02:20.506Z",
+  "alarms": [
+    {
+      "id": "8299ec37-de06-4420-b002-18207d8ce4c0",
+      "enabled": true,
+      "name": "",
+      "time": "00:56",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": false
+    },
+    {
+      "id": "80170dae-b9ef-40b6-81fe-42158d86ade2",
+      "enabled": true,
+      "name": "",
+      "time": "01:11",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": false,
+      "skipNext": false
+    },
+    {
+      "id": "d0c6a36e-520d-47b5-ae43-7a58d241ca2a",
+      "enabled": true,
+      "name": "",
+      "time": "01:15",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": false
+    },
+    {
+      "id": "1858ffa6-3910-4725-a0ca-8fd5ee3f9883",
+      "enabled": true,
+      "name": "",
+      "time": "01:47",
+      "sound": "alert",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": false
+    },
+    {
+      "id": "9c722670-5cf8-47c7-843f-136eb0966b71",
+      "enabled": true,
+      "name": "",
+      "time": "07:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": true
+    },
+    {
+      "id": "69d53cf5-4839-4251-b809-e4b9bedd2c6b",
+      "enabled": true,
+      "name": "Alarm (copy)",
+      "time": "07:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": false,
+      "skipNext": false
+    },
+    {
+      "id": "07e6a2ae-4ab8-4417-8333-76c22b18cf0b",
+      "enabled": true,
+      "name": "",
+      "time": "07:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": false,
+      "skipNext": false
+    },
+    {
+      "id": "38e54635-e639-4e72-bbfd-8d1585a0947d",
+      "enabled": true,
+      "name": "",
+      "time": "07:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": false,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": true
+    },
+    {
+      "id": "2e642590-2946-4019-a8cd-c47de691a37d",
+      "enabled": true,
+      "name": "",
+      "time": "19:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": false
+    }
+  ],
+  "settings": {
+    "theme": "dark",
+    "language": "ja",
+    "font": "sans",
+    "accent": "teal",
+    "background": "greige",
+    "timeFormat": "24",
+    "showSeconds": true,
+    "clockDisplay": "analog",
+    "homeClockDisplay": "both"
+  },
+  "autoScroll": false
+}

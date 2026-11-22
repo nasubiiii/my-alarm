@@ -1,0 +1,255 @@
+{
+  "app": "My Alarm",
+  "version": 1,
+  "exportedAt": "2026-11-22T01:15:38.509Z",
+  "alarms": [
+    {
+      "id": "80170dae-b9ef-40b6-81fe-42158d86ade2",
+      "enabled": false,
+      "name": "",
+      "time": "01:11",
+      "sound": "bell",
+      "days": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        0,
+        1
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": false,
+      "skipNext": false,
+      "snoozeCount": 0,
+      "groupId": ""
+    },
+    {
+      "id": "d0c6a36e-520d-47b5-ae43-7a58d241ca2a",
+      "enabled": false,
+      "name": "",
+      "time": "01:15",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": false
+    },
+    {
+      "id": "1858ffa6-3910-4725-a0ca-8fd5ee3f9883",
+      "enabled": false,
+      "name": "",
+      "time": "01:47",
+      "sound": "alert",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": false
+    },
+    {
+      "id": "9c722670-5cf8-47c7-843f-136eb0966b71",
+      "enabled": false,
+      "name": "",
+      "time": "07:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": true
+    },
+    {
+      "id": "69d53cf5-4839-4251-b809-e4b9bedd2c6b",
+      "enabled": false,
+      "name": "Alarm (copy)",
+      "time": "07:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": false,
+      "skipNext": false
+    },
+    {
+      "id": "07e6a2ae-4ab8-4417-8333-76c22b18cf0b",
+      "enabled": true,
+      "name": "",
+      "time": "07:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": false,
+      "skipNext": false,
+      "snoozeCount": 0,
+      "groupId": "fd10549b-aa7e-4b81-8acc-cfa7847e1d9b"
+    },
+    {
+      "id": "38e54635-e639-4e72-bbfd-8d1585a0947d",
+      "enabled": false,
+      "name": "",
+      "time": "07:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": false,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": true
+    },
+    {
+      "id": "8299ec37-de06-4420-b002-18207d8ce4c0",
+      "enabled": true,
+      "name": "",
+      "time": "09:23",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 3,
+      "fadeIn": false,
+      "skipNext": false,
+      "snoozeCount": 0,
+      "groupId": "fd10549b-aa7e-4b81-8acc-cfa7847e1d9b"
+    },
+    {
+      "id": "574d4709-a3d8-4508-8bef-d3963a1ca227",
+      "enabled": false,
+      "name": "",
+      "time": "09:38",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "snoozeCount": 0,
+      "groupId": "",
+      "fadeIn": false,
+      "skipNext": false
+    },
+    {
+      "id": "6ca87acb-4b31-4069-a628-85cfc18e476a",
+      "enabled": false,
+      "name": "",
+      "time": "10:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "snoozeCount": 0,
+      "groupId": "",
+      "fadeIn": false,
+      "skipNext": false
+    },
+    {
+      "id": "2e642590-2946-4019-a8cd-c47de691a37d",
+      "enabled": false,
+      "name": "",
+      "time": "19:00",
+      "sound": "bell",
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snooze": true,
+      "snoozeMinutes": 5,
+      "fadeIn": true,
+      "skipNext": false
+    }
+  ],
+  "groups": [
+    {
+      "id": "fd10549b-aa7e-4b81-8acc-cfa7847e1d9b",
+      "name": "Work"
+    }
+  ],
+  "settings": {
+    "theme": "light",
+    "language": "ja",
+    "font": "sans",
+    "accent": "orange",
+    "background": "rose",
+    "timeFormat": "24",
+    "showSeconds": true,
+    "clockDisplay": "analog",
+    "homeClockDisplay": "both"
+  },
+  "autoScroll": true
+}

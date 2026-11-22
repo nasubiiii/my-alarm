@@ -46,7 +46,16 @@ function saveAlarms() {
   localStorage.setItem("myAlarms", JSON.stringify(alarms));
 }
 
-function showScreen(screen) {
+// Settings navigation: explicit entry point determines whether a return arrow is shown.
+let activeScreen = 'home';
+function showScreen(screen, entry = 'tab') {
+  activeScreen = screen;
+  const fromAlarm = screen === 'settings' && entry === 'alarm';
+  const settingsPanel = $('settings-screen');
+  const back = $('settings-return');
+  settingsPanel.dataset.entry = fromAlarm ? 'alarm' : 'tab';
+  back.hidden = !fromAlarm;
+  back.setAttribute('aria-hidden', String(!fromAlarm));
   if (["home", "world", "timer", "stopwatch", "settings"].includes(screen)) {
     try { sessionStorage.setItem("myAlarmActiveTab", screen); } catch {}
   }
@@ -1059,11 +1068,7 @@ $("duplicate-btn").addEventListener("click", duplicateAlarm);
 $("delete-btn").addEventListener("click", deleteAlarm);
 
 $("settings-btn").addEventListener("click", () => {
-  showScreen("settings");
-});
-
-$("settings-back-btn").addEventListener("click", () => {
-  showScreen("home");
+  showScreen("settings", "alarm");
 });
 
 $("preview-btn").addEventListener("click", () => {
@@ -1888,10 +1893,11 @@ function renderGroups(){const list=$("group-list");list.replaceChildren();readGr
 function setGroup(id,enabled){alarms.forEach(a=>{if(a.groupId===id)a.enabled=enabled});if(!enabled&&snoozedAlarm?.groupId===id){clearTimeout(snoozeTimer);snoozedAlarm=null;snoozeTimer=null}saveAlarms();renderAlarms();updateClock()}
 $("group-add").onclick=()=>{const name=$("group-name").value.trim();if(!name)return;localStorage.setItem("myAlarmGroups",JSON.stringify([...readGroups(),{id:crypto.randomUUID(),name}]));$("group-name").value="";renderGroups()};
 function renderForecast(){const list=$("forecast-list");list.replaceChildren();const now=new Date();for(let i=0;i<7;i++){const day=new Date(now);day.setDate(day.getDate()+i);day.setHours(0,0,0,0);const card=document.createElement("article");card.className="glass-panel";const heading=document.createElement("h3");heading.className="day-"+day.getDay();heading.textContent=day.toLocaleDateString(appSettings.language,{weekday:"short",month:"numeric",day:"numeric"})+(i===0?" · "+L("今日","Today"):"");card.append(heading);const rows=alarms.filter(a=>{const next=getNextAlarmDate(a,now);if(!next)return false;const candidate=new Date(day);candidate.setHours(...a.time.split(":").map(Number),0,0);return candidate>=next&&(a.days.length?a.days.includes(day.getDay()):candidate.getTime()===next.getTime())}).sort((a,b)=>a.time.localeCompare(b.time));for(const a of rows){const r=document.createElement("button");r.className="forecast-row";r.textContent=a.time+"  "+(a.name||t("defaultAlarm"))+"  ›";r.onclick=()=>openEditor(a.id);card.append(r)}if(!rows.length){const r=document.createElement("p");r.textContent=L("アラームなし","No alarms");card.append(r)}list.append(card)}}
-$("forecast-btn").onclick=()=>{renderForecast();showScreen("forecast")};$("groups-btn").onclick=()=>{renderGroups();showScreen("groups")};document.querySelectorAll(".return-home").forEach(b=>b.onclick=()=>showScreen("home"));document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>showScreen(b.dataset.tab));$("world-full").onclick=()=>$("clock-mode-btn").click();
+$("forecast-btn").onclick=()=>{renderForecast();showScreen("forecast")};$("groups-btn").onclick=()=>{renderGroups();showScreen("groups")};document.querySelectorAll(".return-home").forEach(b=>b.onclick=()=>showScreen("home"));document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>showScreen(b.dataset.tab,"tab"));$("world-full").onclick=()=>$("clock-mode-btn").click();
 let restoredTab = "home";
 try { const saved = sessionStorage.getItem("myAlarmActiveTab"); if (["home","world","timer","stopwatch","settings"].includes(saved)) restoredTab = saved; } catch {}
 showScreen(restoredTab);
+$("settings-return").addEventListener("click",()=>showScreen("home"));
 
 /* Phase 2 additions */
 function L(ja,en){return appSettings.language==='ja'?ja:en}
@@ -1914,7 +1920,7 @@ let cities=readExtra('myAlarmCities',[]);
 const preferredZones=['Asia/Tokyo','Europe/London','America/New_York','Europe/Paris','Asia/Seoul','Asia/Singapore','Australia/Sydney'];
 function refreshCityOptions(){
  const date=new Date(),q=$('city-search').value.trim().toLowerCase(),list=$('city-options');
- $('city-add').textContent='＋';$('city-add').title=$('city-add').ariaLabel=L('都市を追加','Add city');$('city-picker-title').textContent=L('都市を追加','Add city');$('city-picker-close').setAttribute('aria-label',L('閉じる','Close'));$('city-search').setAttribute('aria-label',L('都市を検索','Search cities'));
+ $('city-add').textContent=L('＋ 追加','＋ Add');$('city-add').title=$('city-add').ariaLabel=L('都市を追加','Add city');$('city-picker-title').textContent=L('都市を追加','Add city');$('city-picker-close').setAttribute('aria-label',L('閉じる','Close'));$('city-search').setAttribute('aria-label',L('都市を検索','Search cities'));
  if(!$('city-picker').open)return;
  list.replaceChildren();const sorted=[...zones].sort((a,b)=>(preferredZones.includes(a)?preferredZones.indexOf(a):999)-(preferredZones.includes(b)?preferredZones.indexOf(b):999)||cityName(a).localeCompare(cityName(b),locale()));
  for(const z of sorted){try{const ab=abbreviation(z,date),off='UTC'+offsetText(zoneOffset(z,date)),r=regionNames[cityKey(z)]||[];if(![z,cityName(z),countryName(z),ab,off,...r].join(' ').toLowerCase().includes(q))continue;const btn=action('',()=>{if(cities.includes(z))return;cities.push(z);storeExtra('myAlarmCities',cities);$('city-picker').close();drawCities()});btn.className='city-picker-option';btn.disabled=cities.includes(z);const info=el('span',undefined,'city-picker-info');info.append(el('strong',cityName(z)+(countryName(z)?' · '+countryName(z):'')),el('small',ab+' · '+off));btn.append(info,el('span',btn.disabled?'✓':'+'));list.append(btn)}catch{}}
@@ -1949,7 +1955,7 @@ $('world-clock-display').addEventListener('change',e=>{
 });
 applyWorldClockDisplay();
 let lastCityTick='';
-function tickCities(){const offset=Number($('travel').value);const date=new Date(Date.now()+offset*60000);const key=[Math.floor(date/1000),offset,appSettings.language,appSettings.timeFormat,appSettings.showSeconds,cities.join()].join('|');if(key===lastCityTick)return;lastCityTick=key;const base=zoneOffset(localZone,date);$('travel-label').textContent=L('時差比較','Time travel')+' '+offsetText(offset);$('world-time').textContent=timeAt(localZone,date,appSettings.showSeconds);updateWorldAnalog(date);applyWorldClockDisplay();dateAt(localZone,date,$('world-date'));$('world-zone').textContent=abbreviation(localZone,date)+' · UTC'+offsetText(base)+' · '+zonePart(localZone,date,'long',locale());document.querySelectorAll('.city-row').forEach(r=>{try{const z=r.dataset.zone;const o=zoneOffset(z,date);r.querySelector('.city-name').textContent=cityName(z)+(countryName(z)?' · '+countryName(z):'');r.querySelector('.city-zone').textContent=abbreviation(z,date)+' · UTC'+offsetText(o)+' · '+zonePart(z,date,'long',locale());r.querySelector('.city-time').textContent=timeAt(z,date);dateAt(z,date,r.querySelector('.city-date'));r.querySelector('.city-diff').textContent=L('現在地との時差 ','Local difference ')+offsetText(o-base);const h=Number(new Intl.DateTimeFormat('en-GB',{timeZone:z,hour:'2-digit',hourCycle:'h23'}).format(date));r.querySelector('.city-daylight').textContent=h>=6&&h<18?'☀':'☾';}catch{r.querySelector('.city-time').textContent='—'}})}
+function tickCities(){const offset=Number($('travel').value);const date=new Date(Date.now()+offset*60000);const key=[Math.floor(date/1000),offset,appSettings.language,appSettings.timeFormat,appSettings.showSeconds,cities.join()].join('|');if(key===lastCityTick)return;lastCityTick=key;const base=zoneOffset(localZone,date);$('travel-label').textContent=L('時差比較','Time travel')+' '+offsetText(offset);$('travel-reset').disabled=offset===0;$('world-time').textContent=timeAt(localZone,date,appSettings.showSeconds);updateWorldAnalog(date);applyWorldClockDisplay();dateAt(localZone,date,$('world-date'));$('world-zone').textContent=abbreviation(localZone,date)+' · UTC'+offsetText(base)+' · '+zonePart(localZone,date,'long',locale());document.querySelectorAll('.city-row').forEach(r=>{try{const z=r.dataset.zone;const o=zoneOffset(z,date);r.querySelector('.city-name').textContent=cityName(z)+(countryName(z)?' · '+countryName(z):'');r.querySelector('.city-zone').textContent=abbreviation(z,date)+' · UTC'+offsetText(o)+' · '+zonePart(z,date,'long',locale());r.querySelector('.city-time').textContent=timeAt(z,date);dateAt(z,date,r.querySelector('.city-date'));r.querySelector('.city-diff').textContent=L('現在地との時差 ','Local difference ')+offsetText(o-base);const h=Number(new Intl.DateTimeFormat('en-GB',{timeZone:z,hour:'2-digit',hourCycle:'h23'}).format(date));r.querySelector('.city-daylight').textContent=h>=6&&h<18?'☀':'☾';}catch{r.querySelector('.city-time').textContent='—'}})}
 $('travel').oninput=tickCities;$('travel-reset').onclick=()=>{$('travel').value=0;tickCities()};refreshCityOptions();drawCities();
 const timerNames=[['通常','Standard'],['砂時計','Hourglass'],['液体砂時計','Liquid'],['オイルタイマー','Oil motion']];let timer=readExtra('myAlarmTimer',{kind:0,total:300000,left:300000,end:0});let timerOpen=false;
 function duration(ms,tenths=false){const sec=Math.floor(Math.max(0,ms)/1000);return [Math.floor(sec/3600),Math.floor(sec/60)%60,sec%60].map(n=>String(n).padStart(2,'0')).join(':')+(tenths?'.'+Math.floor(Math.max(0,ms)%1000/100):'')}
@@ -1966,7 +1972,7 @@ $('sw-start').onclick=()=>{if(sw.start){sw.elapsed=swTime();sw.start=0}else sw.s
 function drawLaps(){$('sw-laps').replaceChildren(...sw.laps.map((v,i)=>el('p',`${i+1}  ${duration(v-(sw.laps[i-1]||0),true)}  /  ${duration(v,true)}`)));$('sw-history').replaceChildren(...sw.history.map((h,i)=>{const row=el('div',undefined,'history-row');row.append(el('span',new Date(h.date).toLocaleString(locale(),{hour12:appSettings.timeFormat==='12'})+' · '+duration(h.total,true)),action(L('削除','Delete'),async()=>{if(await appDialog(L('この履歴を削除しますか？','Delete this record?'))){const idx=sw.history.indexOf(h);if(idx>=0)sw.history.splice(idx,1);saveSW();drawLaps()}}));return row}));if(sw.history.length)$('sw-history').append(action(L('履歴をすべて削除','Clear history'),async()=>{if(await appDialog(L('すべての履歴を削除しますか？','Clear all history?'))){sw.history=[];saveSW();drawLaps()}}))}
 function tickSW(){$('sw-value').textContent=duration(swTime(),true);$('sw-start').textContent=sw.start?L('一時停止','Pause'):L('開始・再開','Start / resume');$('sw-lap').textContent=L('ラップ','Lap');$('sw-reset').textContent=L('リセット','Reset');$('sw-history-title').textContent=L('履歴','History');$('sw-lap').disabled=!sw.start}
 renderGroups=function(){const list=$('group-list');list.replaceChildren();readGroups().forEach(g=>{const row=el('div',undefined,'alarm-item group-row');const members=alarms.filter(a=>a.groupId===g.id);const count=members.filter(a=>a.enabled).length;const info=el('div',undefined,'group-info');info.append(el('strong',g.name),el('small',L(`${count}/${members.length}件 ON`,`${count}/${members.length} on`)));const toggle=el('input',undefined,'alarm-toggle');toggle.type='checkbox';toggle.checked=members.length>0&&count===members.length;toggle.indeterminate=count>0&&count<members.length;toggle.disabled=!members.length;toggle.setAttribute('aria-label',g.name+' '+L('一括切替','Toggle group'));toggle.onchange=()=>{setGroup(g.id,toggle.checked);renderGroups()};const rename=action('✎',()=>editGroupMembers(g));const remove=action('×',async()=>{if(!await appDialog(g.name+' — '+L('グループを削除しますか？','Delete group?')))return;storeExtra('myAlarmGroups',readGroups().filter(x=>x.id!==g.id));alarms.forEach(a=>{if(a.groupId===g.id)a.groupId=''});saveAlarms();renderGroups();renderAlarms()});for(const [btn,label] of [[rename,L('編集','Edit')],[remove,L('削除','Delete')]]){btn.className='quiet-action';btn.title=label;btn.setAttribute('aria-label',label)}row.append(info,toggle,rename,remove);list.append(row)})};
-const originalLanguage=applyLanguage;applyLanguage=function(){originalLanguage();$('time-format-select').options[0].textContent=L('24時間表示','24-hour');$('time-format-select').options[1].textContent=L('12時間表示','12-hour');document.querySelector('[data-i18n="homeClockDisplay"]').textContent=L('アラーム画面の時計','Alarm screen clock');$('home-clock-display-select').value=appSettings.homeClockDisplay;$('city-search').placeholder=L('都市・タイムゾーン','City / time zone');$('travel-reset').textContent=L('現在時刻','Now');$('group-name').placeholder=L('グループ名','Group name');refreshCityOptions();$('world-clock-display').options[0].textContent=L('デジタル','Digital');$('world-clock-display').options[1].textContent=L('アナログ','Analog');$('world-clock-display').options[2].textContent=L('両方','Both');$('world-clock-display').ariaLabel=L('現在地の時計表示','Local clock display');applyWorldClockDisplay();drawTimerTypes();decorateNav();drawLaps();drawCities()};
+const originalLanguage=applyLanguage;applyLanguage=function(){originalLanguage();$('time-format-select').options[0].textContent=L('24時間表示','24-hour');$('time-format-select').options[1].textContent=L('12時間表示','12-hour');document.querySelector('[data-i18n="homeClockDisplay"]').textContent=L('アラーム画面の時計','Alarm screen clock');$('home-clock-display-select').value=appSettings.homeClockDisplay;$('city-search').placeholder=L('都市・タイムゾーン','City / time zone');$('travel-reset-text').textContent=L('現在時刻に戻す','Reset to now');$('travel-reset').setAttribute('aria-label',L('現在時刻に戻す','Reset to now'));$('preset-name').placeholder=L('3分','3 minutes');$('group-name').placeholder=L('グループ名','Group name');refreshCityOptions();document.querySelector('[data-i18n="worldClockDisplay"]').textContent=L('世界時計の現在地の表示','World clock local display');$('world-clock-display').options[0].textContent=L('デジタル','Digital');$('world-clock-display').options[1].textContent=L('アナログ','Analog');$('world-clock-display').options[2].textContent=L('両方','Both');$('world-clock-display').ariaLabel=L('現在地の時計表示','Local clock display');applyWorldClockDisplay();drawTimerTypes();decorateNav();drawLaps();drawCities()};
 function decorateNav(){const paths=['<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M5 3L2 6m17-3 3 3"/>','<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>','<path d="M6 3h12M6 21h12M7 3v4l5 5-5 5v4m10-18v4l-5 5 5 5v4"/>','<circle cx="12" cy="14" r="8"/><path d="M9 2h6m-3 0v4m6 1 2-2m-8 5v4"/>','<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'];document.querySelectorAll('#tab-nav button').forEach((b,i)=>{b.querySelector('.nav-icon')?.remove();const span=el('span',undefined,'nav-icon');span.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[i]+'</svg>';b.prepend(span)});for(const [id,key] of [['forecast-btn','forecast'],['groups-btn','groups']]){$(id).title=t(key);$(id).setAttribute('aria-label',t(key))}}
 function colorDates(){const d=new Date().getDay();['current-date','clock-mode-date'].forEach(id=>{$(id).classList.toggle('day-0',d===0);$(id).classList.toggle('day-6',d===6)})}
 // Settings categories (native disclosure, retain original controls and listeners)
@@ -2049,7 +2055,7 @@ function showPresetEditor(preset=null){
   $('preset-kind').replaceChildren(...timerNames.map((names,i)=>{const option=document.createElement('option');option.value=i;option.textContent=L(...names);return option}));
   $('preset-kind').value=timer.kind;
   $('preset-dialog-heading').textContent=preset?L('タイマーを編集','Edit timer'):L('タイマーを保存','Save timer');
-  $('preset-name-label').textContent=L('名前','Name');$('preset-duration-label').textContent=L('時間','Duration');$('preset-kind-label').textContent=L('表示タイプ','Visual type');
+  $('preset-name').placeholder=L('3分','3 minutes');$('preset-name-label').textContent=L('名前','Name');$('preset-duration-label').textContent=L('時間','Duration');$('preset-kind-label').textContent=L('表示タイプ','Visual type');
   $('preset-cancel').textContent=L('キャンセル','Cancel');$('preset-save').textContent=L('保存','Save');
   $('preset-dialog').showModal();
 }
@@ -2114,3 +2120,14 @@ const priorLanguageV3=applyLanguage;applyLanguage=function(){priorLanguageV3();d
 updateScenery();lastCityTick='';tickCities();drawTimerTypes();
 if(!readExtra('myAlarmWelcomeSeen',false))setTimeout(openWelcome,500);
 setInterval(()=>{updateScenery();if(v3Settings.cityScenery!==false&&document.querySelector('.city-row'))tickCities()},60000);
+
+// Update 03.8: keep late-added appearance labels synchronized with language.
+const applyLanguage038 = applyLanguage;
+applyLanguage = function () {
+  applyLanguage038();
+  const scenicLabel = document.querySelector('[data-feature="scenic"]');
+  const cityLabel = document.querySelector('[data-feature="city"]');
+  if (scenicLabel) scenicLabel.textContent = L('時間帯に合わせて風景背景を切り替える', 'Change scenery by time of day');
+  if (cityLabel) cityLabel.textContent = L('世界時計の都市別背景を表示', 'Show city backgrounds in world clock');
+};
+applyLanguage();
