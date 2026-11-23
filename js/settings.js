@@ -611,6 +611,9 @@ window.matchMedia("(prefers-color-scheme: dark)")
 // ページ起動時に文字盤を生成
 setupAnalogClock();
 
-// ページ起動時に保存済み設定を反映
-applySettings();
+// All deferred modules must finish loading before the first cross-module render.
+// In particular, updateClock() needs formatAppDate() from world-clock.js.
+document.addEventListener('DOMContentLoaded', () => {
+  applySettings();
+}, { once: true });
 

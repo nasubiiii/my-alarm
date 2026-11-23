@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "my-alarm-mod57-v1";
+const CACHE_NAME = "my-alarm-mod57-runtime-fix-v4";
 
 const APP_FILES = [
   "./",

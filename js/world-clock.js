@@ -216,4 +216,10 @@ $('world-clock-display').addEventListener('change',e=>{
 applyWorldClockDisplay();
 let lastCityTick='';
 function tickCities(){const offset=Number($('travel').value);const date=new Date(Date.now()+offset*60000);const key=[Math.floor(date/1000),offset,appSettings.language,appSettings.timeFormat,appSettings.showSeconds,cities.join()].join('|');if(key===lastCityTick)return;lastCityTick=key;const base=zoneOffset(localZone,date);$('travel-label').textContent=L('時差比較','Time travel')+' '+offsetText(offset);$('travel-reset').disabled=offset===0;$('world-time').textContent=timeAt(localZone,date,appSettings.showSeconds);updateWorldAnalog(date);applyWorldClockDisplay();dateAt(localZone,date,$('world-date'));$('world-zone').textContent=abbreviation(localZone,date)+' · UTC'+offsetText(base)+' · '+zonePart(localZone,date,'long',locale());document.querySelectorAll('.city-row').forEach(r=>{try{const z=r.dataset.zone;const o=zoneOffset(z,date);r.querySelector('.city-name').textContent=cityName(z)+(countryName(z)?' · '+countryName(z):'');r.querySelector('.city-zone').textContent=abbreviation(z,date)+' · UTC'+offsetText(o)+' · '+zonePart(z,date,'long',locale());r.querySelector('.city-time').textContent=timeAt(z,date);dateAt(z,date,r.querySelector('.city-date'));r.querySelector('.city-diff').textContent=L('現在地との時差 ','Local difference ')+offsetText(o-base);const h=Number(new Intl.DateTimeFormat('en-GB',{timeZone:z,hour:'2-digit',hourCycle:'h23'}).format(date));r.querySelector('.city-daylight').textContent=h>=6&&h<18?'☀':'☾';}catch{r.querySelector('.city-time').textContent='—'}})}
-$('travel').oninput=tickCities;$('travel-reset').onclick=()=>{$('travel').value=0;tickCities()};refreshCityOptions();drawCities();
+$('travel').oninput=tickCities;$('travel-reset').onclick=()=>{$('travel').value=0;tickCities()};
+// drawCities uses bindCityDrag() from the next deferred module, ui-enhancements.js.
+// Run the first render only after every deferred script is available.
+document.addEventListener('DOMContentLoaded', () => {
+  refreshCityOptions();
+  drawCities();
+}, { once: true });
