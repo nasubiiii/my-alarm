@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "my-alarm-mod57-webgl-mount-0572";
+const CACHE_NAME = "my-alarm-mod57-oil-static-0579";
 
 const APP_FILES = [
   "./",
