@@ -3,9 +3,19 @@
 (()=>{'use strict';
 const art=document.getElementById('timer-art');
 if(!art||typeof visualTimerScenes==='undefined'||typeof timer==='undefined')return;
+// The SVG scene may already have been mounted before this deferred renderer loads.
+// Set a traceable state so that the active renderer can be checked in DevTools.
+window.myAlarmOilRendererStatus={mode:'initializing',reason:'',version:'05.7.2'};
+function mountOilScene(){
+ if(timer.kind!==3)return;
+ // Drop only the currently displayed oil scene. The shared timer clock stays intact.
+ art.replaceChildren();
+ tickTimer();
+}
+
 const test=document.createElement('canvas');
 let gl;try{gl=test.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false,depth:false,stencil:false,preserveDrawingBuffer:false});}catch{}
-if(!gl){const s=document.createElement('script');s.src='./timers/oil/oil-canvas.js';document.body.append(s);return;}
+if(!gl){window.myAlarmOilRendererStatus={mode:'fallback-loading',reason:'WebGL context unavailable',version:'05.7.2'};const s=document.createElement('script');s.src='./timers/oil/oil-canvas.js';document.body.append(s);return;}
 visualTimerScenes[3]='<canvas class="oil-canvas oil-webgl vt-svg" role="img" aria-label="Three-dimensional glass oil timer with moving luminous droplets"></canvas>';
 const vertex=`attribute vec2 a; varying vec2 uv; void main(){uv=a*.5+.5;gl_Position=vec4(a,0.,1.);}`;
 const fragment=`precision highp float;
@@ -81,7 +91,7 @@ void main(){
 function shader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
 let program;
 try{program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vertex));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fragment));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));}
-catch(e){console.warn('Oil WebGL unavailable; using Canvas fallback',e);const s=document.createElement('script');s.src='./timers/oil/oil-canvas.js';document.body.append(s);return;}
+catch(e){console.warn('Oil WebGL unavailable; using Canvas fallback',e);window.myAlarmOilRendererStatus={mode:'fallback-loading',reason:String(e),version:'05.7.2'};const s=document.createElement('script');s.src='./timers/oil/oil-canvas.js';document.body.append(s);return;}
 gl.useProgram(program);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);const loc=gl.getAttribLocation(program,'a');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
 const progressLoc=gl.getUniformLocation(program,'uProgress'),motionLoc=gl.getUniformLocation(program,'uMotion'),reduceLoc=gl.getUniformLocation(program,'uReduce'),sizeLoc=gl.getUniformLocation(program,'uSize');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');let canvas=null,raf=0,motion=0,last=0,contextLost=false;
@@ -96,10 +106,14 @@ function render(){const current=art.querySelector('canvas.oil-webgl');if(!curren
  gl.uniform1f(progressLoc,timer.total?Math.max(0,Math.min(1,1-left/timer.total)):0);
  gl.uniform1f(motionLoc,motion*.001);gl.uniform1f(reduceLoc,reduced.matches?1:0);gl.uniform2f(sizeLoc,w,h);
  gl.drawArrays(gl.TRIANGLES,0,6);
+ if(window.myAlarmOilRendererStatus?.mode!=='webgl-active')window.myAlarmOilRendererStatus={mode:'webgl-active',reason:'',version:'05.7.2'};
 }
 function frame(t){raf=0;if(!visible()||!timer.end||reduced.matches)return;motion+=Math.min(48,Math.max(0,t-last));last=t;render();raf=requestAnimationFrame(frame);}
 function sync(){if(!visible()||!timer.end||reduced.matches){if(raf){cancelAnimationFrame(raf);raf=0;}if(visible())render();return;}render();if(!raf){last=performance.now();raf=requestAnimationFrame(frame);}}
 const previous=tickTimer;tickTimer=function(){previous();sync();};
+window.myAlarmOilRendererStatus={mode:'webgl-ready',reason:'',version:'05.7.2'};
+// Invalidate the previous SVG and mount the new WebGL canvas immediately.
+mountOilScene();
 document.addEventListener('visibilitychange',sync);reduced.addEventListener?.('change',sync);window.addEventListener('resize',sync,{passive:true});document.getElementById('timer-screen').addEventListener('click',()=>requestAnimationFrame(sync));
 test.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;if(raf)cancelAnimationFrame(raf);raf=0;});
 test.addEventListener('webglcontextrestored',()=>{contextLost=false;sync();});

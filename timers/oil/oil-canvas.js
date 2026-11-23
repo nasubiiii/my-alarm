@@ -3,6 +3,10 @@
 const art=document.getElementById('timer-art');
 if(!art||typeof visualTimerScenes==='undefined'||typeof timer==='undefined')return;
 visualTimerScenes[3]='<canvas class="oil-canvas vt-svg" role="img" aria-label="Transparent acrylic oil timer with moving glossy droplets"></canvas>';
+window.myAlarmOilRendererStatus={mode:'canvas-fallback',reason:window.myAlarmOilRendererStatus?.reason||'WebGL unavailable',version:'05.7.2'};
+// Replace any already-mounted oil SVG after the fallback renderer is loaded.
+if(timer.kind===3){art.replaceChildren();tickTimer();}
+
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const state={canvas:null,ctx:null,raf:0,phase:0,last:0,drops:[]};
 const rnd=(n,s=0)=>{const v=Math.sin(n*92.731+s*19.21)*47358.54;return v-Math.floor(v)};
