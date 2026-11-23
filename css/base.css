@@ -1,0 +1,1345 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #111827;
+  color: #f9fafb;
+  font-family: Arial, "Noto Sans JP", sans-serif;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  background: #374151;
+  color: white;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 3px;
+}
+
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 52px;
+  margin-bottom: 20px;
+}
+
+.app-header h1,
+.app-header h2 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.icon-btn {
+  font-size: 22px;
+  background: transparent;
+  padding: 8px;
+}
+
+.clock-card {
+  background: #1f2937;
+  border-radius: 20px;
+  padding: 28px 18px;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+#current-date {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+#current-time {
+  font-size: clamp(36px, 10vw, 52px);
+  font-weight: bold;
+  margin: 12px 0 22px;
+  font-variant-numeric: tabular-nums;
+}
+
+.next-alarm-info {
+  border-top: 1px solid #374151;
+  padding-top: 16px;
+}
+
+.next-alarm-info p {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+#next-alarm-text {
+  font-size: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-header h2 {
+  font-size: 20px;
+}
+
+#add-alarm-btn,
+.primary-btn {
+  background: #2563eb;
+}
+
+.alarm-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #374151;
+  padding: 18px 4px;
+  scroll-margin-top: 30vh;
+}
+
+.alarm-item.next-alarm {
+  background: #1e3a5f;
+  border-radius: 12px;
+  padding: 18px 12px;
+  border: 1px solid #3b82f6;
+}
+
+.alarm-summary {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.alarm-time {
+  display: block;
+  font-size: 32px;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.alarm-name {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.alarm-days {
+  display: block;
+  margin-top: 5px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.alarm-item.disabled .alarm-time {
+  color: #6b7280;
+}
+
+.alarm-toggle {
+  width: 23px;
+  height: 23px;
+  accent-color: #2563eb;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-form label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.edit-form input,
+.edit-form select {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #374151;
+  border-radius: 10px;
+  background: #1f2937;
+  color: white;
+}
+
+.weekday-selector {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.weekday-btn {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 13px;
+}
+
+.weekday-btn.selected {
+  background: #2563eb;
+}
+
+.sound-row {
+  display: flex;
+  gap: 10px;
+}
+
+.sound-row select {
+  flex: 1;
+  min-width: 0;
+}
+
+.sound-row button {
+  white-space: nowrap;
+}
+
+.primary-btn {
+  padding: 15px;
+  margin-top: 24px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-actions button {
+  flex: 1;
+}
+
+#delete-btn {
+  background: #7f1d1d;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 0;
+}
+
+.setting-row input {
+  width: 22px;
+  height: 22px;
+  accent-color: #2563eb;
+}
+
+.ringing-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111827;
+  padding: 24px;
+}
+
+.ringing-content {
+  text-align: center;
+}
+
+#ringing-time {
+  font-size: 64px;
+}
+
+#stop-alarm-btn {
+  background: #dc2626;
+  padding: 18px 32px;
+  margin-top: 24px;
+}
+
+/* =========================
+   STEP 2：テーマ・フォント
+========================= */
+
+
+
+:root {
+  --bg: #111827;
+  --surface: #1f2937;
+  --text: #f9fafb;
+  --muted: #9ca3af;
+  --border: #374151;
+  --accent: #2563eb;
+  --accent-soft: #1e3a5f;
+  --font: "Noto Sans JP", sans-serif;
+  --button-bg: #374151;
+  --button-text: #ffffff;
+}
+
+
+:root[data-theme="light"] {
+  --bg: #f5f6fa;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #64748b;
+  --border: #dce1e9;
+  --accent-soft: #e8efff;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+.clock-card {
+  background: var(--surface);
+}
+
+#current-date,
+.next-alarm-info p,
+.alarm-days {
+  color: var(--muted);
+}
+
+.next-alarm-info,
+.alarm-item {
+  border-color: var(--border);
+}
+
+#add-alarm-btn,
+.primary-btn,
+.weekday-btn.selected {
+  background: var(--accent);
+  color: white;
+}
+
+.alarm-item.next-alarm {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.alarm-toggle,
+.setting-row input {
+  accent-color: var(--accent);
+}
+
+.edit-form input,
+.edit-form select,
+.settings-group select {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-group h3 {
+  font-size: 17px;
+  margin: 0 0 8px;
+}
+
+.settings-group label {
+  font-size: 14px;
+}
+
+.settings-group select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.settings-group .setting-row {
+  padding: 8px 0;
+}
+
+.ringing-panel {
+  background: var(--bg);
+}
+
+.ringing-content {
+  color: var(--text);
+}
+
+/* ライトモード用の細部調整 */
+:root[data-theme="light"] .alarm-item.disabled .alarm-time {
+  color: #94a3b8;
+}
+
+:root[data-theme="light"] .icon-btn {
+  color: var(--text);
+}
+
+:root[data-theme="light"] .weekday-btn {
+  color: var(--text);
+  background: #e2e8f0;
+}
+
+:root[data-theme="light"] .weekday-btn.selected {
+  background: var(--accent);
+  color: white;
+}
+
+/* =========================
+   STEP 3：時計表示
+========================= */
+
+#home-screen .app-header {
+  gap: 8px;
+}
+
+#home-screen .app-header h1 {
+  margin-right: auto;
+}
+
+/* 時計専用モード */
+#clock-mode-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+#clock-mode-back-btn {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: 20px;
+  color: var(--text);
+  font-size: 30px;
+}
+
+.clock-mode-content {
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+
+#clock-mode-date {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+#clock-mode-time {
+  font-size: clamp(42px, 11vw, 88px);
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  margin: 20px 0 32px;
+}
+
+.clock-mode-next {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.clock-mode-next p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+#clock-mode-next-alarm {
+  font-size: 20px;
+}
+
+#current-time {
+  font-size: clamp(30px, 9vw, 52px);
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  #clock-mode-time {
+    font-size: clamp(32px, 9vw, 48px);
+  }
+}
+
+/* =========================
+   STEP 3追加：背景テーマ12種類
+========================= */
+
+/* 背景・文字色の切り替えを滑らかに */
+body,
+.clock-card,
+.alarm-item,
+.edit-form input,
+.edit-form select,
+.settings-group select,
+#clock-mode-screen {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* 通常のボタン */
+button:not(.primary-btn):not(#add-alarm-btn):not(.weekday-btn):not(.icon-btn):not(#delete-btn):not(#stop-alarm-btn) {
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+/* アイコンボタン */
+.icon-btn {
+  color: var(--text);
+}
+
+/* 選択されているアラーム */
+.alarm-item.next-alarm {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* 無効なアラーム */
+.alarm-item.disabled .alarm-time {
+  color: var(--muted);
+}
+
+/* 入力欄 */
+.edit-form input,
+.edit-form select,
+.settings-group select {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* 曜日選択ボタン */
+.weekday-btn {
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+.weekday-btn.selected,
+:root[data-theme="light"] .weekday-btn.selected {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* アラームON/OFF */
+.alarm-toggle,
+.setting-row input {
+  accent-color: var(--accent);
+}
+
+/* 時計専用モード */
+#clock-mode-screen {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* 背景テーマ選択欄 */
+#background-select {
+  cursor: pointer;
+}
+
+/* テーマに合わせたフォーカス表示 */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline-color: var(--accent);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline-color: var(--accent);
+}
+
+/* =========================
+   STEP 4：アラーム詳細設定
+========================= */
+
+/* 編集画面のON/OFF設定 */
+.edit-form .setting-row {
+  margin-top: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* 左側の項目名 */
+.edit-form .setting-row span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* チェックボックス */
+.edit-form .setting-row input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+/* スヌーズ間隔の選択欄 */
+#edit-snooze-minutes:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* スマホでも押しやすいように */
+.edit-form .setting-row {
+  min-height: 56px;
+}
+
+.edit-form .setting-row {
+  min-height: 56px;
+}
+
+/* =========================
+   STEP 4-2：一括操作
+========================= */
+
+.bulk-alarm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.bulk-alarm-actions button {
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.bulk-alarm-actions button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* =========================
+   STEP 4-2：鳴動画面
+========================= */
+
+.ringing-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+#snooze-alarm-btn {
+  background: var(--accent);
+  color: #ffffff;
+  padding: 18px 28px;
+  font-weight: bold;
+}
+
+#stop-alarm-btn {
+  margin-top: 0;
+  padding: 18px 28px;
+}
+
+.ringing-actions button {
+  min-width: 130px;
+}
+
+@media (max-width: 360px) {
+  .ringing-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 360px) {
+  .ringing-actions {
+    flex-direction: column;
+  }
+}
+
+/* =========================
+   STEP 4-3：時刻入力
+========================= */
+
+.time-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 8px 0 14px;
+}
+
+.edit-form .time-picker select {
+  width: auto;
+  flex: 1;
+  min-width: 0;
+  padding: 16px 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-separator {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.edit-form #edit-ampm {
+  flex: 0 0 85px;
+  font-size: 17px;
+}
+
+@media (max-width: 380px) {
+  .edit-form .time-picker select {
+    font-size: 20px;
+    padding: 14px 4px;
+  }
+}
+
+/* =========================
+   STEP 4-4：一括ON/OFFスイッチ
+========================= */
+
+.bulk-alarm-wrapper {
+  margin: 6px 0 18px;
+}
+
+.bulk-alarm-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+#bulk-alarm-status {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 一体型の外枠 */
+.bulk-alarm-actions {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+/* 2つのボタン */
+.bulk-alarm-actions button,
+button#all-on-btn,
+button#all-off-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+}
+
+/* 選択中のボタン */
+.bulk-alarm-actions button.is-active,
+button#all-on-btn.is-active,
+button#all-off-btn.is-active {
+  background: var(--accent);
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* 選択中のボタンは操作不要 */
+.bulk-alarm-actions button.is-active:disabled {
+  cursor: default;
+}
+
+/* 押したときの動き */
+.bulk-alarm-actions button:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+/* アラームが0件の場合 */
+.bulk-alarm-actions button:disabled:not(.is-active) {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.bulk-alarm-actions button:disabled:not(.is-active) {
+  opacity: 0.65;
+  cursor: default;
+}
+
+/* =========================
+   STEP 4-4：アクセントカラー修正
+========================= */
+
+/* 通常時 */
+.bulk-alarm-actions #all-on-btn,
+.bulk-alarm-actions #all-off-btn {
+  background: transparent;
+  color: var(--muted);
+}
+
+/* 選択中：アクセントカラーを適用 */
+.bulk-alarm-actions #all-on-btn.is-active,
+.bulk-alarm-actions #all-off-btn.is-active {
+  background: var(--accent);
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* 選択中でも色を薄くしない */
+.bulk-alarm-actions #all-on-btn.is-active:disabled,
+.bulk-alarm-actions #all-off-btn.is-active:disabled {
+  background: var(--accent);
+  color: #ffffff;
+  opacity: 1;
+}
+.bulk-alarm-actions #all-on-btn.is-active:disabled,
+.bulk-alarm-actions #all-off-btn.is-active:disabled {
+  background: var(--accent);
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* 一括ON/OFF：選択状態の色を最優先 */
+.bulk-alarm-actions button.is-active {
+  background-color: var(--accent) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.bulk-alarm-actions button.is-active {
+  background-color: var(--accent) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* =========================
+   STEP 4-5：アナログ時計
+========================= */
+
+.analog-clock {
+  width: min(72vw, 300px);
+  margin: 20px auto 28px;
+}
+
+.analog-clock-face {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 8px var(--bg);
+}
+
+/* 文字盤の目盛り */
+.clock-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 45%;
+  transform-origin: center center;
+}
+
+.clock-marker::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 5px;
+  background: var(--muted);
+  transform: translateX(-50%);
+}
+
+.clock-marker.hour-marker::before {
+  width: 3px;
+  height: 12px;
+  background: var(--text);
+}
+
+/* 12・3・6・9の数字 */
+.clock-number {
+  position: absolute;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text);
+  transform: translate(-50%, -50%);
+}
+
+.number-12 { top: 17%; left: 50%; }
+.number-3  { top: 50%; left: 83%; }
+.number-6  { top: 83%; left: 50%; }
+.number-9  { top: 50%; left: 17%; }
+
+/* 時計の針 */
+.clock-hand {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  border-radius: 10px;
+  transform-origin: center bottom;
+}
+
+.hour-hand {
+  width: 7px;
+  height: 24%;
+  background: var(--text);
+}
+
+.minute-hand {
+  width: 5px;
+  height: 34%;
+  background: var(--text);
+}
+
+.second-hand {
+  width: 2px;
+  height: 39%;
+  background: var(--accent);
+}
+
+.clock-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+/* デジタル＋アナログ両方の表示 */
+#clock-mode-time {
+  margin: 12px 0 24px;
+}
+
+@media (max-height: 650px) {
+  .analog-clock {
+    width: min(52vw, 220px);
+    margin: 10px auto;
+  }
+}
+/* =========================
+   STEP 4-5追加：ホーム画面のアナログ時計
+========================= */
+
+.home-analog-clock {
+  width: min(60vw, 240px);
+  margin: 20px auto 24px;
+}
+
+.home-analog-clock .clock-number {
+  font-size: 15px;
+}
+
+/* 両方表示したときの余白 */
+.home-analog-clock + #current-time {
+  margin-top: 12px;
+}
+
+@media (max-width: 380px) {
+  .home-analog-clock {
+    width: min(65vw, 210px);
+  }
+}
+/* =========================
+   STEP 5：バックアップ・復元
+========================= */
+
+#export-backup-btn,
+#import-backup-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+#export-backup-btn {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+#import-backup-btn {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: 1px solid var(--border);
+}
+/* Phase 1 layout */
+.container{max-width:560px;padding:16px 16px 94px}#home-screen:not([hidden]){height:calc(100dvh - 110px);display:flex;flex-direction:column;min-height:0}#home-screen .app-header,#home-screen .clock-card,#home-screen .section-header,#home-screen .bulk-alarm-wrapper{flex:none}#home-screen .app-header{margin-bottom:6px}.header-tools{display:flex;gap:2px}#home-screen .clock-card{padding:12px;margin-bottom:8px}#home-screen #current-time{margin:4px 0;font-size:clamp(30px,9vw,48px)}#home-screen #current-date{margin:4px}#home-screen .home-analog-clock{max-width:110px;max-height:110px}#alarm-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:4px 2px}.clock-card,.alarm-item,.settings-group{background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--border);backdrop-filter:blur(14px);border-radius:18px}#tab-nav{position:fixed;bottom: max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(calc(100% - 24px),530px);display:flex;gap:3px;padding:7px;background:var(--surface);border:1px solid var(--border);border-radius:22px;z-index:10;box-shadow:0 8px 24px #0002}#tab-nav button{flex:1;min-width:0;font-size:11px;padding:12px 2px;background:transparent;color:var(--text)}#tab-nav button[aria-current=page]{background:var(--accent-soft);color:var(--text)}.weekday-btn.day-0{color:#df7b85}.weekday-btn.day-6{color:#79a8e8}#world-time{font-size:42px;font-variant-numeric:tabular-nums}#group-list .alarm-item{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:10px}#group-list .alarm-item span{flex:1}#forecast-list .alarm-item{margin:6px 0}
+/* 日曜日・土曜日の文字色 */
+#edit-weekdays .weekday-btn.day-0 {
+    color: #D66B78;
+}
+
+#edit-weekdays .weekday-btn.day-6 {
+    color: #528ACB;
+}
+
+/* 選択状態の日曜日・土曜日 */
+#edit-weekdays .weekday-btn.day-0.selected {
+    color: #FFD1D6;
+}
+
+#edit-weekdays .weekday-btn.day-6.selected {
+    color: #C6E2FF;
+}/* Phase 2 glass layout */
+[hidden]{display:none!important}body{min-height:100dvh;background:radial-gradient(ellipse at 12% 8%,color-mix(in srgb,var(--accent) 25%,transparent),transparent 52%),radial-gradient(ellipse at 90% 65%,#8ca9d54d,transparent 55%),var(--bg);background-attachment:fixed}.clock-card,.alarm-item,.settings-group,.glass-panel,#tab-nav{background:color-mix(in srgb,var(--surface) 54%,transparent);backdrop-filter:blur(18px);border:1px solid color-mix(in srgb,var(--border) 60%,white 25%);box-shadow:0 5px 20px #162b4210,inset 0 1px 0 #ffffff42;border-radius:20px}.glass-panel,.settings-group{padding:16px;margin:0 0 12px}.glass-panel h3{margin:0 0 10px}.glass-panel p{margin:8px 0}.alarm-item{padding:14px!important;margin:0 0 10px;scroll-margin-top:0}.alarm-toggle{appearance:none;width:44px;height:26px;border-radius:20px;background:var(--border);position:relative;flex-shrink:0;cursor:pointer;border:0}.alarm-toggle:checked{background:var(--accent)}.alarm-toggle:before{content:'';position:absolute;width:20px;height:20px;top:3px;left:3px;border-radius:50%;background:white;box-shadow:0 1px 4px #0003}.alarm-toggle:checked:before{left:21px}#alarm-list{scrollbar-width:thin;scrollbar-color:var(--border) transparent}.clock-marker{height:88%}.clock-marker::before{height:2%;width:1px}.clock-marker.hour-marker::before{height:4%;width:2px}.day-0,#current-date.day-0,#clock-mode-date.day-0{color:#c85e70}.day-6,#current-date.day-6,#clock-mode-date.day-6{color:#407fc0}:root[data-theme=dark] .day-0,:root[data-theme=dark] #current-date.day-0{color:#ff9ead}:root[data-theme=dark] .day-6,:root[data-theme=dark] #current-date.day-6{color:#9dcaff}#tab-nav button[data-tab]{background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px;font-size:clamp(9px,2.4vw,11px)}#tab-nav button[aria-current=page]{background:var(--accent-soft);color:var(--text)}.nav-icon{font-size:20px;line-height:1.2}.container{padding-bottom:110px}#home-screen:not([hidden]){height:calc(100dvh - 125px)}#home-screen .clock-card{padding:8px}#home-screen .home-analog-clock{margin:8px auto}.bulk-alarm-actions button{padding:7px}.forecast-row{display:block;width:100%;text-align:left;margin:4px 0;padding:8px 10px}#group-name,#city-search,.duration input{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px;max-width:100%}#group-name,#city-search{width:70%}.city-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--border)}.city-row strong{width:100%;font-size:13px}.city-time{flex:1}.city-row button{padding:7px}.settings-disclosure summary{cursor:pointer}.settings-disclosure h3{display:inline;margin:0}.settings-disclosure[open] summary{margin-bottom:16px}.settings-disclosure select{width:100%}#timer-types{display:grid;gap:10px}#timer-types button{padding:20px;text-align:left}.big-time{font-size:clamp(26px,8vw,46px);text-align:center;font-variant-numeric:tabular-nums}.duration,.actions{display:flex;align-items:center;justify-content:center;gap:8px}.duration input{width:30%;text-align:center}.actions{flex-wrap:wrap;margin-top:12px}progress,#travel{width:100%;accent-color:var(--accent)}.timer-art{margin:20px auto;width:90px;height:130px;border:2px solid var(--border);background:linear-gradient(to top,var(--accent) var(--remaining),transparent var(--remaining));border-radius:18px}.art-1{clip-path:polygon(0 0,100% 0,100% 12%,57% 50%,100% 88%,100% 100%,0 100%,0 88%,43% 50%,0 12%)}
+
+/* Update 02.1 world clock */
+#world-zone,.city-zone,.city-diff{font-size:12px;color:var(--muted)}.city-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px}.city-info,.city-clock{display:flex;flex-direction:column;gap:5px;min-width:0}.city-info strong{font-size:16px}.city-zone{overflow-wrap:anywhere}.city-clock{text-align:right;align-self:center}.city-time{font-size:26px;font-variant-numeric:tabular-nums}.city-controls{grid-column:1/-1;display:flex;justify-content:flex-end;gap:6px}.city-daylight{font-size:18px}#city-message:empty{display:none}#world-zone{overflow-wrap:anywhere}
+
+/* Update 02.2 – palette and compact layout */
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+body{background:radial-gradient(ellipse at 5% 4%,var(--glow,var(--bg)),transparent 65%),linear-gradient(150deg,var(--bg),color-mix(in srgb,var(--bg) 72%,var(--surface)));background-attachment:fixed;color:var(--text)}
+.clock-card,.alarm-item,.settings-group,.glass-panel,#tab-nav{background:color-mix(in srgb,var(--surface) 76%,transparent);border-color:var(--border);box-shadow:0 4px 16px #162b420c}
+:root[data-theme=light] .clock-card,:root[data-theme=light] .alarm-item,:root[data-theme=light] .glass-panel,:root[data-theme=light] .settings-group{box-shadow:0 4px 18px #3542560c,inset 0 1px 0 #ffffffb0}
+#tab-nav{background:color-mix(in srgb,var(--surface) 95%,transparent)}
+#home-screen .app-header{min-height:40px;margin-bottom:4px}#home-screen .clock-card{padding:5px 10px;margin-bottom:5px}#home-screen .home-analog-clock{margin:3px auto;max-width:88px;max-height:88px}#home-screen #current-date{margin:2px;font-size:12px}
+#home-screen .section-header{margin:0 0 4px}#home-screen .section-header h2{font-size:17px;margin:5px 0}#home-screen #add-btn{padding:5px 10px;font-size:12px}
+#home-screen .bulk-alarm-wrapper{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:0 0 6px}#home-screen .bulk-alarm-header{margin:0}#home-screen .bulk-alarm-actions{width:auto;gap:2px;padding:2px;border-radius:10px}#home-screen #all-on-btn,#home-screen #all-off-btn{flex:none;padding:5px 10px;font-size:11px;border-radius:7px;min-height:28px}#bulk-alarm-status{font-size:11px}
+#alarm-list .alarm-item{padding:8px 12px!important;margin:0 0 6px;border-radius:14px}#alarm-list .alarm-time{font-size:27px;line-height:1.15}#alarm-list .alarm-name{font-size:13px;margin:2px 0}#alarm-list .alarm-days{font-size:11px;line-height:1.25}
+#alarm-list .alarm-item.next-alarm{background:var(--accent-soft);border-color:var(--accent)}
+.header-tools .icon-btn{display:grid;place-items:center;width:34px;height:36px;padding:6px;font-size:20px;color:var(--text)}.header-tools svg,.nav-icon svg{width:20px;height:20px;display:block}.nav-icon{display:block}
+#world-screen .clock-card{padding:16px 12px;margin-bottom:12px}#world-screen #world-time{margin:14px 0}#world-screen .city-row{padding:8px 0;gap:2px 8px}#world-screen .city-info,#world-screen .city-clock{gap:2px}#world-screen .city-controls{gap:3px}#world-screen .city-controls button{padding:4px 8px}.history-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0}.history-row button{padding:5px 8px;font-size:12px}.settings-group{padding:12px;margin-bottom:9px}.settings-disclosure[open] summary{margin-bottom:10px}
+#clock-mode-screen{background:var(--bg)}
+
+/* Update 02.3 */
+#world-screen .clock-card{padding:10px 12px;margin-bottom:8px}#world-screen .clock-card p{margin:4px 0}#world-screen #world-time{margin:6px 0;font-size:36px}#world-screen .glass-panel{padding:10px 12px;margin-bottom:8px}#world-screen .city-row{grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:4px 8px;padding:6px 0;line-height:1.2}#world-screen .city-info,#world-screen .city-clock{gap:2px}#world-screen .city-info strong{font-size:14px}#world-screen .city-info small{font-size:11px}#world-screen .city-time{font-size:23px}#world-screen .city-controls{grid-column:auto;align-items:center;gap:4px}#world-screen .city-controls button{padding:0;width:30px;height:34px;font-size:19px;background:transparent}#world-screen .city-handle{touch-action:none;cursor:grab;user-select:none}#world-screen .city-dragging{background:var(--surface);box-shadow:0 3px 12px #0003;border-radius:10px;position:relative;z-index:2} .app-dialog{width:min(90vw,360px);border:1px solid var(--border);border-radius:20px;padding:20px;background:var(--surface);color:var(--text);box-shadow:0 12px 40px #0004} .app-dialog::backdrop{background:#0006;backdrop-filter:blur(3px)}.app-dialog h3{margin:0 0 16px;font-size:18px}.app-dialog input{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)}.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.dialog-primary{background:var(--accent);color:white}.container{padding-bottom:calc(115px + env(safe-area-inset-bottom))}
+/* Update 02.4 */
+#world-screen .city-controls button,#group-list .quiet-action{background:transparent!important;box-shadow:none!important;color:var(--muted)!important;border:0;width:36px;height:38px;padding:0;font-size:17px;flex:none}
+#world-screen .city-controls button:hover,#group-list .quiet-action:hover{color:var(--text)!important;background:var(--accent-soft)!important}
+#world-screen .city-handle{touch-action:none;-webkit-user-select:none;user-select:none;cursor:grab}#world-screen .city-dragging .city-handle{cursor:grabbing}
+#group-list .group-row{flex-wrap:nowrap;gap:5px;padding:9px 12px!important}#group-list .group-info{flex:1;min-width:0;overflow-wrap:anywhere;display:flex;flex-direction:column;gap:3px}#group-list .group-info small{font-size:11px;color:var(--muted)}#group-list .alarm-toggle{margin:0 3px}#group-list .alarm-toggle:indeterminate{background:var(--accent-soft);border:1px solid var(--accent)}#group-list .alarm-toggle:indeterminate:before{left:11px}#group-list .alarm-toggle:disabled{opacity:.45}
+.app-dialog .dialog-actions button:not(.dialog-primary){background:transparent!important;color:var(--muted)!important}.app-dialog .dialog-actions .dialog-primary{background:var(--accent)!important;color:#fff!important}
+
+/* Update 02.5 */
+.group-editor{box-sizing:border-box;width:min(92vw,400px);max-height:85dvh;overflow:auto}.group-editor #group-edit-name{box-sizing:border-box;margin:6px 0 14px}.group-edit-header,.group-edit-tools{display:flex;align-items:center;justify-content:space-between;gap:8px}.group-edit-header small,.group-edit-note,.group-member-info small{color:var(--muted);font-size:12px}.group-edit-tools{justify-content:flex-end}.group-edit-tools button{background:transparent!important;color:var(--muted);font-size:12px;padding:8px}.group-member-list{max-height:min(36dvh,280px);overflow-y:auto;overscroll-behavior:contain}.group-member-row{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--border);cursor:pointer}.group-editor .group-member-row input{appearance:auto;width:18px;height:18px;flex:none;accent-color:var(--accent);padding:0}.group-member-info{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;min-width:0;overflow-wrap:anywhere}.group-member-info strong{font-variant-numeric:tabular-nums}.group-edit-note{display:block;margin-top:10px}
+
+/* Update 02.6: quieter secondary controls */
+#world-screen .city-controls button,#group-list .quiet-action{font-size:13px;opacity:.72;min-width:36px;min-height:40px}
+#world-screen .city-controls button:hover,#world-screen .city-controls button:focus-visible,#group-list .quiet-action:hover,#group-list .quiet-action:focus-visible{opacity:1}
+#tab-nav button[data-tab]{background:transparent!important;box-shadow:none!important;border:0;color:var(--muted)!important}
+#tab-nav button[data-tab][aria-current=page]{background:color-mix(in srgb,var(--accent) 13%,transparent)!important;color:var(--text)!important}
+#tab-nav .nav-icon svg{width:18px;height:18px;stroke-width:1.5}
+
+/* Mobile city picker */
+.city-picker{box-sizing:border-box;width:min(92vw,440px);max-height:85dvh;overflow:hidden; padding:16px}.city-picker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.city-picker-header h3{margin:0}.city-picker-header button{background:transparent;color:var(--muted)}.city-picker #city-search{box-sizing:border-box;width:100%;font-size:16px;margin-bottom:8px}.city-picker-list{max-height:55dvh;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}.city-picker .city-picker-option{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;background:transparent;color:var(--text);padding:10px 4px;border-bottom:1px solid var(--border);border-radius:0;min-height:48px}.city-picker-info{display:flex;flex-direction:column;gap:4px}.city-picker-info small{color:var(--muted);font-size:12px}.city-picker-option:disabled{opacity:.5}#world-screen .city-controls{gap:0}#world-screen .city-row{column-gap:4px}#world-screen .city-controls button{width:32px;min-width:32px}#world-screen #city-add{width:100%;text-align:left}#tab-nav button[data-tab]{min-width:0;white-space:nowrap;font-size:clamp(8px,2.6vw,12px)}
+
+/* Update 03.0 */
+body::before{content:"";position:fixed;inset:0;z-index:-1;background-image:linear-gradient(180deg,#ffffff1f,#ffffff10),var(--scenic-image,none);background-size:cover;background-position:center;pointer-events:none;transition:opacity .6s}
+:root[data-theme="dark"] body::before{filter:brightness(.60) saturate(.8)}
+:root[data-scenery="none"] body::before{display:none}
+.feature-check{display:flex;align-items:center;gap:8px;margin:12px 0;line-height:1.5}.feature-check input{width:18px;height:18px;flex-shrink:0}
+.city-row.has-city-scene{position:relative;isolation:isolate;overflow:hidden;border:1px solid #ffffff42;border-radius:15px;padding:12px;margin-bottom:9px;background:linear-gradient(110deg,#23476dbb,#3b597b91);color:#fff}
+.city-row.has-city-scene::before{content:"";position:absolute;inset:0;z-index:-2;background-image:linear-gradient(90deg,#142339b8,#16263d55),var(--city-landmark);background-size:cover,auto 100%;background-position:center,right bottom;background-repeat:no-repeat;opacity:.9}
+.city-row.has-city-scene[data-period="morning"]{background:linear-gradient(110deg,#e6b59bbb,#90b4d0aa)}
+.city-row.has-city-scene[data-period="day"]{background:linear-gradient(110deg,#70a9c2bb,#a4d6df99)}
+.city-row.has-city-scene[data-period="evening"]{background:linear-gradient(110deg,#aa677bbb,#db9b8099)}
+.city-row.has-city-scene[data-period="night"]{background:linear-gradient(110deg,#172540dd,#3d477dbb)}
+.city-row.has-city-scene .city-info,.city-row.has-city-scene .city-clock,.city-row.has-city-scene .city-controls{position:relative;z-index:1;text-shadow:0 1px 3px #0009}
+.city-row.has-city-scene small,.city-row.has-city-scene strong{color:#fff}
+.city-row.has-city-scene button{background:#ffffff28;color:white;border:1px solid #ffffff44}
+.timer-art.art-3{position:relative;overflow:hidden;width:135px;height:210px;border:3px solid #ffffff9e;border-radius:35px;background:linear-gradient(180deg,#d7f5ffcc,#8ccde6bb);box-shadow:inset 0 0 24px #ffffffa6,0 12px 24px #0001;clip-path:none}
+.timer-art.art-3::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:var(--remaining);background:linear-gradient(0deg,#ed8ca8c7,#e5a8c8aa);transition:height .5s}
+.oil-drop{position:absolute;z-index:2;top:-22px;left:calc(8% + var(--i)*11%);width:calc(12px + var(--i)*1px);height:calc(16px + var(--i)*1px);border-radius:50% 50% 55% 55%;background:radial-gradient(circle at 35% 25%,#fff9,#e766a5 55%,#b857a8);animation:oil-fall calc(3.8s + var(--i)*.55s) linear infinite;animation-delay:calc(var(--i)*-.63s);box-shadow:inset -2px -2px 4px #7c397355}
+@keyframes oil-fall{0%{transform:translateY(-15px) scale(.75)}50%{transform:translateY(115px) translateX(8px) scale(1.1)}100%{transform:translateY(250px) translateX(-5px) scale(.8)}}
+@media(prefers-reduced-motion:reduce){.oil-drop{animation:none;top:40%}}
+.welcome-dialog{width:min(420px,calc(100vw - 32px));max-height:90dvh;border:1px solid var(--border);border-radius:24px;padding:24px;background:var(--surface);color:var(--text);box-shadow:0 25px 90px #0005}
+.welcome-dialog::backdrop{background:#111a2f99;backdrop-filter:blur(5px)}
+.welcome-content{text-align:center}.welcome-illustration{font-size:62px;margin:6px auto 14px;color:var(--accent)}.welcome-content h2{margin:0 0 12px}.welcome-content p{min-height:65px;color:var(--muted);line-height:1.6}.welcome-dots{letter-spacing:7px;color:var(--accent);margin:16px}.welcome-controls{display:flex;justify-content:space-between;gap:10px}.welcome-controls button{flex:1}.welcome-replay{width:100%;margin:12px 0 24px}
+
+/* Update 03.1: light theme contrast and readable scenic overlay */
+:root[data-theme="light"] body{background:linear-gradient(180deg,#f7f9fbe8,#e9eef5e6),var(--scenic-image,none),var(--bg);background-size:cover;background-position:center;background-attachment:fixed;color:var(--text)}
+:root[data-theme="light"] body::before{display:none}
+:root[data-theme="light"] #home-screen .app-header,:root[data-theme="light"] #world-screen>h2,:root[data-theme="light"] #timer-screen>h2,:root[data-theme="light"] #stopwatch-screen>h2{color:var(--text)}
+:root[data-theme="light"] .app-header button,:root[data-theme="light"] .app-header h1,:root[data-theme="light"] .section-header,:root[data-theme="light"] .section-header h2,:root[data-theme="light"] .section-header button,:root[data-theme="light"] .bulk-alarm-wrapper{color:var(--text)}
+:root[data-theme="light"] .clock-card,:root[data-theme="light"] .alarm-item,:root[data-theme="light"] .glass-panel,:root[data-theme="light"] .settings-group{background:color-mix(in srgb,#fff 90%,transparent);color:#243747;border-color:#d7e0e8}
+:root[data-theme="light"] #tab-nav{background:#f9fbfdeb;color:#243747;border-color:#d5dee8}
+:root[data-theme="light"] #tab-nav button[data-tab]{color:#526879!important}
+:root[data-theme="light"] #tab-nav button[data-tab][aria-current=page]{color:#23394b!important}
+:root[data-theme="light"] .alarm-item.disabled{opacity:.77}
+/* Oil drops use resolved inline positions/durations for browser compatibility */
+.timer-art.art-3 .oil-drop{left:10%;width:14px;height:18px;animation:oil-fall 4s linear infinite;animation-duration:var(--oil-duration,4s);animation-delay:var(--oil-delay,0s)}
+.timer-art.art-3.oil-paused .oil-drop{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.timer-art.art-3 .oil-drop{animation:none;top:42%}}
+/* Presets */
+#timer-presets{margin-bottom:12px}.preset-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}.preset-heading h3{margin:0!important;font-size:16px}.preset-heading button{font-size:12px;padding:8px 10px}.preset-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.preset-card{display:flex;align-items:stretch;flex-direction:column;min-width:0;border:1px solid var(--border);background:color-mix(in srgb,var(--surface) 72%,transparent);border-radius:14px;overflow:hidden}.preset-launch{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px;min-height:90px;text-align:left;background:transparent!important;color:var(--text)!important}.preset-launch strong{font-size:13px;overflow-wrap:anywhere}.preset-launch span{font-size:23px;font-variant-numeric:tabular-nums;font-weight:600}.preset-launch small{font-size:11px;color:var(--muted)}.preset-controls{display:flex;justify-content:flex-end;padding:0 5px 5px}.preset-controls button{background:transparent!important;color:var(--muted)!important;padding:5px 7px;font-size:14px;min-width:28px}.preset-controls button:disabled{opacity:.25}.preset-empty{font-size:13px;color:var(--muted)}.preset-dialog{box-sizing:border-box}.preset-dialog label{display:block;margin:10px 0 5px;font-size:13px}.preset-dialog #preset-name,.preset-dialog #preset-kind{width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)}.preset-dialog .duration input{width:30%;box-sizing:border-box}.preset-dialog .duration{gap:4px}
+@media(max-width:370px){.preset-list{grid-template-columns:1fr}}
+
+/* Update 03.2: visible scene layers, timer animation continuity, shared presets */
+:root[data-theme="light"] body{background-image:linear-gradient(180deg,rgba(247,249,251,.20),rgba(233,238,245,.28)),var(--scenic-image,none),linear-gradient(180deg,#edf4fb,#dce5f3)!important;background-size:cover!important;background-position:center!important;background-attachment:fixed!important}
+:root[data-theme="dark"] body{background-image:linear-gradient(180deg,rgba(10,20,37,.38),rgba(13,25,43,.5)),var(--scenic-image,none),linear-gradient(180deg,#17253e,#23364c)!important;background-size:cover!important;background-position:center!important;background-attachment:fixed!important}
+body::before{display:none!important}
+#timer-detail #timer-presets{margin-top:18px;margin-bottom:12px}
+.timer-art.art-3 .oil-drop{animation-name:oil-fall!important;animation-timing-function:linear!important;animation-iteration-count:infinite!important;animation-play-state:running}
+.timer-art.art-3.oil-paused .oil-drop{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.timer-art.art-3 .oil-drop{animation-name:oil-fall!important;animation-duration:7s!important}}
+
+/* Update 03.3: bookmark-only saved timer menu */
+#timer-detail{position:relative}
+.timer-detail-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.timer-detail-heading h3{margin:0!important}
+#preset-toggle{font-size:21px!important;font-weight:400!important;line-height:1!important;padding:5px 8px!important;min-width:32px!important;min-height:32px!important;background:transparent!important;color:var(--muted)!important;border:0!important;box-shadow:none!important;opacity:.75}
+#preset-toggle:hover,#preset-toggle[aria-expanded="true"]{opacity:1;color:var(--text)!important}
+#timer-detail #timer-presets.preset-popover{position:absolute;z-index:40;right:12px;top:56px;width:min(290px,calc(100% - 24px));max-height:min(65vh,460px);overflow:auto;box-sizing:border-box;margin:0!important;padding:12px;background:var(--surface,#fff);color:var(--text);border:1px solid var(--border);border-radius:13px;box-shadow:0 12px 35px rgba(0,0,0,.18);backdrop-filter:blur(22px)}
+#timer-detail #timer-presets[hidden]{display:none!important}
+#timer-detail #timer-save-preset{display:none!important}
+.preset-heading h3{font-size:13px!important}.preset-heading button{font-size:11px!important;padding:5px 7px!important}
+#timer-presets .preset-list{display:flex;flex-direction:column;gap:2px;margin-top:7px}
+#timer-presets .preset-card{display:flex;flex-direction:row;align-items:center;border:0;border-bottom:1px solid var(--border);border-radius:0;background:transparent;min-height:40px}
+#timer-presets .preset-launch{display:flex;flex:1;flex-direction:row;align-items:center;justify-content:space-between;gap:8px;min-height:0;padding:8px 3px}
+#timer-presets .preset-launch strong{font-size:12px;font-weight:500}
+#timer-presets .preset-launch span{font-size:12px;font-weight:500;white-space:nowrap}
+#timer-presets .preset-controls{padding:0;gap:0}
+#timer-presets .preset-controls button{font-size:12px;padding:3px;min-width:23px}
+
+/* Update 03.4: subtle add-city action and independent local clock display */
+#world-screen .glass-panel:has(> #city-add){position:relative;padding-top:10px}
+#world-screen #city-add{display:flex;align-items:center;justify-content:center;width:32px!important;height:32px;min-width:32px;min-height:32px;margin:0 0 8px auto;padding:0!important;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--surface) 65%,transparent)!important;color:var(--muted)!important;font-size:20px;font-weight:400;box-shadow:none;opacity:.8}
+#world-screen #city-add:hover,#world-screen #city-add:focus-visible{opacity:1;color:var(--text)!important;background:var(--accent-soft)!important}
+#world-screen .world-local-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#world-screen .world-local-heading #world-date{margin:0;flex:1;text-align:left;font-size:13px}
+#world-clock-display{width:auto;max-width:120px;min-width:0;font-size:12px;padding:5px 22px 5px 8px;border:1px solid var(--border);border-radius:9px;color:var(--muted);background:var(--surface);cursor:pointer}
+#world-screen #world-analog-clock{margin:8px auto;max-width:110px;max-height:110px}
+#world-screen #world-time[hidden],#world-screen #world-analog-clock[hidden]{display:none!important}
+
+/* 03.6: World clock display is configured only in Settings. */
+#world-screen .world-local-heading{justify-content:center}
+#world-screen .world-local-heading #world-date{text-align:center}
+
+/* Update 03.7: consistent top alignment, settings flow and quiet controls */
+#world-screen,#timer-screen,#stopwatch-screen,#more-screen,#settings-screen{margin-top:0!important;padding-top:0!important}
+#world-screen>h2,#timer-screen>h2,#stopwatch-screen>h2{margin:0 0 6px!important;min-height:40px;display:flex;align-items:center;font-size:20px;line-height:1.2}
+#world-screen .subscreen-header{min-height:40px;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 6px}
+#world-screen .subscreen-header h2{margin:0;font-size:20px;line-height:1.2}
+#world-screen .subscreen-header .icon-btn{flex:none;width:36px;height:36px;min-width:36px;padding:6px;background:transparent!important;color:var(--text);box-shadow:none}
+#world-screen .subscreen-header .icon-btn:hover{background:var(--accent-soft)!important}
+#world-screen .clock-card{margin-top:0}
+#settings-screen .settings-group label:not(.setting-row){display:block;width:100%;margin:9px 0 5px;line-height:1.45}
+#settings-screen .settings-group select{display:block;box-sizing:border-box;width:100%;max-width:100%;margin:0 0 10px}
+#travel-reset{display:flex;align-items:center;gap:4px;width:max-content;margin:5px 0 0 auto;padding:3px 5px!important;border:0!important;background:transparent!important;box-shadow:none!important;color:var(--muted)!important;font-size:11px!important;line-height:1.3;opacity:.7}
+#travel-reset:hover:not(:disabled),#travel-reset:focus-visible:not(:disabled){opacity:1;color:var(--text)!important}
+#travel-reset:disabled{opacity:.25;cursor:default}
+#travel-reset span[aria-hidden]{font-size:14px}
+@media(max-width:480px){#world-screen .subscreen-header h2,#timer-screen>h2,#stopwatch-screen>h2{font-size:19px}}
+
+/* Update 03.8: align Settings with the other top-level tabs. */
+#settings-screen > .app-header {
+  min-height:40px; height:40px; margin:0 0 6px;
+  display:flex; justify-content:flex-start; align-items:center;
+}
+#settings-screen > .app-header h2 {
+  margin:0; font-size:20px; line-height:1.2; color:var(--text);
+}
+#settings-screen .settings-group label.feature-check {
+  display:flex; width:auto; align-items:center; gap:8px;
+  margin:9px 0; line-height:1.5;
+}
+#settings-screen .settings-group label.feature-check input { width:18px; height:18px; flex:none; }
+#settings-screen .settings-group select,
+#settings-screen #world-clock-display {
+  display:block; box-sizing:border-box; width:100%; max-width:100%;
+  min-width:0; height:46px; min-height:46px;
+  margin:0 0 10px; padding:10px 32px 10px 12px;
+  font-size:14px; line-height:1.4; color:var(--text);
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; opacity:1; cursor:pointer;
+}
+@media(max-width:480px){#settings-screen > .app-header h2{font-size:19px}}
+
+/* Update 03.9: consistent add button and context-sensitive settings return */
+#world-screen .city-add-header{display:flex;justify-content:flex-end;align-items:center;margin:0 0 6px}
+#world-screen #city-add{width:auto!important;height:auto;min-width:0;min-height:0;display:inline-flex;align-items:center;justify-content:center;padding:5px 10px!important;margin:0!important;border-radius:9px;background:var(--accent-soft)!important;color:var(--text)!important;border:1px solid var(--border);font-size:12px;font-weight:500;opacity:1;line-height:1.3;white-space:nowrap}
+/* Update 04.0: use the exact same button tokens as the alarm Add action. */
+#world-screen #city-add {
+  background:var(--button-bg)!important;
+  color:var(--button-text)!important;
+  border:0!important;
+  border-radius:10px;
+  padding:5px 10px!important;
+  font-size:12px;
+  font-weight:400;
+  box-shadow:none;
+}
+#world-screen #city-add:hover { filter:brightness(.97); }
+
+/* Update 04.2: single authoritative rule for the settings return arrow. */
+#settings-screen > .app-header { position:relative; }
+#settings-screen > .app-header #settings-return {
+  position:absolute; left:0; top:50%; transform:translateY(-50%);
+  display:flex; align-items:center; justify-content:center;
+  min-width:34px; min-height:34px; padding:4px 8px;
+  background:transparent; border:0; box-shadow:none;
+  color:var(--text); font-size:22px; line-height:1;
+  opacity:1; visibility:visible; z-index:3;
+}
+#settings-screen > .app-header #settings-return[hidden] { display:none!important; }
+#settings-screen > .app-header #settings-return:not([hidden]) + h2 { margin-left:42px; }
+
+/* Update 04.3: world-clock card spacing and vertical actions. */
+#world-screen .city-row {
+  grid-template-columns:minmax(0,1fr) auto 28px;
+  column-gap:8px;
+  padding:10px 12px 10px 16px;
+}
+#world-screen .city-info { min-width:0; }
+#world-screen .city-controls {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  grid-column:auto;
+}
+#world-screen .city-controls button {
+  width:28px;
+  min-width:28px;
+  height:27px;
+  padding:0;
+  line-height:1;
+  font-size:17px;
+}
+#world-screen .city-row.has-city-scene::before {
+  background-position:center,calc(100% - 64px) bottom;
+}
+@media (max-width:480px) {
+  #world-screen .city-row {
+    grid-template-columns:minmax(0,1fr) auto 26px;
+    column-gap:5px;
+    padding:9px 10px 9px 13px;
+  }
+  #world-screen .city-controls button { width:26px; min-width:26px; height:27px; }
+  #world-screen .city-row.has-city-scene::before {
+    background-position:center,calc(100% - 50px) bottom;
+  }
+}
+
+/* Update 04.4: unified back navigation for secondary alarm pages. */
+#forecast-screen > .subpage-header, #groups-screen > .subpage-header {
+  display:flex; align-items:center; gap:10px; min-height:40px; margin:0 0 10px;
+}
+#forecast-screen > .subpage-header h2, #groups-screen > .subpage-header h2 {
+  margin:0; font-size:20px; line-height:1.3;
+}
+#forecast-screen > .subpage-header .return-home, #groups-screen > .subpage-header .return-home {
+  display:inline-flex; align-items:center; justify-content:center; flex:none;
+  width:34px; height:34px; min-width:34px; min-height:34px;
+  padding:0; border:0; border-radius:10px; background:transparent;
+  color:var(--text); font-size:23px; line-height:1; box-shadow:none;
+}
+#forecast-screen > .subpage-header .return-home:hover, #groups-screen > .subpage-header .return-home:hover { background:var(--accent-soft); }
+
+/* Update 04.6 — timer layout and mobile touch targets */
+#timer-screen #timer-types{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#timer-screen #timer-types button{min-width:0;min-height:76px;padding:15px 13px;border-radius:16px;text-align:left;overflow-wrap:anywhere}
+#timer-detail{box-sizing:border-box;width:100%;min-width:0}
+#timer-detail .duration{gap:6px;max-width:370px;margin:10px auto 14px}
+#timer-detail .duration input{box-sizing:border-box;min-width:0;flex:1;width:0;max-width:110px;font-size:18px;font-variant-numeric:tabular-nums}
+#timer-detail #timer-value{font-size:clamp(32px,9vw,50px);letter-spacing:.02em;margin:12px 0}
+#timer-detail #timer-progress{display:block;height:9px;margin:12px 0;border-radius:20px}
+#timer-detail .actions{display:flex;gap:10px}
+#timer-detail .actions button:not([hidden]){min-height:44px;flex:1;max-width:180px}
+#timer-detail #timer-back{min-height:36px}
+@media(max-width:360px){#timer-screen #timer-types{grid-template-columns:1fr}#timer-detail .duration input{font-size:16px;padding:8px 4px}}
+
+/* Update 04.7: quiet, compact group creation matching World clock Add */
+#groups-screen .group-add-header{display:flex;align-items:center;gap:8px;margin:0 0 12px}
+#groups-screen #group-name{box-sizing:border-box;flex:1;min-width:0;width:auto;max-width:none;height:34px;min-height:34px;padding:6px 10px;border:1px solid var(--border);border-radius:9px;background:color-mix(in srgb,var(--surface) 65%,transparent);color:var(--text);font-size:12px;box-shadow:none}
+#groups-screen #group-name::placeholder{color:var(--muted);opacity:.75}
+#groups-screen #group-add{flex:none;width:auto;min-width:0;min-height:0;height:30px;padding:5px 10px;border:0;border-radius:10px;background:var(--button-bg);color:var(--button-text);font-size:12px;font-weight:400;box-shadow:none;line-height:1.3}
+#groups-screen #group-add:hover{filter:brightness(.97)}
+
+/* Update 04.8: group creation follows World clock's add-first modal pattern */
+#groups-screen .group-add-header{justify-content:flex-end}
+#groups-screen #group-add{height:30px;padding:5px 10px;background:var(--button-bg);color:var(--button-text)}
+#groups-screen .group-picker{box-sizing:border-box;width:min(92vw,400px);max-width:400px;padding:16px}
+#groups-screen .group-picker #group-name{display:block;box-sizing:border-box;width:100%;max-width:none;min-height:42px;height:42px;font-size:16px;padding:10px 12px;margin:10px 0 16px;background:var(--surface);border:1px solid var(--border);color:var(--text)}
+#groups-screen .group-picker .dialog-actions{display:flex;justify-content:flex-end;gap:8px}
+#groups-screen .group-picker .dialog-actions button{min-height:36px}
+
+/* Update 04.9: identical analog clock sizing in Alarm and World clock. */
+#world-screen #world-analog-clock{width:88px!important;max-width:88px!important;height:88px!important;max-height:88px!important;margin:3px auto!important}
+
+/* Update 05.0: same typography and spacing for both local clock cards. */
+#home-screen #current-time,
+#world-screen #world-time{
+  font-family:var(--font);
+  font-size:clamp(30px,9vw,48px);
+  font-weight:700;
+  line-height:1.2;
+  letter-spacing:normal;
+  font-variant-numeric:tabular-nums;
+  margin:4px 0;
+}
+#home-screen #current-date,
+#world-screen #world-date{
+  font-family:var(--font);
+  font-size:12px;
+  font-weight:400;
+  line-height:1.4;
+  margin:2px 0;
+  color:var(--muted);
+}
+#world-screen .clock-card{padding:5px 10px 8px;}
+#world-screen #world-analog-clock{margin:3px auto!important;}
+#world-screen #world-zone{margin:4px 0;font-size:12px;color:var(--muted);}
+
+/* Update 05.1: timer selection previews and calm visual animations */
+#timer-screen #timer-types{gap:12px}
+#timer-screen #timer-types .timer-type-card{display:flex;align-items:center;gap:12px;min-height:92px;padding:12px!important;text-align:left;transition:transform .15s,border-color .15s;background:color-mix(in srgb,var(--surface) 80%,transparent);color:var(--text);border:1px solid var(--border)}
+#timer-screen #timer-types .timer-type-card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#timer-screen #timer-types .timer-type-card:active{transform:scale(.985)}
+.timer-type-label{font-size:13px;font-weight:600;line-height:1.4;min-width:0}
+.timer-type-preview{position:relative;display:block;flex:0 0 55px;width:55px;height:62px;border-radius:12px;background:color-mix(in srgb,var(--accent) 9%,var(--surface));overflow:hidden}
+.preview-dial{position:absolute;inset:10px 7px;border-radius:50%;border:3px solid var(--accent);background:conic-gradient(var(--accent) 0 28%,transparent 28% 100%);box-shadow:inset 0 0 0 4px var(--surface)}
+.preview-dial:after{content:'';position:absolute;inset:12px;border-radius:50%;background:var(--accent)}
+.preview-1:before{content:'';position:absolute;inset:7px 12px;border:3px solid var(--accent);clip-path:polygon(0 0,100% 0,100% 12%,57% 50%,100% 88%,100% 100%,0 100%,0 88%,43% 50%,0 12%);border-radius:5px}
+.preview-sand-top,.preview-sand-bottom{position:absolute;left:17px;width:21px;height:18px;background:#d4ac77;clip-path:polygon(0 0,100% 0,50% 100%)}
+.preview-sand-top{top:12px;animation:timer-sand-shrink 5s ease-in-out infinite alternate;transform-origin:50% 0}
+.preview-sand-bottom{bottom:12px;transform:rotate(180deg);animation:timer-sand-grow 5s ease-in-out infinite alternate}
+.preview-2:before{content:'';position:absolute;inset:7px 15px;border:2px solid #6fb4c7;border-radius:10px;background:linear-gradient(to top,#75bcd0 55%,transparent 55%)}
+.preview-liquid-wave{position:absolute;left:14px;right:14px;top:24px;height:9px;border-radius:50%;background:#a4dce7;animation:timer-wave 2.8s ease-in-out infinite alternate}
+.preview-3:before{content:'';position:absolute;inset:7px 14px;border:2px solid #c9a0ba;border-radius:12px;background:#d5e8ed}
+.preview-oil-drop{position:absolute;left:calc(19px + var(--drop-index)*5px);top:calc(13px + var(--drop-index)*9px);width:8px;height:11px;border-radius:50%;background:#d787b4;animation:timer-oil-bob 2.5s ease-in-out infinite alternate;animation-delay:calc(var(--drop-index)*-.4s)}
+@keyframes timer-wave{to{transform:translateY(5px) rotate(5deg)}}
+@keyframes timer-sand-shrink{to{transform:scaleY(.2)}}
+@keyframes timer-sand-grow{to{transform:rotate(180deg) scaleY(.25)}}
+@keyframes timer-oil-bob{to{transform:translateY(-8px)}}

@@ -1,0 +1,43 @@
+/* Update 05.3 — fully illustrated, timer-synchronized detail stage */
+#timer-detail{padding:20px 20px 22px;overflow:hidden}
+#timer-detail .timer-detail-heading{margin-top:8px}
+#timer-detail #timer-progress{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden}
+#timer-detail #timer-value{font-size:clamp(38px,9vw,52px);font-weight:650;letter-spacing:.015em;margin:16px 0 4px;color:var(--text)}
+#timer-detail .duration{margin:12px auto 0;max-width:330px}
+#timer-detail .duration input{background:color-mix(in srgb,var(--surface) 74%,transparent);border-color:color-mix(in srgb,var(--border) 70%,transparent);font-size:16px}
+#timer-detail .timer-art.vt-stage{box-sizing:border-box;display:flex;align-items:center;justify-content:center;position:relative;isolation:isolate;width:min(100%,340px)!important;height:300px!important;max-width:340px;margin:4px auto 10px!important;padding:0!important;border:0!important;clip-path:none!important;border-radius:22px!important;overflow:visible!important;background:radial-gradient(ellipse at 50% 45%,#b9e5dd44,transparent 66%)!important;box-shadow:none!important;filter:none!important}
+#timer-detail .timer-art.vt-stage:before,#timer-detail .timer-art.vt-stage:after{content:none!important;display:none!important}
+#timer-detail .vt-svg{height:100%;width:100%;max-width:290px;overflow:visible;filter:drop-shadow(0 12px 14px #243b4b19)}
+#timer-detail .vt-sand-stream{animation:vt-sand-fall .55s linear infinite}
+#timer-detail .vt-water-wave{animation:vt-water-sway 3s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+#timer-detail .vt-oil-blob{transform-box:fill-box;transform-origin:center;animation:vt-oil-drift 4s ease-in-out infinite alternate}
+#timer-detail .vt-oil-blob.b2{animation-duration:5.3s;animation-delay:-2s}
+#timer-detail .vt-oil-blob.b3{animation-duration:6.2s;animation-delay:-1s}
+#timer-detail .vt-oil-blob.b4{animation-duration:3.7s;animation-delay:-2.8s}
+#timer-detail .vt-stage.vt-still .vt-sand-stream,#timer-detail .vt-stage.vt-still .vt-water-wave,#timer-detail .vt-stage.vt-still .vt-oil-blob{animation-play-state:paused}
+#timer-detail .vt-ring-progress{transition:stroke-dashoffset .12s linear}
+#timer-detail .actions{margin-top:8px}
+#timer-detail .actions button{border-radius:13px}
+@keyframes vt-sand-fall{to{stroke-dashoffset:-18}}
+@keyframes vt-water-sway{to{translate:5px -2px;scale:1.025 1}}
+@keyframes vt-oil-drift{to{translate:12px -26px;rotate:12deg;scale:1.14 .9}}
+@media(max-width:430px){#timer-detail{padding:14px}#timer-detail .timer-art.vt-stage{height:260px!important}#timer-detail #timer-value{margin-top:12px}}
+@media(prefers-reduced-motion:reduce){#timer-detail .vt-svg *{animation:none!important;transition:none!important}}
+
+/* Update 05.4 — organic oil-motion illustration with layered glass and moving droplets */
+#timer-detail .vt-oil-scene{max-width:315px;filter:drop-shadow(0 15px 19px #243d6126)}
+#timer-detail .vt-oil-scene .oil-drop{transform-box:view-box;transform-origin:0 0;will-change:transform;animation-timing-function:ease-in-out;animation-iteration-count:infinite;animation-direction:alternate}
+#timer-detail .vt-oil-scene .oil-d1{animation-name:oil-path-one;animation-duration:8.5s}
+#timer-detail .vt-oil-scene .oil-d2{animation-name:oil-path-two;animation-duration:10.5s;animation-delay:-3.4s}
+#timer-detail .vt-oil-scene .oil-d3{animation-name:oil-path-three;animation-duration:9.8s;animation-delay:-5.1s}
+#timer-detail .vt-oil-scene .oil-d4{animation-name:oil-path-four;animation-duration:7.7s;animation-delay:-2.5s}
+#timer-detail .vt-oil-scene .oil-d5{animation-name:oil-path-five;animation-duration:11.3s;animation-delay:-6.2s}
+#timer-detail .vt-oil-scene .oil-meniscus{transition:transform .18s linear}
+#timer-detail .vt-oil-scene .vt-oil-fill{transition:height .18s linear,y .18s linear}
+#timer-detail .vt-stage.vt-still .oil-drop{animation-play-state:paused}
+@keyframes oil-path-one{0%{transform:translate(150px,90px) rotate(-16deg) scale(.83,1.13)}40%{transform:translate(170px,150px) rotate(16deg) scale(1.1,.85)}100%{transform:translate(144px,275px) rotate(-8deg) scale(.91,1.14)}}
+@keyframes oil-path-two{0%{transform:translate(176px,290px) rotate(15deg) scale(1.05,.92)}50%{transform:translate(143px,200px) rotate(-18deg) scale(.85,1.14)}100%{transform:translate(176px,73px) rotate(8deg) scale(1.2,.83)}}
+@keyframes oil-path-three{0%{transform:translate(142px,300px) rotate(-12deg) scale(1,.88)}55%{transform:translate(167px,192px) rotate(15deg) scale(.79,1.16)}100%{transform:translate(147px,101px) rotate(-9deg) scale(1.12,.92)}}
+@keyframes oil-path-four{0%{transform:translate(175px,96px) rotate(-20deg) scale(.86,1.1)}60%{transform:translate(151px,177px) rotate(12deg) scale(1.14,.82)}100%{transform:translate(175px,303px) rotate(-15deg) scale(.88,1.12)}}
+@keyframes oil-path-five{0%{transform:translate(143px,177px) rotate(-9deg) scale(.9,1.1)}50%{transform:translate(177px,274px) rotate(17deg) scale(1.12,.85)}100%{transform:translate(150px,78px) rotate(-11deg) scale(.83,1.15)}}
+@media(prefers-reduced-motion:reduce){#timer-detail .vt-oil-scene .oil-drop{animation:none!important}#timer-detail .vt-oil-scene .oil-d1{transform:translate(150px,85px)}#timer-detail .vt-oil-scene .oil-d2{transform:translate(175px,155px)}#timer-detail .vt-oil-scene .oil-d3{transform:translate(143px,260px)}#timer-detail .vt-oil-scene .oil-d4{transform:translate(175px,300px)}#timer-detail .vt-oil-scene .oil-d5{transform:translate(145px,195px)}}

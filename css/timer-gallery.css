@@ -1,0 +1,37 @@
+/* Remaining fraction is shared with the timer logic; illustrations are purely decorative. */
+#timer-detail .timer-art.art-1{width:118px;height:170px;clip-path:polygon(0 0,100% 0,100% 9%,57% 50%,100% 91%,100% 100%,0 100%,0 91%,43% 50%,0 9%);border-radius:10px;background:linear-gradient(to top,#d9ad74 var(--remaining),transparent var(--remaining));filter:drop-shadow(0 3px 8px #0002)}
+#timer-detail .timer-art.art-2{position:relative;overflow:hidden;width:124px;height:170px;border-radius:24px;border:3px solid #a7d6df;background:linear-gradient(to top,#7bc5d7 var(--remaining),#e2f3f6 var(--remaining));box-shadow:inset 0 0 18px #ffffff88,0 8px 18px #0001}
+#timer-detail .timer-art.art-2:after{content:'';position:absolute;left:-10%;right:-10%;bottom:var(--remaining);height:12px;border-radius:50%;background:#a8e0e9;transform:translateY(50%);animation:timer-wave 2.8s ease-in-out infinite alternate}
+@media(max-width:370px){#timer-screen #timer-types .timer-type-card{gap:8px;padding:9px!important}.timer-type-preview{flex-basis:46px;width:46px}}
+@media(prefers-reduced-motion:reduce){.timer-type-preview *,#timer-detail .timer-art.art-2:after{animation:none!important}}
+
+
+/* Update 05.2 — visual timer gallery: illustrations lead, controls stay quiet */
+#timer-screen #timer-types{gap:14px;align-items:stretch}
+#timer-screen #timer-types .timer-type-card{display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:226px;padding:0!important;overflow:hidden;border-radius:19px;background:color-mix(in srgb,var(--surface) 78%,transparent);border:1px solid color-mix(in srgb,var(--border) 80%,transparent);box-shadow:0 5px 18px #15263a0c;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+@media(hover:hover){#timer-screen #timer-types .timer-type-card:hover{transform:translateY(-3px);box-shadow:0 12px 26px #15263a1c;border-color:var(--accent)}}
+#timer-screen #timer-types .timer-type-card:active{transform:scale(.99)}
+#timer-screen .timer-type-preview{flex:0 0 160px;width:100%;height:160px;border-radius:0;background:radial-gradient(ellipse at 52% 30%,#ffffffad,transparent 62%),linear-gradient(145deg,#dfeeea,#e9e6e9);overflow:hidden;isolation:isolate}
+#timer-screen .preview-1{background:radial-gradient(circle at 50% 35%,#ffffffd9,transparent 65%),linear-gradient(135deg,#dceee8,#c7dfdb)}
+#timer-screen .preview-2{background:radial-gradient(circle at 50% 35%,#ffffffd9,transparent 65%),linear-gradient(135deg,#e0eff4,#cbdfe9)}
+#timer-screen .preview-3{background:radial-gradient(circle at 50% 35%,#ffffffd9,transparent 65%),linear-gradient(135deg,#f1e0e9,#dcd5ec)}
+#timer-screen .timer-type-info{display:flex;flex-direction:column;gap:4px;padding:13px 15px 16px;text-align:left;min-width:0}
+#timer-screen .timer-type-label{font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+#timer-screen .timer-type-description{font-size:11px;color:var(--muted);line-height:1.5;font-weight:400}
+#timer-screen .preview-dial{inset:auto;left:50%;top:50%;width:106px;height:106px;transform:translate(-50%,-50%);border:0;border-radius:50%;background:conic-gradient(from -90deg,#158e85 0 74%,#9ccac4 74% 100%);box-shadow:0 8px 18px #1c605a24,0 0 0 7px #ffffff73;animation:timer-gallery-ring 10s linear infinite}
+#timer-screen .preview-dial:before{content:'';position:absolute;inset:12px;border-radius:50%;background:#f4faf7;box-shadow:inset 0 1px 5px #224c4721}
+#timer-screen .preview-dial:after{content:'';position:absolute;inset:43px;border-radius:50%;background:#158e85;box-shadow:0 0 0 4px #d3ece7}
+#timer-screen .preview-1:before{inset:auto;left:50%;top:50%;width:85px;height:117px;transform:translate(-50%,-50%);border:3px solid #b7a08b;border-radius:10px;clip-path:polygon(0 0,100% 0,100% 10%,58% 50%,100% 90%,100% 100%,0 100%,0 90%,42% 50%,0 10%);background:#fff9ee90;filter:drop-shadow(0 6px 7px #735b4a2a)}
+#timer-screen .preview-sand-top,#timer-screen .preview-sand-bottom{left:50%;width:66px;height:47px;background:linear-gradient(145deg,#f1d6a1,#cb9e65)}
+#timer-screen .preview-sand-top{top:26px;transform:translateX(-50%);transform-origin:50% 0;animation:timer-gallery-sand-top 6s ease-in-out infinite alternate}
+#timer-screen .preview-sand-bottom{bottom:25px;transform:translateX(-50%) rotate(180deg);transform-origin:50% 50%;animation:timer-gallery-sand-bottom 6s ease-in-out infinite alternate}
+#timer-screen .preview-2:before{inset:auto;left:50%;top:50%;width:80px;height:120px;transform:translate(-50%,-50%);border:3px solid #a1cbd6;border-radius:22px;background:linear-gradient(to top,#6ab8d2 53%,#e8f7f8 53%);box-shadow:inset 0 0 16px #ffffffa0,0 9px 18px #397d9630}
+#timer-screen .preview-liquid-wave{left:calc(50% - 39px);right:auto;top:calc(50% - 2px);width:78px;height:15px;background:#a9e2e9;border-radius:50%;animation:timer-wave 2.8s ease-in-out infinite alternate}
+#timer-screen .preview-3:before{inset:auto;left:50%;top:50%;width:78px;height:120px;transform:translate(-50%,-50%);border:3px solid #c6a2c3;border-radius:29px;background:linear-gradient(160deg,#f3d8e8,#c6e4e9);box-shadow:inset 0 0 14px #ffffffaa,0 9px 18px #855b8730}
+#timer-screen .preview-oil-drop{left:calc(50% - 29px + var(--drop-index)*15px);top:calc(50% - 44px + var(--drop-index)*20px);width:17px;height:22px;border-radius:48% 52% 58% 42%;background:linear-gradient(145deg,#f7a4c9,#c56b9f);box-shadow:inset 2px 2px 4px #ffffff9c;animation:timer-oil-bob 2.5s ease-in-out infinite alternate;animation-delay:calc(var(--drop-index)*-.4s)}
+@keyframes timer-gallery-ring{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes timer-gallery-sand-top{to{transform:translateX(-50%) scaleY(.18)}}
+@keyframes timer-gallery-sand-bottom{to{transform:translateX(-50%) rotate(180deg) scaleY(.18)}}
+@media(max-width:370px){#timer-screen #timer-types{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#timer-screen #timer-types .timer-type-card{min-height:190px}#timer-screen .timer-type-preview{flex-basis:126px;height:126px}#timer-screen .timer-type-info{padding:10px 9px 12px}#timer-screen .timer-type-label{font-size:13px}#timer-screen .timer-type-description{font-size:10px}#timer-screen .preview-dial{width:88px;height:88px}#timer-screen .preview-dial:after{inset:35px}}
+@media(prefers-reduced-motion:reduce){#timer-screen .timer-type-preview *,#timer-screen .timer-type-card{animation:none!important;transition:none!important}}
+
