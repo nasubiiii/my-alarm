@@ -17,18 +17,21 @@ button, input, select {
 
 button {
   border: none;
-  border-radius: 10px;
+  border-radius: var(--ui-radius-md);
   padding: 10px 16px;
-  background: #374151;
-  color: white;
+  background: var(--button-bg);
+  color: var(--button-text);
   cursor: pointer;
 }
 
-button:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline: 2px solid #60a5fa;
-  outline-offset: 3px;
+button:disabled {
+  cursor: default;
+}
+
+:is(button, input, select, summary, [role="button"]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--surface);
 }
 
 .container {
@@ -171,7 +174,7 @@ select:focus-visible {
 }
 
 .edit-form label {
-  font-size: 14px;
+  font-size: var(--ui-font-body);
   font-weight: bold;
   margin-top: 10px;
 }
@@ -180,10 +183,6 @@ select:focus-visible {
 .edit-form select {
   width: 100%;
   padding: 14px;
-  border: 1px solid #374151;
-  border-radius: 10px;
-  background: #1f2937;
-  color: white;
 }
 
 .weekday-selector {
@@ -290,6 +289,19 @@ select:focus-visible {
   --font: "Noto Sans JP", sans-serif;
   --button-bg: #374151;
   --button-text: #ffffff;
+  --ui-radius-sm: 4px;
+  --ui-radius-md: 7px;
+  --ui-radius-modal: 12px;
+  --ui-space-card: 11px;
+  --ui-gap-card: 6px;
+  --ui-gap-section: 16px;
+  --ui-border-width: 1px;
+  --ui-shadow-card-size: 6px;
+  --ui-shadow-card: 0 2px var(--ui-shadow-card-size) 0 color-mix(in srgb, #000 26%, transparent);
+  --ui-font-title: 20px;
+  --ui-font-body: 14px;
+  --ui-font-caption: 12px;
+  --ui-font-alarm-time: 36px;
 }
 
 
@@ -300,6 +312,7 @@ select:focus-visible {
   --muted: #64748b;
   --border: #dce1e9;
   --accent-soft: #e8efff;
+  --ui-shadow-card: 0 2px var(--ui-shadow-card-size) 0 color-mix(in srgb, #000 14%, transparent);
 }
 
 body {
@@ -342,10 +355,12 @@ body {
 
 .edit-form input,
 .edit-form select,
-.settings-group select {
+.settings-group select,
+.app-dialog input {
   background: var(--surface);
   color: var(--text);
-  border: 1px solid var(--border);
+  border: var(--ui-border-width) solid var(--border);
+  border-radius: var(--ui-radius-md);
 }
 
 .settings-group {
@@ -362,13 +377,12 @@ body {
 }
 
 .settings-group label {
-  font-size: 14px;
+  font-size: var(--ui-font-body);
 }
 
 .settings-group select {
   width: 100%;
   padding: 12px;
-  border-radius: 10px;
   margin-bottom: 10px;
 }
 
@@ -499,7 +513,7 @@ body,
 }
 
 /* 通常のボタン */
-button:not(.primary-btn):not(#add-alarm-btn):not(.weekday-btn):not(.icon-btn):not(#delete-btn):not(#stop-alarm-btn) {
+button:not([data-tab]):not(.primary-btn):not(#add-alarm-btn):not(.weekday-btn):not(.icon-btn):not(#delete-btn):not(#stop-alarm-btn) {
   background: var(--button-bg);
   color: var(--button-text);
 }
@@ -518,15 +532,6 @@ button:not(.primary-btn):not(#add-alarm-btn):not(.weekday-btn):not(.icon-btn):no
 /* 無効なアラーム */
 .alarm-item.disabled .alarm-time {
   color: var(--muted);
-}
-
-/* 入力欄 */
-.edit-form input,
-.edit-form select,
-.settings-group select {
-  background: var(--surface);
-  color: var(--text);
-  border-color: var(--border);
 }
 
 /* 曜日選択ボタン */
@@ -556,19 +561,6 @@ button:not(.primary-btn):not(#add-alarm-btn):not(.weekday-btn):not(.icon-btn):no
 /* 背景テーマ選択欄 */
 #background-select {
   cursor: pointer;
-}
-
-/* テーマに合わせたフォーカス表示 */
-button:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline-color: var(--accent);
-}
-
-button:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline-color: var(--accent);
 }
 
 /* =========================
@@ -1003,7 +995,7 @@ button#all-off-btn.is-active {
   border: 1px solid var(--border);
 }
 /* Phase 1 layout */
-.container{max-width:560px;padding:16px 16px 94px}#home-screen:not([hidden]){height:calc(100dvh - 110px);display:flex;flex-direction:column;min-height:0}#home-screen .app-header,#home-screen .clock-card,#home-screen .section-header,#home-screen .bulk-alarm-wrapper{flex:none}#home-screen .app-header{margin-bottom:6px}.header-tools{display:flex;gap:2px}#home-screen .clock-card{padding:12px;margin-bottom:8px}#home-screen #current-time{margin:4px 0;font-size:clamp(30px,9vw,48px)}#home-screen #current-date{margin:4px}#home-screen .home-analog-clock{max-width:110px;max-height:110px}#alarm-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:4px 2px}.clock-card,.alarm-item,.settings-group{background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--border);backdrop-filter:blur(14px);border-radius:18px}#tab-nav{position:fixed;bottom: max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(calc(100% - 24px),530px);display:flex;gap:3px;padding:7px;background:var(--surface);border:1px solid var(--border);border-radius:22px;z-index:10;box-shadow:0 8px 24px #0002}#tab-nav button{flex:1;min-width:0;font-size:11px;padding:12px 2px;background:transparent;color:var(--text)}#tab-nav button[aria-current=page]{background:var(--accent-soft);color:var(--text)}.weekday-btn.day-0{color:#df7b85}.weekday-btn.day-6{color:#79a8e8}#world-time{font-size:42px;font-variant-numeric:tabular-nums}#group-list .alarm-item{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:10px}#group-list .alarm-item span{flex:1}#forecast-list .alarm-item{margin:6px 0}
+.container{max-width:560px;padding:16px 16px 94px}#home-screen:not([hidden]){height:calc(100dvh - 110px);display:flex;flex-direction:column;min-height:0}#home-screen .app-header,#home-screen .clock-card,#home-screen .section-header,#home-screen .bulk-alarm-wrapper{flex:none}#home-screen .app-header{margin-bottom:6px}.header-tools{display:flex;gap:2px}#home-screen .clock-card{padding:12px;margin-bottom:8px}#home-screen #current-time{margin:4px 0;font-size:clamp(30px,9vw,48px)}#home-screen #current-date{margin:4px}#home-screen .home-analog-clock{max-width:110px;max-height:110px}#alarm-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:4px 2px}.clock-card,.alarm-item,.settings-group{background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--border);backdrop-filter:blur(14px);border-radius:18px}#tab-nav{position:fixed;bottom: max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(calc(100% - 24px),530px);display:flex;gap:3px;padding:7px;background:var(--surface);border:var(--ui-border-width) solid var(--border);border-radius:var(--ui-radius-modal);z-index:10;box-shadow:0 8px 24px #0002}#tab-nav button{flex:1;min-width:0;font-size:11px;padding:12px 2px;background:transparent;color:var(--text)}#tab-nav button[aria-current=page]{background:var(--accent-soft);color:var(--text)}.weekday-btn.day-0{color:#df7b85}.weekday-btn.day-6{color:#79a8e8}#world-time{font-size:42px;font-variant-numeric:tabular-nums}#group-list .alarm-item{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:10px}#group-list .alarm-item span{flex:1}#forecast-list .alarm-item{margin:6px 0}
 /* 日曜日・土曜日の文字色 */
 #edit-weekdays .weekday-btn.day-0 {
     color: #D66B78;
@@ -1030,7 +1022,7 @@ button#all-off-btn.is-active {
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 body{background:radial-gradient(ellipse at 5% 4%,var(--glow,var(--bg)),transparent 65%),linear-gradient(150deg,var(--bg),color-mix(in srgb,var(--bg) 72%,var(--surface)));background-attachment:fixed;color:var(--text)}
 .clock-card,.alarm-item,.settings-group,.glass-panel,#tab-nav{background:color-mix(in srgb,var(--surface) 76%,transparent);border-color:var(--border);box-shadow:0 4px 16px #162b420c}
-:root[data-theme=light] .clock-card,:root[data-theme=light] .alarm-item,:root[data-theme=light] .glass-panel,:root[data-theme=light] .settings-group{box-shadow:0 4px 18px #3542560c,inset 0 1px 0 #ffffffb0}
+:root[data-theme=light] .clock-card,:root[data-theme=light] .alarm-item,:root[data-theme=light] .glass-panel{box-shadow:0 4px 18px #3542560c,inset 0 1px 0 #ffffffb0}
 #tab-nav{background:color-mix(in srgb,var(--surface) 95%,transparent)}
 #home-screen .app-header{min-height:40px;margin-bottom:4px}#home-screen .clock-card{padding:5px 10px;margin-bottom:5px}#home-screen .home-analog-clock{margin:3px auto;max-width:88px;max-height:88px}#home-screen #current-date{margin:2px;font-size:12px}
 #home-screen .section-header{margin:0 0 4px}#home-screen .section-header h2{font-size:17px;margin:5px 0}#home-screen #add-btn{padding:5px 10px;font-size:12px}
@@ -1038,11 +1030,11 @@ body{background:radial-gradient(ellipse at 5% 4%,var(--glow,var(--bg)),transpare
 #alarm-list .alarm-item{padding:8px 12px!important;margin:0 0 6px;border-radius:14px}#alarm-list .alarm-time{font-size:27px;line-height:1.15}#alarm-list .alarm-name{font-size:13px;margin:2px 0}#alarm-list .alarm-days{font-size:11px;line-height:1.25}
 #alarm-list .alarm-item.next-alarm{background:var(--accent-soft);border-color:var(--accent)}
 .header-tools .icon-btn{display:grid;place-items:center;width:34px;height:36px;padding:6px;font-size:20px;color:var(--text)}.header-tools svg,.nav-icon svg{width:20px;height:20px;display:block}.nav-icon{display:block}
-#world-screen .clock-card{padding:16px 12px;margin-bottom:12px}#world-screen #world-time{margin:14px 0}#world-screen .city-row{padding:8px 0;gap:2px 8px}#world-screen .city-info,#world-screen .city-clock{gap:2px}#world-screen .city-controls{gap:3px}#world-screen .city-controls button{padding:4px 8px}.history-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0}.history-row button{padding:5px 8px;font-size:12px}.settings-group{padding:12px;margin-bottom:9px}.settings-disclosure[open] summary{margin-bottom:10px}
+#world-screen .clock-card{padding:16px 12px;margin-bottom:12px}#world-screen #world-time{margin:14px 0}#world-screen .city-row{padding:8px 0;gap:2px 8px}#world-screen .city-info,#world-screen .city-clock{gap:2px}#world-screen .city-controls{gap:3px}#world-screen .city-controls button{padding:4px 8px}.history-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0}.history-row button{padding:5px 8px;font-size:var(--ui-font-caption)}.settings-group{padding:12px;margin-bottom:9px;border-radius:var(--ui-radius-md);box-shadow:var(--ui-shadow-card)}.settings-disclosure[open] summary{margin-bottom:10px}
 #clock-mode-screen{background:var(--bg)}
 
 /* Update 02.3 */
-#world-screen .clock-card{padding:10px 12px;margin-bottom:8px}#world-screen .clock-card p{margin:4px 0}#world-screen #world-time{margin:6px 0;font-size:36px}#world-screen .glass-panel{padding:10px 12px;margin-bottom:8px}#world-screen .city-row{grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:4px 8px;padding:6px 0;line-height:1.2}#world-screen .city-info,#world-screen .city-clock{gap:2px}#world-screen .city-info strong{font-size:14px}#world-screen .city-info small{font-size:11px}#world-screen .city-time{font-size:23px}#world-screen .city-controls{grid-column:auto;align-items:center;gap:4px}#world-screen .city-controls button{padding:0;width:30px;height:34px;font-size:19px;background:transparent}#world-screen .city-handle{touch-action:none;cursor:grab;user-select:none}#world-screen .city-dragging{background:var(--surface);box-shadow:0 3px 12px #0003;border-radius:10px;position:relative;z-index:2} .app-dialog{width:min(90vw,360px);border:1px solid var(--border);border-radius:20px;padding:20px;background:var(--surface);color:var(--text);box-shadow:0 12px 40px #0004} .app-dialog::backdrop{background:#0006;backdrop-filter:blur(3px)}.app-dialog h3{margin:0 0 16px;font-size:18px}.app-dialog input{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)}.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.dialog-primary{background:var(--accent);color:white}.container{padding-bottom:calc(115px + env(safe-area-inset-bottom))}
+#world-screen .clock-card{padding:10px 12px;margin-bottom:8px}#world-screen .clock-card p{margin:4px 0}#world-screen #world-time{margin:6px 0;font-size:36px}#world-screen .glass-panel{padding:10px 12px;margin-bottom:8px}#world-screen .city-row{grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:4px 8px;padding:6px 0;line-height:1.2}#world-screen .city-info,#world-screen .city-clock{gap:2px}#world-screen .city-info strong{font-size:14px}#world-screen .city-info small{font-size:11px}#world-screen .city-time{font-size:23px}#world-screen .city-controls{grid-column:auto;align-items:center;gap:4px}#world-screen .city-controls button{padding:0;width:30px;height:34px;font-size:19px;background:transparent}#world-screen .city-handle{touch-action:none;cursor:grab;user-select:none}#world-screen .city-dragging{background:var(--surface);box-shadow:0 3px 12px #0003;border-radius:10px;position:relative;z-index:2} .app-dialog{width:min(90vw,360px);border:var(--ui-border-width) solid var(--border);border-radius:var(--ui-radius-modal);padding:20px;background:var(--surface);color:var(--text);box-shadow:0 12px 40px #0004} .app-dialog::backdrop{background:#0006;backdrop-filter:blur(3px)}.app-dialog h3{margin:0 0 var(--ui-gap-section);font-size:var(--ui-font-title)}.app-dialog input{width:100%;padding:12px;background:var(--bg)}.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:var(--ui-gap-section)}.dialog-primary{background:var(--accent);color:white}.container{padding-bottom:calc(115px + env(safe-area-inset-bottom))}
 /* Update 02.4 */
 #world-screen .city-controls button,#group-list .quiet-action{background:transparent!important;box-shadow:none!important;color:var(--muted)!important;border:0;width:36px;height:38px;padding:0;font-size:17px;flex:none}
 #world-screen .city-controls button:hover,#group-list .quiet-action:hover{color:var(--text)!important;background:var(--accent-soft)!important}
@@ -1056,8 +1048,8 @@ body{background:radial-gradient(ellipse at 5% 4%,var(--glow,var(--bg)),transpare
 /* Update 02.6: quieter secondary controls */
 #world-screen .city-controls button,#group-list .quiet-action{font-size:13px;opacity:.72;min-width:36px;min-height:40px}
 #world-screen .city-controls button:hover,#world-screen .city-controls button:focus-visible,#group-list .quiet-action:hover,#group-list .quiet-action:focus-visible{opacity:1}
-#tab-nav button[data-tab]{background:transparent!important;box-shadow:none!important;border:0;color:var(--muted)!important}
-#tab-nav button[data-tab][aria-current=page]{background:color-mix(in srgb,var(--accent) 13%,transparent)!important;color:var(--text)!important}
+#tab-nav button[data-tab]{background:transparent;border:0;border-radius:var(--ui-radius-sm);color:var(--muted)}
+#tab-nav button[data-tab][aria-current=page]{background:var(--accent-soft);color:var(--text)}
 #tab-nav .nav-icon svg{width:18px;height:18px;stroke-width:1.5}
 
 /* Mobile city picker */
@@ -1082,7 +1074,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;background-image:linea
 .oil-drop{position:absolute;z-index:2;top:-22px;left:calc(8% + var(--i)*11%);width:calc(12px + var(--i)*1px);height:calc(16px + var(--i)*1px);border-radius:50% 50% 55% 55%;background:radial-gradient(circle at 35% 25%,#fff9,#e766a5 55%,#b857a8);animation:oil-fall calc(3.8s + var(--i)*.55s) linear infinite;animation-delay:calc(var(--i)*-.63s);box-shadow:inset -2px -2px 4px #7c397355}
 @keyframes oil-fall{0%{transform:translateY(-15px) scale(.75)}50%{transform:translateY(115px) translateX(8px) scale(1.1)}100%{transform:translateY(250px) translateX(-5px) scale(.8)}}
 @media(prefers-reduced-motion:reduce){.oil-drop{animation:none;top:40%}}
-.welcome-dialog{width:min(420px,calc(100vw - 32px));max-height:90dvh;border:1px solid var(--border);border-radius:24px;padding:24px;background:var(--surface);color:var(--text);box-shadow:0 25px 90px #0005}
+.welcome-dialog{width:min(420px,calc(100vw - 32px));max-height:90dvh;padding:24px;background:var(--surface);color:var(--text);box-shadow:0 25px 90px #0005}
 .welcome-dialog::backdrop{background:#111a2f99;backdrop-filter:blur(5px)}
 .welcome-content{text-align:center}.welcome-illustration{font-size:62px;margin:6px auto 14px;color:var(--accent)}.welcome-content h2{margin:0 0 12px}.welcome-content p{min-height:65px;color:var(--muted);line-height:1.6}.welcome-dots{letter-spacing:7px;color:var(--accent);margin:16px}.welcome-controls{display:flex;justify-content:space-between;gap:10px}.welcome-controls button{flex:1}.welcome-replay{width:100%;margin:12px 0 24px}
 
@@ -1093,8 +1085,6 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;background-image:linea
 :root[data-theme="light"] .app-header button,:root[data-theme="light"] .app-header h1,:root[data-theme="light"] .section-header,:root[data-theme="light"] .section-header h2,:root[data-theme="light"] .section-header button,:root[data-theme="light"] .bulk-alarm-wrapper{color:var(--text)}
 :root[data-theme="light"] .clock-card,:root[data-theme="light"] .alarm-item,:root[data-theme="light"] .glass-panel,:root[data-theme="light"] .settings-group{background:color-mix(in srgb,#fff 90%,transparent);color:#243747;border-color:#d7e0e8}
 :root[data-theme="light"] #tab-nav{background:#f9fbfdeb;color:#243747;border-color:#d5dee8}
-:root[data-theme="light"] #tab-nav button[data-tab]{color:#526879!important}
-:root[data-theme="light"] #tab-nav button[data-tab][aria-current=page]{color:#23394b!important}
 :root[data-theme="light"] .alarm-item.disabled{opacity:.77}
 /* Oil drops use resolved inline positions/durations for browser compatibility */
 .timer-art.art-3 .oil-drop{left:10%;width:14px;height:18px;animation:oil-fall 4s linear infinite;animation-duration:var(--oil-duration,4s);animation-delay:var(--oil-delay,0s)}
